@@ -1,0 +1,102 @@
+{% extends 'index.html' %}
+
+{% block content %}
+{% block barra %}
+<!-- Page Navbar -->
+<nav id="scrollspy" class="navbar page-navbar navbar-expand-md navbar-brand fixed-top" data-spy="affix"
+    data-offset-top="20">
+    <div class="container">
+        <a class="navbar-brand" href="#"><strong class="text-primary">Seguimiento</strong> <span
+                class="text-dark">Estudiantil</span></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto">
+                {% if docente == "docente" %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle text-dark" href="#" id="adminMenu" role="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Docente
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="adminMenu">
+                        <a class="nav-link text-dark"
+                            href="/home/docenteMaterias/{{idPersona}}/{{docente}}/{{admin}}">Materias</a>
+                    </div>
+                </li>
+                {% endif %}
+                {% if admin == "admin" %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle text-dark" href="#" id="adminMenu" role="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Admin
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="adminMenu">
+                        <a class="dropdown-item" href="/home/ciclos/{{idPersona}}/{{docente}}/{{admin}}">Ciclos</a>
+                        <a class="dropdown-item" href="/home/mallas/{{idPersona}}/{{docente}}/{{admin}}">Mallas</a>
+                        <a class="dropdown-item" href="/home/periodos/{{idPersona}}/{{docente}}/{{admin}}">Periodos
+                            Académicos</a>
+                        <a class="dropdown-item"
+                            href="/home/listamaterias/{{idPersona}}/{{docente}}/{{admin}}">Materias</a>
+                        <a class="dropdown-item" href="/home/cursas/{{idPersona}}/{{docente}}/{{admin}}">Cursas</a>
+                        <a class="dropdown-item"
+                            href="/home/asignaciones/{{idPersona}}/{{docente}}/{{admin}}">Asignaciones</a>
+                        <a class="dropdown-item" href="/home/unidades/{{idPersona}}/{{docente}}/{{admin}}">Unidades</a>
+                        <a class="dropdown-item" href="/home/rol/{{idPersona}}/{{docente}}/{{admin}}">Roles</a>
+                        <a class="dropdown-item" href="/home/docentes/{{idPersona}}/{{docente}}/{{admin}}">Docentes</a>
+                        <a class="dropdown-item"
+                            href="/home/estudiantes/{{idPersona}}/{{docente}}/{{admin}}">Estudiantes</a>
+                    </div>
+                </li>
+                {% endif %}
+                <li class="nav-item">
+                    <a class="nav-link text-dark" href="/home/{{idPersona}}/{{docente}}/{{admin}}">Inicio</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-dark"
+                        href="/home/materias/estudiantes/unidades/{{idMateria}}/{{idPersona}}/docente/admin">Volver</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-dark" href="/">Salir</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav><!-- End of Page Navbar -->
+{% endblock %}
+<br>
+<br>
+<div class="container my-4">
+    <div class="text-center mb-4">
+        <h2 class="display-5 text-dark">AGREGAR PERIODO ACADEMICO</h2>
+    </div>
+    <div class container my-4>
+        <div class="text-white mb-4">
+            <a href="/home/periodos/{{idPersona}}/{{docente}}/{{admin}}" class="btn btn-danger">VOLVER</a>
+        </div>
+    </div>
+    <div>
+        <form action="/home/addPeriodoAcademico/{{idPersona}}/{{docente}}/{{admin}}" method="POST"
+            class="p-4 bg-light rounded">
+
+            <div class="form-group mb-3">
+                <label for="fecha_inicio" class="form-label text-dark">Fecha de Inicio:</label>
+                <input type="date" class="form-control w-50 mx-auto" id="fecha_inicio" name="fecha_inicio"
+                    placeholder="Fecha de Inicio" required>
+            </div>
+            <div class="form-group mb-3">
+                <label for="fecha_fin" class="form-label text-dark">Fecha de Fin:</label>
+                <input type="date" class="form-control w-50 mx-auto" id="fecha_fin" name="fecha_fin"
+                    placeholder="Fecha de Fin" required>
+            </div>
+            <div class="text-center">
+                <button id="boton" type="submit" class="btn btn-success">Guardar</button>
+            </div>
+        </form>
+        <br>
+        <br>
+    </div>
+</div>
+{% endblock %}

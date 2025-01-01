@@ -1,0 +1,113 @@
+[
+    {
+        "id": 1,
+        "dni": "1104526322",
+        "nombre": "Abel",
+        "apellido": "Mora",
+        "fechaNacimiento": "1997-05-25",
+        "numTelefono": "0932415532",
+        "idCuenta": 2,
+        "roles": [
+            {
+                "id": 1,
+                "nombre": "Estudiante",
+                "descripcion": "Rol de Estudiante",
+                "estado": true,
+                "idPersona": 0
+            }
+        ],
+        "nota": 7.8,
+        "asistencia": "94%",
+        "colegioProcedencia": "Julio Isacc",
+        "cursas": [
+            {
+                "id": 1,
+                "paralelo": "A",
+                "idEstudiante": 1,
+                "asignacion": 1,
+                "periodoAcademico": 1
+            },
+            {
+                "id": 2,
+                "paralelo": "A",
+                "idEstudiante": 1,
+                "asignacion": 2,
+                "periodoAcademico": 1
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "dni": "1104526342",
+        "nombre": "Brian",
+        "apellido": "Sanchez",
+        "fechaNacimiento": "1997-05-25",
+        "numTelefono": "0932415532",
+        "idCuenta": 2,
+        "roles": [
+            {
+                "id": 1,
+                "nombre": "Estudiante",
+                "descripcion": "Rol de Estudiante",
+                "estado": true,
+                "idPersona": 0
+            }
+        ],
+        "nota": 6.8,
+        "asistencia": "94%",
+        "colegioProcedencia": "Julio Isacc",
+        "cursas": [
+            {
+                "id": 1,
+                "paralelo": "A",
+                "idEstudiante": 2,
+                "asignacion": 1,
+                "periodoAcademico": 1
+            },
+            {
+                "id": 2,
+                "paralelo": "B",
+                "idEstudiante": 2,
+                "asignacion": 4,
+                "periodoAcademico": 1
+            }
+        ]
+    },
+    {
+        "id": 3,
+        "dni": "1104524444",
+        "nombre": "Darwin",
+        "apellido": "Sarango",
+        "fechaNacimiento": "1997-05-25",
+        "numTelefono": "0932415532",
+        "idCuenta": 3,
+        "roles": [
+            {
+                "id": 1,
+                "nombre": "Estudiante",
+                "descripcion": "Rol de Estudiante",
+                "estado": true,
+                "idPersona": 0
+            }
+        ],
+        "nota": 8.8,
+        "asistencia": "100%",
+        "colegioProcedencia": "Bernardo Valdiviezo",
+        "cursas": [
+            {
+                "id": 2,
+                "paralelo": "A",
+                "idEstudiante": 4,
+                "asignacion": 3,
+                "periodoAcademico": 1
+            },
+            {
+                "id": 4,
+                "paralelo": "A",
+                "idEstudiante": 4,
+                "asignacion": 4,
+                "periodoAcademico": 2
+            }
+        ]
+    }
+]

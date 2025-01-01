@@ -1,0 +1,6 @@
+
+
+
+class ReporteAsignacion:
+    pass
+    

@@ -1,0 +1,107 @@
+[
+    {
+        "id": 1,
+        "fecha_inicio": "23/10/2023",
+        "fecha_fin": "30/03/2024",
+        "cursas": [
+            {
+                "id": 1,
+                "paralelo": "A",
+                "idEstudiante": 1,
+                "asignacion": 1,
+                "periodoAcademico": 1
+            },
+            {
+                "id": 2,
+                "paralelo": "B",
+                "idEstudiante": 1,
+                "asignacion": 4,
+                "periodoAcademico": 1
+            },
+            {
+                "id": 3,
+                "paralelo": "A",
+                "idEstudiante": 1,
+                "asignacion": 1,
+                "periodoAcademico": 1
+            },
+            {
+                "id": 4,
+                "paralelo": "A",
+                "idEstudiante": 1,
+                "asignacion": 4,
+                "periodoAcademico": 2
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "fecha_inicio": "23/02/2022",
+        "fecha_fin": "20/07/2022",
+        "cursas": [
+            {
+                "id": 1,
+                "paralelo": "A",
+                "idEstudiante": 1,
+                "asignacion": 1,
+                "periodoAcademico": 1
+            },
+            {
+                "id": 2,
+                "paralelo": "B",
+                "idEstudiante": 1,
+                "asignacion": 4,
+                "periodoAcademico": 1
+            },
+            {
+                "id": 3,
+                "paralelo": "A",
+                "idEstudiante": 1,
+                "asignacion": 1,
+                "periodoAcademico": 1
+            },
+            {
+                "id": 4,
+                "paralelo": "A",
+                "idEstudiante": 1,
+                "asignacion": 4,
+                "periodoAcademico": 2
+            }
+        ]
+    },
+    {
+        "id": 3,
+        "fecha_inicio": "15/11/2022",
+        "fecha_fin": "23/04/2023",
+        "cursas": [
+            {
+                "id": 1,
+                "paralelo": "A",
+                "idEstudiante": 1,
+                "asignacion": 1,
+                "periodoAcademico": 1
+            },
+            {
+                "id": 2,
+                "paralelo": "B",
+                "idEstudiante": 1,
+                "asignacion": 4,
+                "periodoAcademico": 1
+            },
+            {
+                "id": 3,
+                "paralelo": "A",
+                "idEstudiante": 1,
+                "asignacion": 1,
+                "periodoAcademico": 1
+            },
+            {
+                "id": 4,
+                "paralelo": "A",
+                "idEstudiante": 1,
+                "asignacion": 4,
+                "periodoAcademico": 2
+            }
+        ]
+    }
+]

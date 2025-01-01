@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Start your development with Creative Design landing page.">
+    <meta name="author" content="Devcrud">
+    
+    <title>Creative Design | Free Bootstrap 4.3.x template</title>
+
+    <!-- font icons -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/vendors/themify-icons/css/themify-icons.css')}}">
+
+    <!-- Bootstrap + Creative Design main styles -->
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/creative-design.css')}}">
+     <!-- Font Icon -->
+     <link rel="stylesheet" href="{{ url_for('static', filename='fonts/material-icon/css/material-design-iconic-font.min.css') }}">
+
+     <!-- Main css -->
+     <link rel="stylesheet" href="{{ url_for('static', filename='css/style01.css') }}">
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            background-color: #201616da; /* Cambia el color a tu preferencia */
+        }
+    </style>
+    <!--ESTILOS DE GRAFICAS-->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/grafica.css') }}">
+
+</head>
+<body data-spy="scroll" data-target=".navbar" data-offset="40" id="home">
+    
+    {%block barra%}
+    
+
+    {%endblock%}
+    {%block aux%}
+
+    {%endblock%}
+=
+    {% block content %}
+    {% endblock %}
+    <   
+    
+
+    <!-- core  -->
+    <script src="{{ url_for('static', filename='vendors/jquery/jquery-3.4.1.js')}}"></script>
+    <script src="{{ url_for('static', filename='vendors/bootstrap/bootstrap.bundle.js')}}"></script>
+
+    <!-- bootstrap affix -->
+    <script src="{{ url_for('static', filename='vendors/bootstrap/bootstrap.affix.js')}}"></script>
+
+    <!-- Creative Design js -->
+    <script src="{{ url_for('static', filename='js/creative-design.js')}}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.min.js" integrity="sha512-L0Shl7nXXzIlBSUUPpxrokqq4ojqgZFQczTYlGjzONGTDAcLremjwaWv5A+EDLnxhQzY5xUZPWLOLqYRkY0Cbw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="{{ url_for('static', filename='js/grafica.js')}}"></script>
+</body>
+</html>

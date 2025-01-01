@@ -1,0 +1,35 @@
+{% extends "index.html" %}
+{% block content %}
+<div class="text-white my-4">
+    <h2 class="display-5">Modificar Cursa</h2>
+</div>
+<div class="booking-form-body">
+    <a href="/home/cursas/{{idPersona}}/{{docente}}/{{admin}}" class="btn btn-danger mb-3">Volver</a>
+    <form id="form" class="custom-form booking-form" action="/home/cursas/editar/{{idPersona}}/{{docente}}/{{admin}}" method="post" role="form">
+        <input type="hidden" name="id" value="{{data._id}}"/>
+        <div class="form-row">
+            <div class="form-group col-lg-6 col-md-12">
+                <label for="id_materia">ID Materia</label>
+                <input type="text" value="{{data._id_materia}}" name="id_materia" class="form-control" placeholder="ID Materia" required>
+            </div>
+            <div class="form-group col-lg-6 col-md-12">
+                <label for="cedula_estudiante">Cédula Estudiante</label>
+                <input type="text" value="{{data._cedula_estudiante}}" name="cedula_estudiante" class="form-control" placeholder="Cédula Estudiante" required>
+            </div>
+            <div class="form-group col-lg-6 col-md-12">
+                <label for="nota">Nota</label>
+                <input type="number" step="0.01" value="{{data._nota}}" name="nota" class="form-control" placeholder="Nota" required>
+            </div>
+            <div class="form-group col-lg-6 col-md-12">
+                <label for="asistencia">Asistencia</label>
+                <input type="number" value="{{data._asistencia}}" name="asistencia" class="form-control" placeholder="Asistencia" required>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col-12 text-center">
+                <button id="boton" type="submit" class="btn btn-success">Guardar</button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

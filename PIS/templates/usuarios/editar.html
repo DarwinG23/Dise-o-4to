@@ -1,0 +1,65 @@
+{% extends "index.html" %}
+{% block content %}
+<h2 class="text-white">Registro</h2>
+<div class="booking-form-body">
+    <a href="/personas" class="btn btn-danger">VOLVER</a>
+    <form id="form" class="custom-form booking-form" action="/personas/guardar" method="post" role="form">
+        <div class="booking-form-body">
+            <div class="row">
+                <div class="col-lg-6 col-12">
+                    <input type="text" name="cedula" class="form-control" placeholder="Cédula" value="{{ data.cedula }}" required>
+                </div>
+                <div class="col-lg-6 col-12">
+                    <input type="text" name="name" class="form-control" placeholder="Nombre" value="{{ data.nombre }}" required>
+                </div>
+                <div class="col-lg-6 col-12">
+                    <input type="text" name="lastname" class="form-control" placeholder="Apellidos" value="{{ data.apellido }}" required>
+                </div>
+                <div class="col-lg-6 col-12">
+                    <input type="date" name="birthdate" class="form-control" placeholder="Fecha de Nacimiento" value="{{ data.fechaNacimiento }}" required>
+                </div>
+                <div class="col-lg-6 col-12">
+                    <input type="text" name="telefono" class="form-control" placeholder="Teléfono" value="{{ data.telefono }}" required>
+                </div>
+                <div class="col-lg-6 col-12">
+                    <input type="radio" name="role" id="estudiante" value="student" {% if data.role == "estudiantes" %}checked{% endif %} required>
+                    <label for="student">Estudiante</label>
+                    <input type="radio" name="role" id="docente" value="teacher" {% if data.role == "docente" %}checked{% endif %} required>
+                    <label for="teacher">Docente</label>
+                </div>
+                
+                <div id="student-fields" style="display: none;" class="col-12">
+                    <div class="form-group">
+                        <input type="text" name="nota" class="form-control" placeholder="Nota" value="{{ data.nota }}">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" name="asistencia" class="form-control" placeholder="Asistencia" value="{{ data.asistencia }}">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" name="colegioProcedencia" class="form-control" placeholder="Colegio de Procedencia" value="{{ data.colegioProcedencia }}">
+                    </div>
+                </div>
+
+                <div id="teacher-fields" style="display: none;" class="col-12">
+                    <div class="form-group">
+                        <input type="text" name="titulo" class="form-control" placeholder="Título" value="{{ data.titulo }}">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" name="cubiculo" class="form-control" placeholder="Cubículo" value="{{ data.cubiculo }}">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" name="idiomas" class="form-control" placeholder="Idiomas" value="{{ data.idiomas }}">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" name="tipoContrato" class="form-control" placeholder="Tipo de Contrato" value="{{ data.tipoContrato }}">
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-10 col-8 mx-auto mt-2">
+                    <button id="boton" type="submit" class="form-control btn btn-success">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

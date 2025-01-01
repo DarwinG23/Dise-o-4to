@@ -1,0 +1,24 @@
+[
+    {
+        "id": 1,
+        "nombre": "Ingenieria en Sistemas",
+        "descripcion": "Carrera de Ingenieria en Sistemas",
+        "vigencia": true,
+        "ciclos": [
+            {
+                "id": 1,
+                "descripcion": "Ciclo 1",
+                "vigencia": true,
+                "malla_curricular": 1,
+                "materias": []
+            },
+            {
+                "id": 2,
+                "descripcion": "Ciclo 2",
+                "vigencia": true,
+                "malla_curricular": 1,
+                "materias": []
+            }
+        ]
+    }
+]

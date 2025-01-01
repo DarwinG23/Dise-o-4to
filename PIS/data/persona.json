@@ -1,0 +1,81 @@
+[
+    {
+        "id": 1,
+        "dni": "1106006123",
+        "nombre": "Darwin",
+        "apellido": "Granda",
+        "fechaNacimiento": "1997-05-25",
+        "numTelefono": "0979411882",
+        "idCuenta": 1,
+        "roles": [
+            {
+                "id": 1,
+                "nombre": "Administrador",
+                "descripcion": "Rol de Administrador",
+                "estado": true,
+                "idPersona": 0
+            },
+            {
+                "id": 2,
+                "nombre": "Docente",
+                "descripcion": "Rol de Docente",
+                "estado": true,
+                "idPersona": 0
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "dni": "1104526322",
+        "nombre": "Abel",
+        "apellido": "Mora",
+        "fechaNacimiento": "1997-05-25",
+        "numTelefono": "0932415532",
+        "idCuenta": 4,
+        "roles": [
+            {
+                "id": 1,
+                "nombre": "Estudiante",
+                "descripcion": "Rol de Estudiante",
+                "estado": true,
+                "idPersona": 0
+            }
+        ]
+    },
+    {
+        "id": 3,
+        "dni": "1106006232",
+        "nombre": "Alexander",
+        "apellido": "Sanchez",
+        "fechaNacimiento": "1997-05-25",
+        "numTelefono": "0979411882",
+        "idCuenta": 2,
+        "roles": [
+            {
+                "id": 1,
+                "nombre": "Administrador",
+                "descripcion": "Rol de Administrador",
+                "estado": true,
+                "idPersona": 0
+            }
+        ]
+    },
+    {
+        "id": 4,
+        "dni": "1106006231",
+        "nombre": "Mario",
+        "apellido": "Zambrano",
+        "fechaNacimiento": "1997-05-25",
+        "numTelefono": "0979411882",
+        "idCuenta": 2,
+        "roles": [
+            {
+                "id": 2,
+                "nombre": "Docente",
+                "descripcion": "Rol de Docente",
+                "estado": true,
+                "idPersona": 0
+            }
+        ]
+    }
+]

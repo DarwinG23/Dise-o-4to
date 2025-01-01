@@ -1,0 +1,53 @@
+[
+    {
+        "id": 0,
+        "dni": "1106006123",
+        "nombre": "Darwin",
+        "apellido": "Granda",
+        "fechaNacimiento": "1997-05-25",
+        "numTelefono": "0979411882",
+        "idCuenta": 1,
+        "roles": [
+            {
+                "id": 1,
+                "nombre": "Administrador",
+                "descripcion": "Rol de Administrador",
+                "estado": true,
+                "idPersona": 0
+            },
+            {
+                "id": 2,
+                "nombre": "Docente",
+                "descripcion": "Rol de Docente",
+                "estado": true,
+                "idPersona": 0
+            }
+        ],
+        "titulo": "Magister",
+        "cubiculo": "A-1",
+        "idiomas": "Espaniol",
+        "tipoContrato": "Tiempo Completo"
+    },
+    {
+        "id": 3,
+        "dni": "1104754531",
+        "nombre": "Mario",
+        "apellido": "Zambrano",
+        "fechaNacimiento": "1999-12-12",
+        "numTelefono": "0987655772",
+        "idCuenta": " ",
+        "roles": [
+            {
+                "id": 2,
+                "nombre": "Docente",
+                "descripcion": "Rol de Docente",
+                "estado": true,
+                "idPersona": 0
+            }
+        ],
+        "titulo": "Ingeniero",
+        "cubiculo": "C-1",
+        "idiomas": "Espaniol",
+        "tipoContrato": "Por horas"
+    }
+]

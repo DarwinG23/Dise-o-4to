@@ -1,0 +1,83 @@
+[
+    {
+        "id": 1,
+        "codigo": "3412",
+        "estado": true,
+        "fecha_inicio": "2021-06-01",
+        "fecha_limite": "2021-06-30",
+        "asignacion": 1,
+        "nombre": "Listas-Pilas-Colas",
+        "numero": 0
+    },
+    {
+        "id": 2,
+        "codigo": "1551",
+        "estado": true,
+        "fecha_inicio": "2021-06-01",
+        "fecha_limite": "2021-06-30",
+        "asignacion": 1,
+        "nombre": "Metodos de Ordenacion y Busqueda",
+        "numero": 0
+    },
+    {
+        "id": 3,
+        "codigo": "8080",
+        "estado": true,
+        "fecha_inicio": "2024-06-01",
+        "fecha_limite": "2024-06-30",
+        "asignacion": 1,
+        "nombre": "Grafos y Arboles",
+        "numero": "3"
+    },
+    {
+        "id": 4,
+        "codigo": "5050",
+        "estado": true,
+        "fecha_inicio": "2021-06-01",
+        "fecha_limite": "2021-06-30",
+        "asignacion": 1,
+        "nombre": "Probabilidad y Distribuciones",
+        "numero": 0
+    },
+    {
+        "id": 5,
+        "codigo": "6060",
+        "estado": true,
+        "fecha_inicio": "2021-06-01",
+        "fecha_limite": "2021-06-30",
+        "asignacion": 1,
+        "nombre": "Metodos de  regrecion",
+        "numero": 0
+    },
+    {
+        "id": 6,
+        "codigo": "4322",
+        "estado": true,
+        "fecha_inicio": "2021-06-01",
+        "fecha_limite": "2021-06-30",
+        "asignacion": 1,
+        "nombre": "SQL",
+        "numero": 0
+    },
+    {
+        "id": 7,
+        "codigo": "2022",
+        "estado": true,
+        "fecha_inicio": "2021-06-01",
+        "fecha_limite": "2021-06-30",
+        "asignacion": 1,
+        "nombre": "Modelo Relacional",
+        "numero": 0
+    },
+    {
+        "id": 8,
+        "codigo": "1010",
+        "estado": true,
+        "fecha_inicio": "2021-06-01",
+        "fecha_limite": "2021-06-30",
+        "asignacion": 1,
+        "nombre": "Normalizacion",
+        "numero": 0
+    }
+    
+]

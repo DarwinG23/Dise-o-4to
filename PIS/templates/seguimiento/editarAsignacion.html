@@ -1,0 +1,31 @@
+{% extends "index.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Editar Asignación</h2>
+    <div class="booking-form-body">
+        <a href="/home/asignaciones/{{ idPersona }}/{{ docente }}/{{ admin }}" class="btn btn-danger mb-3">Volver</a>
+        <form id="form" class="custom-form booking-form" action="/home/asignaciones/editar/{{ idPersona }}/{{ docente }}/{{ admin }}" method="post" role="form">
+            <input type="hidden" name="id" value="{{ data.id }}">
+            
+            <div class="form-group">
+                <label for="id_materia">ID Materia:</label>
+                <input type="text" class="form-control" id="id_materia" name="id_materia" value="{{ data.id_materia }}">
+            </div>
+            <div class="form-group">
+                <label for="cedula_docente">Cédula Docente:</label>
+                <input type="text" class="form-control" id="cedula_docente" name="cedula_docente" value="{{ data.cedula_docente }}">
+            </div>
+            <div class="form-group">
+                <label for="numero_unidades">Número de Unidades:</label>
+                <input type="text" class="form-control" id="numero_unidades" name="numero_unidades" value="{{ data.numero_unidades }}">
+            </div>
+            <div class="form-group">
+                <label for="id_cursa">ID Cursa:</label>
+                <input type="text" class="form-control" id="id_cursa" name="id_cursa" value="{{ data.id_cursa }}">
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
