@@ -2,7 +2,7 @@ from flask import Blueprint, jsonify, abort , request, render_template, redirect
 from flask_cors import CORS
 import time, math, datetime
 import random
-from controls.util_exel.read import Read
+from controls.util.read import Read
 from io import BytesIO
 from controls.util.cedula import Cedula
 router = Blueprint('router', __name__)
@@ -23,5 +23,5 @@ cors = CORS(router, resource={
 #---------------------------------------------Login-----------------------------------------------------#
 @router.route('/', ) #SON GETS
 def inicio():
-    return render_template('login/login.html')
+    return render_template('inicio.html')
 
