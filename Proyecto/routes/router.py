@@ -25,3 +25,6 @@ cors = CORS(router, resource={
 def inicio():
     return render_template('inicio.html')
 
+@router.route('/estudiante')
+def estudiante():
+    return render_template('/estudiante/estudiante.html')
