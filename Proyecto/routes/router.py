@@ -10,7 +10,7 @@ router = Blueprint('router', __name__)
 
 
 
-#CORS(api)
+#CORS(api)2
 cors = CORS(router, resource={
     r"/*":{
         "origins":"*"
