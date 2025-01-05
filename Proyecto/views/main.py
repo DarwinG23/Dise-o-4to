@@ -1,6 +1,6 @@
 import sys
 sys.path.append('..')
-from controls.tda.PermisoControl import PermisoControl
+from controls.tda.permisoControl import PermisoControl
 
 pc = PermisoControl()
 

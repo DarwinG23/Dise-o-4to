@@ -4,6 +4,15 @@ class Permiso:
         self.__nombre = ""
         self.__detalle = ""
         self.__estado = ""
+        self.__idRol = 0
+
+    @property
+    def _idRol(self):
+        return self.__idRol
+
+    @_idRol.setter
+    def _idRol(self, value):
+        self.__idRol = value
 
     @property
     def _id(self):
@@ -44,7 +53,8 @@ class Permiso:
             "id": self.__id,
             "nombre": self.__nombre,
             "detalle": self.__detalle,
-            "estado": self.__estado
+            "estado": self.__estado,
+            "idRol": self.__idRol
         }
     
     @classmethod
@@ -54,6 +64,7 @@ class Permiso:
         permiso._nombre = data["nombre"]
         permiso._detalle = data["detalle"]
         permiso._estado = data["estado"]
+        permiso._idRol = data["idRol"]
         return permiso
 
 
