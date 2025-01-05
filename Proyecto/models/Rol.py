@@ -79,7 +79,7 @@ class Rol:
     
     #Al deserializar si es necesario hacer una consulta a la bdd para obtener los permisos del rol
     @classmethod
-    def deserializar(cls, data):
+    def deserializar(self, data):
         rol = Rol()
         rol._id = data["id"]
         rol._nombre = data["nombre"] #IMPORTANTE: Al escribir entre los corchetes [] se escribe todo en minusculas

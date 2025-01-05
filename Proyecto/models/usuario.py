@@ -79,7 +79,7 @@ class Usuario:
         }
         
     @classmethod
-    def deserializar(cls, data):
+    def deserializar(self, data):
         usuario = Usuario()
         usuario._id = data["id"]
         usuario._nombre = data["nombre"]

@@ -58,7 +58,7 @@ class Permiso:
         }
     
     @classmethod
-    def deserializar(cls, data):
+    def deserializar(self, data):
         permiso = Permiso()
         permiso._id = data["id"]
         permiso._nombre = data["nombre"]

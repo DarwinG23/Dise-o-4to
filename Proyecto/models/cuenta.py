@@ -70,7 +70,7 @@ class Cuenta:
         }
         
     @classmethod
-    def deserializar(cls, dic):
+    def deserializar(self, dic):
         cuenta = Cuenta()
         cuenta._id = dic["id"]
         cuenta._correo = dic["correo"]
