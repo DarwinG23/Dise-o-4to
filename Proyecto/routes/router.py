@@ -28,3 +28,8 @@ def inicio():
 @router.route('/estudiante')
 def estudiante():
     return render_template('/estudiante/estudiante.html')
+
+
+@router.route('/administrador')
+def administrador():
+    return render_template('/administrador/administrador.html')
