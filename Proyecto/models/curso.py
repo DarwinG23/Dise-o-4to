@@ -1,6 +1,7 @@
 from controls.tda.linked.linkedList import Linked_List
 from controls.tda.asignacionControl import AsignacionControl
-#COMPLETAR
+from controls.tda.estudianteControl import EstudianteControl
+
 class Curso:
     def __init__(self):
         self.__id = 0
@@ -85,14 +86,20 @@ class Curso:
         curso._paralelo = data["paralelo"]
         curso._numParticipantes = data["numParticipantes"]
         curso._idDocente = data["idDocente"]
-        #COMPLETAR
-        ac = AsignacionControl()
         
+        ac = AsignacionControl()
         if ac._list().isEmpty:
             asignaciones = Linked_List()
         else:
             asignaciones = ac._list() 
             asignaciones = asignaciones.lineal_binary_search_models(str(curso._id),"_idCurso") 
         curso._asignaciones = asignaciones
+        
+        ec = EstudianteControl()
+        if ec._list().isEmpty:
+            estudiantes = Linked_List()
+        else:
+            estudiantes = ec._list()
+            estudiantes = estudiantes.lineal_binary_search_models(str(curso._id),"_idCurso")
         
         return curso

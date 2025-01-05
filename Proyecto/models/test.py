@@ -1,5 +1,5 @@
 from controls.tda.linked.linkedList import Linked_List
-#COMPLETAR
+from controls.tda.preguntaControl import PreguntaControl
 
 class Test:
     def __init__(self):
@@ -8,6 +8,7 @@ class Test:
         self.__descripcion = ""
         self.__resultado = 0
         self.__idAsignacion = 0
+        self.__idAdministrador = 0
         self.__preguntas = Linked_List()
 
     @property
@@ -51,14 +52,24 @@ class Test:
         self.__idAsignacion = value
 
     @property
+    def _idAdministrador(self):
+        return self.__idAdministrador
+
+    @_idAdministrador.setter
+    def _idAdministrador(self, value):
+        self.__idAdministrador = value
+
+    @property
     def _preguntas(self):
         return self.__preguntas
 
     @_preguntas.setter
     def _preguntas(self, value):
         self.__preguntas = value
-        
-        
+
+
+    
+    
     @property
     def serializable(self):
         return {
@@ -66,6 +77,7 @@ class Test:
             "nombre": self.__nombre,
             "descripcion": self.__descripcion,
             "resultado": self.__resultado,
+            "idAdministrador": self.__idAdministrador,
             "idAsignacion": self.__idAsignacion
         }
         
@@ -77,7 +89,14 @@ class Test:
         test._descripcion = data['descripcion']
         test._resultado = data['resultado']
         test._idAsignacion = data['idasignacion']
-        #COMPLETAR
+        test._idAdministrador = data['idadministrador']
+        pc = PreguntaControl()
+        if pc._list().isEmpty:
+            preguntas = pc._list()
+        else:
+            preguntas = pc._list()
+            preguntas = preguntas.lineal_binary_search_models(str(test._id),"_idTest")
+        test._preguntas = preguntas
         return test
 
         

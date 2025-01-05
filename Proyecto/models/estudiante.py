@@ -1,6 +1,6 @@
 from controls.tda.linked.linkedList import Linked_List  
-#COMPLETAR
-
+from controls.tda.recomendacionControl import RecomendacionControl
+from controls.tda.asignacionControl import AsignacionControl
 
 class Estudiante:
     def __init__(self):
@@ -87,8 +87,21 @@ class Estudiante:
         estudiante._contactoEmergencia = data["contactoemergencia"]
         estudiante._idCurso = data["idcurso"]
         estudiante._idUsuario = data["idusuario"]
-        #COMPLETAR
+        rc= RecomendacionControl()
+        ac = AsignacionControl()
         
+        if rc._list().isEmpty:
+            recomendaciones = Linked_List()
+        else:
+            recomendaciones = rc._list()
+            recomendaciones = recomendaciones.lineal_binary_search_models(str(estudiante._id),"_idEstudiante")
+        estudiante._recomendaciones = recomendaciones
+        if ac._list().isEmpty:
+            asignaciones = Linked_List()
+        else:
+            asignaciones = ac._list()
+            asignaciones = asignaciones.lineal_binary_search_models(str(estudiante._id),"_idEstudiante")
+        estudiante._asignaciones = asignaciones
         
         return estudiante
     

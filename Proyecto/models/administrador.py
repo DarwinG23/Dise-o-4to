@@ -1,5 +1,6 @@
 from controls.tda.linked.linkedList import Linked_List
-#COMPLETAR
+from controls.tda.testControl import TestControl
+
 class Administrador:
     def __init__(self):
         self.__id = 0
@@ -51,6 +52,13 @@ class Administrador:
         administrador = Administrador()
         administrador._id = data["id"]
         administrador._idUsuario = data["idusuario"]
-        #COMPLETAR
+        tc = TestControl()
+        
+        if tc._list().isEmpty:
+            tests = Linked_List()
+        else:
+            tests = tc._list() 
+            tests = tests.lineal_binary_search_models(str(administrador._id),"_idAdministrador") 
+        administrador._tests = tests
         return administrador
 

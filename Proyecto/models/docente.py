@@ -1,5 +1,8 @@
 from controls.tda.linked.linkedList import Linked_List
-#COMPLETAR
+from controls.tda.recomendacionControl import RecomendacionControl
+from controls.tda.cursoControl import CursoControl
+from controls.tda.asignacionControl import AsignacionControl
+
 class Docente:
     def __init__(self):
         self.__id = 0 
@@ -79,6 +82,18 @@ class Docente:
         docente._id = data["id"]
         docente._titulo = data["titulo"]
         docente._idUsuario = data["idusuario"]
-        #COMPLETAR
+        rc = RecomendacionControl()
+        cc = CursoControl()
+        if cc._list().isEmpty:
+            cursos = Linked_List()
+        else:
+            cursos = cc._list()
+            cursos = cursos.lineal_binary_search_models(str(docente._id),"_idDocente")
+        docente._cursos = cursos
+        if rc._list().isEmpty:
+            recomendaciones = Linked_List()
+        else:
+            recomendaciones = rc._list()
+            recomendaciones = recomendaciones.lineal_binary_search_models(str(docente._id),"_idDocente")
         return docente
         

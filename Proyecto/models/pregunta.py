@@ -1,5 +1,6 @@
 from controls.tda.linked.linkedList import Linked_List
-#COMPLETAR
+from controls.tda.opcionControl import OpcionControl
+
 class Pregunta:
     def __init__(self):
         self.__id = 0
@@ -75,5 +76,11 @@ class Pregunta:
         pregunta._estado = data['estado']
         pregunta._respuesta = data['respuesta']
         pregunta._idTest = data['idtest']
-        #COMPLETAR
+        oc = OpcionControl()
+        if oc._list().isEmpy:
+            opciones = Linked_List()
+        else:
+            opciones = oc._list()
+            opciones = opciones.lineal_binary_search_models(str(pregunta._id),"_idPregunta")
+        pregunta._opciones = opciones
         return pregunta
