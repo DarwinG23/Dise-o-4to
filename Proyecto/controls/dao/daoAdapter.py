@@ -14,7 +14,7 @@ class DaoAdapter(Generic[T]):
     def __init__(self, atype: T):
         self.atype = atype
         conexion = Connection()
-        self.conn = conexion.connect("USUARIO_DBA", "2001", "XE")
+        self.conn = conexion.connect("PIS_TRABAJO", "1104", "XE")
       
       
     def _list(self) -> T:
