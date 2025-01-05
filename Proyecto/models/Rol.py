@@ -1,6 +1,7 @@
 from controls.tda.linked.linkedList import Linked_List
 #En este caso importamos permisos porque es un atributo de la clase Rol
 from controls.tda.permisoControl import PermisoControl
+  
 
 class Rol:
     #Constructor de la clase
@@ -88,7 +89,7 @@ class Rol:
         #Consulta a la bdd para obtener los permisos del rol
         pc = PermisoControl()
         if pc._list().isEmpty:
-            pc = Linked_List()
+            permisos = Linked_List()
         else:
             permisos = pc._list() #Obtenermos todos los permisos de la bdd
             permisos = permisos.lineal_binary_search_models(str(rol._id),"_idRol") #IMPORTANTE: Buscamos los permisos del rol

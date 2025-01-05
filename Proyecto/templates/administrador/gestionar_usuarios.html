@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestionar Usuarios</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #eef2f7;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #0078D4;
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+        }
+        main {
+            padding: 2rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        section {
+            margin-bottom: 2rem;
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+        }
+        h2 {
+            color: #0078D4;
+            font-size: 1.6rem;
+            margin-bottom: 1rem;
+        }
+        form label {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            display: block;
+            color: #444;
+        }
+        form input, form select, form button {
+            display: block;
+            width: 100%;
+            padding: 0.8rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        form input:focus, form select:focus {
+            border-color: #0078D4;
+            outline: none;
+        }
+        form button {
+            background-color: #0078D4;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        form button:hover {
+            background-color: #005bb5;
+        }
+        .buscar-btn {
+            background-color: #f4f4f4;
+            color: #0078D4;
+            border: 1px solid #0078D4;
+            width: auto;
+            cursor: pointer;
+            padding: 0.8rem 1.5rem;
+            transition: background-color 0.3s ease;
+        }
+        .buscar-btn:hover {
+            background-color: #0078D4;
+            color: white;
+        }
+        .input-group {
+            display: flex;
+            align-items: center;
+        }
+        .input-group input {
+            flex: 1;
+            margin-right: 1rem;
+        }
+        .volver {
+            text-align: center;
+            margin-top: 2rem;
+        }
+        .volver button {
+            width: auto;
+            padding: 0.8rem 2rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Gestionar Usuarios</h1>
+    </header>
+    <main>
+        <!-- Crear Usuario -->
+        <section>
+            <h2>Crear Usuario</h2>
+            <form id="crearUsuarioForm">
+                <label for="nombre">Nombre</label>
+                <input type="text" id="nombre" name="nombre" placeholder="Ingrese el nombre" required>
+
+                <label for="apellido">Apellido</label>
+                <input type="text" id="apellido" name="apellido" placeholder="Ingrese el apellido" required>
+
+                <label for="ci">C.I.</label>
+                <input type="text" id="ci" name="ci" placeholder="Ingrese el número de C.I." required>
+
+                <label for="fecha_nacimiento">Fecha de Nacimiento</label>
+                <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" required>
+
+                <label for="telefono">Teléfono</label>
+                <input type="text" id="telefono" name="telefono" placeholder="Ingrese el número de teléfono" required>
+
+                <label for="direccion">Dirección</label>
+                <input type="text" id="direccion" name="direccion" placeholder="Ingrese la dirección" required>
+
+                <label for="email">Correo Electrónico</label>
+                <input type="email" id="email" name="email" placeholder="Ingrese el correo electrónico" required>
+
+                <label for="rol">Rol</label>
+                <select id="rol" name="rol">
+                    <option value="usuario">Usuario</option>
+                    <option value="administrador">Administrador</option>
+                    <option value="docente">Docente</option>
+                </select>
+
+                <button type="submit">Crear</button>
+            </form>
+        </section>
+
+        <!-- Actualizar Usuario -->
+        <section>
+            <h2>Actualizar Usuario</h2>
+            <form id="actualizarUsuarioForm">
+                <label for="usuario_id">ID del Usuario</label>
+                <div class="input-group">
+                    <input type="text" id="usuario_id" name="usuario_id" placeholder="Ingrese el ID del usuario" required>
+                    <button type="button" class="buscar-btn" onclick="buscarUsuario()">Buscar</button>
+                </div>
+
+                <label for="nuevo_nombre">Nuevo Nombre</label>
+                <input type="text" id="nuevo_nombre" name="nuevo_nombre" placeholder="Ingrese el nuevo nombre">
+
+                <label for="nuevo_apellido">Nuevo Apellido</label>
+                <input type="text" id="nuevo_apellido" name="nuevo_apellido" placeholder="Ingrese el nuevo apellido">
+
+                <label for="nuevo_ci">Nuevo C.I.</label>
+                <input type="text" id="nuevo_ci" name="nuevo_ci" placeholder="Ingrese el nuevo C.I.">
+
+                <label for="nueva_fecha_nacimiento">Nueva Fecha de Nacimiento</label>
+                <input type="date" id="nueva_fecha_nacimiento" name="nueva_fecha_nacimiento">
+
+                <label for="nuevo_telefono">Nuevo Teléfono</label>
+                <input type="text" id="nuevo_telefono" name="nuevo_telefono" placeholder="Ingrese el nuevo teléfono">
+
+                <label for="nueva_direccion">Nueva Dirección</label>
+                <input type="text" id="nueva_direccion" name="nueva_direccion" placeholder="Ingrese la nueva dirección">
+
+                <label for="nuevo_email">Nuevo Correo Electrónico</label>
+                <input type="email" id="nuevo_email" name="nuevo_email" placeholder="Ingrese el nuevo correo electrónico">
+
+                <label for="nuevo_rol">Nuevo Rol</label>
+                <select id="nuevo_rol" name="nuevo_rol">
+                    <option value="usuario">Usuario</option>
+                    <option value="administrador">Administrador</option>
+                    <option value="docente">Docente</option>
+                </select>
+
+                <button type="submit">Actualizar</button>
+            </form>
+        </section>
+
+        <!-- Eliminar Usuario -->
+        <section>
+            <h2>Eliminar Usuario</h2>
+            <form id="eliminarUsuarioForm">
+                <div class="input-group">
+                    <input type="text" id="usuario_id_eliminar" name="usuario_id" placeholder="Ingrese el ID del usuario" required>
+                    <button type="button" class="buscar-btn" onclick="buscarUsuarioEliminar()">Buscar</button>
+                </div>
+                <button type="submit">Eliminar</button>
+            </form>
+        </section>
+
+        <!-- Volver -->
+        <div class="volver">
+            <a href="/administrador">
+                <button type="button">Volver al Administrador</button>
+            </a>
+        </div>
+    </main>
+
+    <script>
+        function buscarUsuario() {
+            const usuarioId = document.getElementById('usuario_id').value;
+            if (usuarioId) {
+                alert(`Buscando usuario con ID: ${usuarioId}`);
+                // Aquí iría la lógica para buscar el usuario
+            } else {
+                alert('Por favor ingrese un ID de usuario.');
+            }
+        }
+
+        function buscarUsuarioEliminar() {
+            const usuarioId = document.getElementById('usuario_id_eliminar').value;
+            if (usuarioId) {
+                alert(`Buscando usuario para eliminar con ID: ${usuarioId}`);
+                // Aquí iría la lógica para buscar el usuario para eliminar
+            } else {
+                alert('Por favor ingrese un ID de usuario.');
+            }
+        }
+    </script>
+</body>
+</html>
