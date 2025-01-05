@@ -1,6 +1,7 @@
 from controls.tda.linked.linkedList import Linked_List
 #En este caso importamos permisos porque es un atributo de la clase Rol
 from controls.tda.permisoControl import PermisoControl
+  
 
 class Rol:
     #Constructor de la clase

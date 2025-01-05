@@ -31,13 +31,34 @@ def inicio():
 def estudiante():
     return render_template('/estudiante/estudiante.html')
 
-#------------ Vista administrador-----------------#
-@router.route('/administrador')
-def administrador():
-    return render_template('/administrador/administrador.html')
 
 
 #------------ Vista Docente-----------------#
 @router.route('/docente')
 def docente():
     return render_template('/docente/docente.html')
+
+
+@router.route('/administrador')
+def administrador():
+    return render_template('administrador/administrador.html')  # Asegúrate de que esta ruta sea correcta
+
+# Página para gestionar usuarios
+@router.route('/administrador/gestionar_usuarios')
+def gestionar_usuarios():
+    return render_template('administrador/gestionar_usuarios.html')
+
+# Página para gestionar técnicas de reducción de estrés
+@router.route('/administrador/gestionar_tecnicas')
+def gestionar_tecnicas():
+    return render_template('administrador/gestionar_tecnicas.html')
+
+# Página para configurar alertas
+@router.route('/administrador/configurar_alertas')
+def configurar_alertas():
+    return render_template('administrador/configurar_alertas.html')
+
+# Página para visualizar datos generales
+@router.route('/administrador/visualizar_datos')
+def visualizar_datos():
+    return render_template('administrador/visualizar_datos.html')
