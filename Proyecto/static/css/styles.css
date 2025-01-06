@@ -1988,9 +1988,11 @@ a:hover.back-to-top {
 
 	/* Extra Pages */
 	.ex-header {
-		background: url('../images/ex-header-background.jpg') center center no-repeat;
+		background: url('/static/img/ex-header-background.jpg') center center no-repeat;
 		background-size: cover;
 	}
+
+
 
 	.ex-header h1 {
 		width: 80%;
