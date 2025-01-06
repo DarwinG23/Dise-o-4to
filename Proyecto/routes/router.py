@@ -5,6 +5,8 @@ import random
 from controls.util.read import Read
 from io import BytesIO
 from controls.util.cedula import Cedula
+from controls.tda.cuentaControl import CuentaControl
+from controls.tda.usuarioControl import UsuarioControl
 router = Blueprint('router', __name__)
 
 
@@ -24,6 +26,34 @@ cors = CORS(router, resource={
 @router.route('/', ) #SON GETS
 def inicio():
     return render_template('inicio.html')
+
+@router.route('/login',  methods=["POST"])
+def login():
+    data = request.form
+    cc = CuentaControl()
+    cuenta = cc._list().binary_search_models(data["correo"], "_correo")
+    if cuenta == -1:
+        flash('Usuario no encontrado', 'error')
+        return redirect(url_for('router.inicio'))
+    elif cuenta._contrasena == data["contrasenia"]:
+        #uc = UsuarioControl()
+        #listaUsuarios = uc._list()
+        #usuario = listaUsuarios.binary_search_models(cuenta._idUsuario, "_id")
+        roles = cuenta._roles
+        roles.print
+        admin = roles.binary_search_models("Administrador", "_nombre")
+        docente = roles.binary_search_models("Docente", "_nombre")
+        estudiante = roles.binary_search_models("Estudiante", "_nombre")
+        
+        if admin != -1:
+            return render_template('administrador/administrador.html')
+        elif docente != -1:
+            return render_template('docente/docente.html')
+        elif estudiante != -1:
+            return render_template('estudiante/inicioEstudiante.html')
+    else:
+        flash('Contraseña incorrecta', 'error')
+        return redirect(url_for('router.inicio'))
 #---------------------------------------------Presentación-----------------------------------------------#
 @router.route('/presentacion') 
 def presentacion():

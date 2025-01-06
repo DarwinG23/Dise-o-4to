@@ -64,7 +64,7 @@ class Permiso:
         permiso._nombre = data["nombre"]
         permiso._detalle = data["detalle"]
         permiso._estado = data["estado"]
-        permiso._idRol = data["idRol"]
+        permiso._idRol = data["idrol"]
         return permiso
 
 

@@ -86,6 +86,7 @@ class Rol:
         rol._nombre = data["nombre"] #IMPORTANTE: Al escribir entre los corchetes [] se escribe todo en minusculas
         rol._detalle = data["detalle"]
         rol._estado = data["estado"]
+        rol._idCuenta = data["idcuenta"]
         #Consulta a la bdd para obtener los permisos del rol
         pc = PermisoControl()
         if pc._list().isEmpty:
@@ -96,5 +97,8 @@ class Rol:
             #IMPORTANTE: al buscar debemos colocar un guion bajo "_" seguido del nombre del atributo como se ve "_idRol"
         rol._permisos = permisos
         return rol
+    
+    def __str__(self):
+        return f"Id: {self.__id}, Nombre: {self.__nombre}, Detalle: {self.__detalle}, Estado: {self.__estado}, IdCuenta: {self.__idCuenta}"
 
     

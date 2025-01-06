@@ -11,26 +11,26 @@ cc = CuentaControl()
 uc = UsuarioControl()
 
 #PIMERO CREAMOS EL USUARIO
-# uc._usuario._nombre = "Darwin"
-# uc._usuario._apellido = "Granda"
-# uc._usuario._ci = "1106006123"
-# uc._usuario._fechaNacimiento = "15/11/1998" #IMPORTANTE EL FORMATO ES DD/MM/YYYY
-# uc._usuario._direccion = "Ciudad Alegria"
-# uc._usuario._telefono = "0979411882"
+# uc._usuario._nombre = "Alexander"
+# uc._usuario._apellido = "Sanchez"
+# uc._usuario._ci = "1104753890"
+# uc._usuario._fechaNacimiento = "02/05/2004" #IMPORTANTE EL FORMATO ES DD/MM/YYYY
+# uc._usuario._direccion = "Buenos Aires y 9 de Octubre" 
+# uc._usuario._telefono = "980679607"
 # uc.save
 
 #SEGUNDO CREAMOS LA CUENTA
-# cc._cuenta._correo = "darwin.granda@unl.edu.ec"
+# cc._cuenta._correo = "alexander.sanchez@unl.edu.ec"
 # cc._cuenta._contrasena = "1234"
 # cc._cuenta._estado = 1
-# cc._cuenta._idUsuario = 1
+# cc._cuenta._idUsuario = 3
 # cc.save
 
 #TERCERO CREAMOS EL ROL
-# rc._rol._nombre = "Administrador"
-# rc._rol._detalle = "Administrador del sistema"
+# rc._rol._nombre = "Docente"
+# rc._rol._detalle = "Rol para los docentes"
 # rc._rol._estado = 1
-# rc._rol._idCuenta = 1
+# rc._rol._idCuenta = 3
 # rc.save
 
 
