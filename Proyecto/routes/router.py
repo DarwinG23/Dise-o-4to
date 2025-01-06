@@ -64,3 +64,8 @@ def configurar_alertas():
 @router.route('/administrador/visualizar_datos')
 def visualizar_datos():
     return render_template('administrador/visualizar_datos.html')
+
+
+@router.route('/estudiante/inicioEstudiante')
+def inicioEstudiante():
+    return render_template('/estudiante/inicioEstudiante.html')
