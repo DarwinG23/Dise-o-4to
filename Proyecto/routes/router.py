@@ -24,9 +24,11 @@ cors = CORS(router, resource={
 @router.route('/', ) #SON GETS
 def inicio():
     return render_template('inicio.html')
-
-
-#------------ Vista Estudiante-----------------#
+#---------------------------------------------Presentación-----------------------------------------------#
+@router.route('/presentacion') 
+def presentacion():
+    return render_template('/presentacion/presentacion.html')
+#------------ Vista Estudiante--------------------#
 @router.route('/estudiante')
 def estudiante():
     return render_template('/estudiante/estudiante.html')
@@ -37,7 +39,7 @@ def administrador():
     return render_template('/administrador/administrador.html')
 
 
-#------------ Vista Docente-----------------#
+#------------ Vista Docente------------------------#
 @router.route('/docente')
 def docente():
     return render_template('/docente/docente.html')
