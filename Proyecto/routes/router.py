@@ -26,7 +26,13 @@ def inicio():
     return render_template('inicio.html')
 
 
-#------------ Vista Estudiante-----------------#
-@router.route('/estudiante')
+#------------ Vista Estudiante----------
+# -------#
+@router.route('/estudiante/incio')
 def estudiante():
-    return render_template('/estudiante/estudiante.html')
+    return render_template('/estudiante/estudianteInicio.html')
+
+
+@router.route('/logout')
+def logout(): 
+    return redirect(url_for('/'))  

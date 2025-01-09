@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estudiante</title>
+    <link rel="stylesheet" href="estudiante.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <style>
+        /* General */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+
+        /* Header */
+        header {
+            background: #003366;
+            color: #fff;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        header .perfil {
+            display: flex;
+            align-items: center;
+        }
+
+        header .perfil img {
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            margin-right: 0.5rem;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            gap: 1rem;
+        }
+
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1rem;
+        }
+
+        /* Notification Dropdown */
+        .dropdown-menu {
+            min-width: 300px;
+        }
+
+        .dropdown-menu .dropdown-item {
+            white-space: normal;
+            text-wrap: wrap;
+        }
+
+        /* Sidebar */
+        .container {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .sidebar {
+            width: 20%;
+            background-color: #9dc9f5;
+            color: #fff;
+            padding: 1rem;
+            min-height: 100vh;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar h2 {
+            margin: 0 0 1rem;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar ul li {
+            margin-bottom: 1rem;
+        }
+
+        .sidebar ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .sidebar ul li a:hover {
+            text-decoration: underline;
+        }
+
+        .main-content {
+            width: 80%;
+            padding: 2rem;
+            background-color: #f9f9f9;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1rem;
+            background: #333;
+            color: #fff;
+        }
+
+        .dropdown-menu {
+            min-width: 200px;
+            padding: 0.5rem;
+        }
+
+        .dropdown-menu .dropdown-item.text-danger {
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Universidad Nacional de Loja</h1>
+        <img src="/static/img/unlLogo.png" alt="Logo de la Universidad Nacional de Loja" width="70" height="70">
+        <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
+            <div class="container-fluid">
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link text-white dropdown-toggle" href="#" role="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-envelope"></i> Mensajes
+                            </a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link text-white dropdown-toggle" href="#" role="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-bell"></i> Notificaciones
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="perfil">
+                <img src="/static/img/perfil.png" alt="Foto de perfil">
+                <div class="dropdown">
+                    <a href="#" tabindex="0" class="d-inline-block dropdown-toggle icon-no-margin" id="user-menu-toggle"
+                        aria-label="Menú de usuario" data-bs-toggle="dropdown" role="button" aria-haspopup="true"
+                        aria-expanded="false">
+                        <span class="userbutton">
+                            <span class="usertext mr-1 text-light">DARWIN ANDRES SARANGO SOTO</span>
+                        </span>
+                        <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="user-menu-toggle">
+                        <li><a class="dropdown-item" href="#">Editar perfil</a></li>
+                        <li><a class="dropdown-item" href="#">Configuración</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item text-danger" href="/logout">Cerrar sesión</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <aside class="sidebar">
+            <h2>Área Personal</h2>
+            <ul>
+                <li><a href="#"><i class="fas fa-home"></i> Página principal del sitio</a></li>
+            </ul>
+            <h3>Mis Cursos</h3>
+            <ul>
+                <li><a href="#">Diseño de Software</a></li>
+            </ul>
+        </aside>
+        <main class="main-content">
+
+        </main>
+    </div>
+    <footer>
+        <p>&copy; 2025 Universidad Nacional de Loja</p>
+    </footer>
+</body>
+
+</html>
