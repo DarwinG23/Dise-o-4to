@@ -63,6 +63,18 @@ def presentacion():
 def estudiante():
     return render_template('/estudiante/estudiante.html')
 
+@router.route('/estudiante/inicioTest')
+def testInicio():
+    return render_template('/estudiante/testsE/inicioTest.html')
+
+@router.route('/estudiante/tests/ver')
+def verTests():
+    return render_template('/estudiante/testsE/test.html')
+
+@router.route('/estudiante/curso/tareas')
+def tareas():
+    return render_template('/estudiante/curso/tareas.html')
+
 @router.route('/logout')
 def logout():
     return render_template(url_for('/'))

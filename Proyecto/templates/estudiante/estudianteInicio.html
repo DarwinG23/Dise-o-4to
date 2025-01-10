@@ -189,6 +189,7 @@
             sidebar.classList.toggle('collapsed');
             mainContent.classList.toggle('collapsed');
         }
+        
     </script>
 </head>
 
@@ -247,7 +248,7 @@
             <div class="section">
                 <h2>Área Personal</h2>
                 <ul>
-                    <li><a href="#"><i class="fas fa-home"></i> Página principal del sitio</a></li>
+                    <li><a href="/estudiante/inicio"><i class="fas fa-home"></i> Página principal del sitio</a></li>
                 </ul>
             </div>
 
@@ -258,22 +259,25 @@
                 </ul>
                 <h3>Mis Tests</h3>
                 <ul>
-                    <li><a href="#"><i class="fas fa-clipboard-list"></i> Test 1</a></li>
+                    <li><a href="/estudiante/inicioTest"><i class="fas fa-clipboard-list"></i> Test 1</a></li>
                     <li><a href="#"><i class="fas fa-clipboard-list"></i> Test 2</a></li>
                     <li><a href="#"><i class="fas fa-clipboard-list"></i> Test 3</a></li>
                 </ul>
-                
+                <h3>Mis tareas</h3>
+                <ul>
+                    <li><a href="/estudiante/curso/tareas"><i class="fas fa-tasks"></i> Ver </a></li>  
+                </ul>
             </div>
         </aside>
-        <main class="main-content">
-            
-
-
-        </main>
     </div>
-    <footer>
+    <section class="main-content">
+        
+        {% block content %}
+        {% endblock %}
+    </section>
+    <!-- <footer>
         <p>&copy; 2025 Universidad Nacional de Loja</p>
-    </footer>
+    </footer> -->
 </body>
 
 </html>
