@@ -43,3 +43,9 @@ def administrador():
 @router.route('/docente')
 def docente():
     return render_template('/docente/docente.html')
+
+
+#------------ Vista Docente------------------------#
+@router.route('/docenteCursos')
+def docenteCursos():
+    return render_template('/docente/docenteCursos.html')
