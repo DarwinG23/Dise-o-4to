@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel del Administrador</title>
+    <title>Gestión de Docente</title>
     <style>
         * {
             margin: 0;
@@ -23,11 +23,11 @@
 
         .container {
             width: 100%;
-            max-width: 800px;
+            max-width: 600px;
             background: #070404;
             border-radius: 15px;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-            padding: 30px 40px;
+            padding: 20px 30px;
             color: #ffffff;
             text-align: center;
         }
@@ -37,13 +37,13 @@
             color: #ffffff;
             padding: 20px;
             border-radius: 15px 15px 0 0;
-            font-size: 2.5em;
+            font-size: 1.8em;
             font-weight: bold;
             margin-bottom: 20px;
         }
 
         .button {
-            font-size: 1.2em;
+            font-size: 1em;
             padding: 15px;
             background: linear-gradient(135deg, #6c5ce7, #0984e3);
             color: #ffffff;
@@ -79,30 +79,25 @@
 </head>
 <body>
     <div class="container">
-        <div class="header">Panel del Administrador</div>
-        <!-- Redirige a las distintas secciones del panel -->
+        <div class="header">Gestión de Docente</div>
+        <!-- Redirige al formulario para asignar tareas -->
         <section>
-            <a href="/administrador/gestionar_usuarios">
-                <button class="button">Gestionar Usuarios</button>
+            <a href="/docente/crearTarea">
+                <button class="button">Crear Tarea</button>
             </a>
         </section>
         <section>
-            <a href="/administrador/gestionar_tecnicas">
-                <button class="button">Gestionar Técnicas</button>
+            <a href="/docente/evaluacionEstres">
+                <button class="button">Evaluación de Estrés</button>
             </a>
         </section>
         <section>
-            <a href="/administrador/configurar_alertas">
-                <button class="button">Configurar Alertas</button>
-            </a>
-        </section>
-        <section>
-            <a href="/administrador/visualizar_datos">
-                <button class="button">Visualizar Datos</button>
+            <a href="/docente/gestionGeneral">
+                <button class="button">Gestión General</button>
             </a>
         </section>
         <div class="footer">
-            <p>© 2025 Panel de Administración | <a href="/soporte">Soporte</a></p>
+            <p>© 2025 Gestión de Docente | <a href="#">Soporte</a></p>
         </div>
     </div>
 </body>

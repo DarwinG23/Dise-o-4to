@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asignar Tareas - Docente</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #74b9ff, #a29bfe);
+            color: #2d3436;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background: #070404;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            padding: 20px 30px;
+        }
+
+        .header {
+            background: #0984e3;
+            color: #ffffff;
+            text-align: center;
+            padding: 20px;
+            border-radius: 15px 15px 0 0;
+            font-size: 1.8em;
+            font-weight: bold;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        label {
+            font-weight: bold;
+            color: #636e72;
+        }
+
+        input, textarea {
+            font-size: 1em;
+            padding: 12px;
+            border: 2px solid #dfe6e9;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #0984e3;
+            background-color: #ffffff;
+        }
+
+        textarea {
+            resize: none;
+        }
+
+        button {
+            font-size: 1em;
+            padding: 15px;
+            background: linear-gradient(135deg, #6c5ce7, #0984e3);
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.2s ease, background-color 0.3s ease;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+            background: linear-gradient(135deg, #4b49e6, #086fd8);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.85em;
+            color: #636e72;
+        }
+
+        .footer a {
+            color: #0984e3;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">Asignar Nueva Tarea</div>
+        <form action="/ruta/para/subir/tarea" method="post">
+            <label for="titulo">Título</label>
+            <input type="text" id="titulo" name="titulo" placeholder="Escribe el título de la tarea" required>
+
+            <label for="descripcion">Descripción</label>
+            <textarea id="descripcion" name="descripcion" rows="4" placeholder="Describe brevemente la tarea" required></textarea>
+
+            <label for="fecha_inicio">Fecha de Inicio</label>
+            <input type="date" id="fecha_inicio" name="fecha_inicio" required>
+
+            <label for="fecha_fin">Fecha de Fin</label>
+            <input type="date" id="fecha_fin" name="fecha_fin" required>
+
+            <label for="hora">Hora</label>
+            <input type="time" id="hora" name="hora" required>
+
+            <!-- Formulario para subir PDF debajo de los campos de fecha y hora -->
+            <label for="archivo_pdf">Seleccionar PDF</label>
+            <input type="file" id="archivo_pdf" name="archivo_pdf" accept="application/pdf" required>
+
+            <button type="submit">Asignar Tarea</button>
+        </form>
+
+        <div class="footer">
+            <p>© 2025 Administración de Tareas | <a href="#">Soporte</a></p>
+        </div>
+    </div>
+</body>
+</html>

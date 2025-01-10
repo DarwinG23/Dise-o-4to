@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel del Administrador</title>
+    <title>Gestión General</title>
     <style>
         * {
             margin: 0;
@@ -26,8 +26,8 @@
             max-width: 800px;
             background: #070404;
             border-radius: 15px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-            padding: 30px 40px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+            padding: 40px 50px;
             color: #ffffff;
             text-align: center;
         }
@@ -37,22 +37,22 @@
             color: #ffffff;
             padding: 20px;
             border-radius: 15px 15px 0 0;
-            font-size: 2.5em;
+            font-size: 2em;
             font-weight: bold;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
         }
 
         .button {
             font-size: 1.2em;
-            padding: 15px;
+            padding: 15px 30px;
             background: linear-gradient(135deg, #6c5ce7, #0984e3);
             color: #ffffff;
             border: none;
             border-radius: 10px;
             cursor: pointer;
-            margin: 10px 0;
+            margin: 15px 0;
             width: 100%;
-            transition: transform 0.2s ease, background-color 0.3s ease;
+            transition: transform 0.3s ease, background-color 0.3s ease;
         }
 
         .button:hover {
@@ -62,7 +62,7 @@
 
         .footer {
             margin-top: 20px;
-            font-size: 0.85em;
+            font-size: 0.9em;
             color: #636e72;
         }
 
@@ -75,34 +75,34 @@
         .footer a:hover {
             text-decoration: underline;
         }
+
+        section {
+            margin: 10px 0;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">Panel del Administrador</div>
-        <!-- Redirige a las distintas secciones del panel -->
+        <div class="header">Gestión General</div>
+
         <section>
-            <a href="/administrador/gestionar_usuarios">
-                <button class="button">Gestionar Usuarios</button>
+            <a href="/docente/eliminarAsignados">
+                <button class="button">Asignados</button>
             </a>
         </section>
         <section>
-            <a href="/administrador/gestionar_tecnicas">
-                <button class="button">Gestionar Técnicas</button>
+            <a href="/proporcionar-recomendaciones.html">
+                <button class="button">Proporcionar Recomendaciones</button>
             </a>
         </section>
         <section>
-            <a href="/administrador/configurar_alertas">
-                <button class="button">Configurar Alertas</button>
+            <a href="/descargar-informes.html">
+                <button class="button">Descargar Informes en PDF</button>
             </a>
         </section>
-        <section>
-            <a href="/administrador/visualizar_datos">
-                <button class="button">Visualizar Datos</button>
-            </a>
-        </section>
+
         <div class="footer">
-            <p>© 2025 Panel de Administración | <a href="/soporte">Soporte</a></p>
+            <p>© 2025 Gestión General | <a href="#">Soporte</a></p>
         </div>
     </div>
 </body>
