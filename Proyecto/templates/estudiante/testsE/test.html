@@ -1,0 +1,71 @@
+{% extends 'estudiante/estudianteInicio.html' %}
+
+{% block content %}
+<style>
+    .card-title {
+        font-weight: bold;
+        border-bottom: 2px solid #003366;
+        padding-bottom: 5px;
+    }
+
+    .form-check-label {
+        font-size: 1rem;
+        color: #333;
+    }
+
+    .form-check-input:checked + .form-check-label {
+        font-weight: bold;
+        color: #003366;
+    }
+
+    .btn-primary {
+        background-color: #0056b3;
+        border: none;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .btn-primary:hover {
+        background-color: #004099;
+        transform: scale(1.05);
+    }
+</style>
+
+<h1 class="text-primary">Test DASS-21</h1>
+<p class="text-muted">El test DASS-21 evalúa los niveles de depresión, ansiedad y estrés. Por favor, selecciona la respuesta que mejor describa cómo te has sentido durante la última semana.</p>
+
+<div class="container mt-4">
+    <form id="dass21-form" method="POST" action="/submit-test">
+        <!-- Preguntas -->
+        <div class="card p-3 mb-3 shadow-sm">
+            <h5 class="card-title text-primary">Pregunta 1</h5>
+            <div class="question">
+                <label class="form-label">Me he sentido tenso o alterado.</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="question1" id="q1-0" value="0" required>
+                    <label class="form-check-label" for="q1-0">0: No me ha ocurrido</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="question1" id="q1-1" value="1">
+                    <label class="form-check-label" for="q1-1">1: Ocurrió algunas veces</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="question1" id="q1-2" value="2">
+                    <label class="form-check-label" for="q1-2">2: Ocurrió bastante seguido</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="question1" id="q1-3" value="3">
+                    <label class="form-check-label" for="q1-3">3: Ocurrió casi siempre</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Agrega más preguntas aquí -->
+        <div class="text-center mt-4">
+            <button type="submit" class="btn btn-primary btn-lg shadow-sm">
+                <i class="fas fa-paper-plane"></i> Enviar Test
+            </button>
+        </div>
+        
+    </form>
+</div>
+{% endblock %}
