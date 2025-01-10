@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eliminar y Modificar Tareas y Evaluaciones - Docente</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #74b9ff, #a29bfe);
+            color: #2d3436;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: #070404;
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+            padding: 40px 50px;
+            color: #ffffff;
+        }
+
+        .header {
+            background: #0984e3;
+            color: #ffffff;
+            padding: 20px;
+            border-radius: 15px 15px 0 0;
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+
+        .button {
+            font-size: 1.1em;
+            padding: 16px;
+            background: linear-gradient(135deg, #6c5ce7, #0984e3);
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            margin: 15px 0;
+            width: 100%;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+
+        .button:hover {
+            transform: scale(1.05);
+            background: linear-gradient(135deg, #4b49e6, #086fd8);
+        }
+
+        .footer {
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: #636e72;
+        }
+
+        .footer a {
+            color: #0984e3;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        .task-list, .test-list {
+            margin-top: 30px;
+        }
+
+        .list-item {
+            background-color: #2d3436;
+            margin-bottom: 10px;
+            padding: 20px;
+            border-radius: 10px;
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .list-item button {
+            padding: 8px 12px;
+            margin-left: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .remove-btn {
+            background-color: #d63031;
+            color: #ffffff;
+            border: none;
+        }
+
+        .remove-btn:hover {
+            background-color: #e74c3c;
+        }
+
+        .modify-btn {
+            background-color: #0984e3;
+            color: #ffffff;
+            border: none;
+        }
+
+        .modify-btn:hover {
+            background-color: #74b9ff;
+        }
+
+        .list-title {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .list-description {
+            font-size: 1em;
+            margin-top: 10px;
+            color: #b2bec3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">Eliminar y Modificar Tareas y Evaluaciones</div>
+        
+        <form action="/docente/eliminar-tarea" method="post">
+            <h3>Tareas Asignadas</h3>
+            <div class="task-list">
+                <div class="list-item">
+                    <div>
+                        <div class="list-title">Tarea 1: Estudio de Matemáticas</div>
+                        <div class="list-description">Fecha de entrega: 2025-01-20</div>
+                    </div>
+                    <div>
+                        <button type="button" class="remove-btn" onclick="eliminarTarea()">Eliminar</button>
+                        <button type="button" class="modify-btn" onclick="modificarTarea()">Modificar</button>
+                    </div>
+                </div>
+
+                <div class="list-item">
+                    <div>
+                        <div class="list-title">Tarea 2: Examen de Historia</div>
+                        <div class="list-description">Fecha de entrega: 2025-01-25</div>
+                    </div>
+                    <div>
+                        <button type="button" class="remove-btn" onclick="eliminarTarea()">Eliminar</button>
+                        <button type="button" class="modify-btn" onclick="modificarTarea()">Modificar</button>
+                    </div>
+                </div>
+
+                <div class="list-item">
+                    <div>
+                        <div class="list-title">Tarea 3: Proyecto de Ciencia</div>
+                        <div class="list-description">Fecha de entrega: 2025-02-10</div>
+                    </div>
+                    <div>
+                        <button type="button" class="remove-btn" onclick="eliminarTarea()">Eliminar</button>
+                        <button type="button" class="modify-btn" onclick="modificarTarea()">Modificar</button>
+                    </div>
+                </div>
+            </div>
+
+            <h3>Evaluaciones (Tests) Creados</h3>
+            <div class="test-list">
+                <div class="list-item">
+                    <div>
+                        <div class="list-title">Test 1: Evaluación de Estrés</div>
+                        <div class="list-description">Fecha de creación: 2025-01-05</div>
+                    </div>
+                    <div>
+                        <button type="button" class="remove-btn" onclick="eliminarTest()">Eliminar</button>
+                        <button type="button" class="modify-btn" onclick="modificarTest()">Modificar</button>
+                    </div>
+                </div>
+
+                <div class="list-item">
+                    <div>
+                        <div class="list-title">Test 2: Evaluación de Matemáticas</div>
+                        <div class="list-description">Fecha de creación: 2025-01-10</div>
+                    </div>
+                    <div>
+                        <button type="button" class="remove-btn" onclick="eliminarTest()">Eliminar</button>
+                        <button type="button" class="modify-btn" onclick="modificarTest()">Modificar</button>
+                    </div>
+                </div>
+
+                <div class="list-item">
+                    <div>
+                        <div class="list-title">Test 3: Evaluación de Historia</div>
+                        <div class="list-description">Fecha de creación: 2025-01-12</div>
+                    </div>
+                    <div>
+                        <button type="button" class="remove-btn" onclick="eliminarTest()">Eliminar</button>
+                        <button type="button" class="modify-btn" onclick="modificarTest()">Modificar</button>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="button">Confirmar Eliminación</button>
+        </form>
+
+        <div class="footer">
+            <p>© 2025 Gestión de Docente | <a href="#">Soporte</a></p>
+        </div>
+    </div>
+
+    <script>
+        function eliminarTarea() {
+            if (confirm("¿Estás seguro de que deseas eliminar esta tarea?")) {
+                // Aquí se realizaría la eliminación de la tarea con algún código de backend.
+                alert("Tarea eliminada.");
+            }
+        }
+
+        function modificarTarea() {
+            alert("Aquí se abriría el formulario para modificar la tarea.");
+            // Lógica para redirigir o mostrar un formulario de modificación
+        }
+
+        function eliminarTest() {
+            if (confirm("¿Estás seguro de que deseas eliminar este test?")) {
+                // Aquí se realizaría la eliminación del test con algún código de backend.
+                alert("Test eliminado.");
+            }
+        }
+
+        function modificarTest() {
+            alert("Aquí se abriría el formulario para modificar el test.");
+            // Lógica para redirigir o mostrar un formulario de modificación
+        }
+    </script>
+</body>
+</html>
