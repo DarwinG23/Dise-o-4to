@@ -48,7 +48,7 @@ def login():
         if admin != -1:
             return render_template('administrador/administrador.html')
         elif docente != -1:
-            return render_template('docente/docente.html')
+            return render_template('docente/docenteInicio.html')
         elif estudiante != -1:
             return render_template('estudiante/inicioEstudiante.html')
     else:
