@@ -189,7 +189,7 @@
             sidebar.classList.toggle('collapsed');
             mainContent.classList.toggle('collapsed');
         }
-        
+
     </script>
 </head>
 
@@ -197,7 +197,7 @@
     <header>
         <h1 class="text-white">
             <img src="/static/img/unlLogo.png" alt="Logo de la Universidad Nacional de Loja">
-            Universidad Nacional de Loja
+            StressTraker
         </h1>
         <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
             <div class="container-fluid">
@@ -219,13 +219,14 @@
                 </div>
             </div>
             <div class="perfil">
+                <h1 class="fs-6 text" >Conectado: {{ roles }} </h1>
                 <img src="/static/img/perfil.png" alt="Foto de perfil">
                 <div class="dropdown">
                     <a href="#" tabindex="0" class="d-inline-block dropdown-toggle icon-no-margin" id="user-menu-toggle"
                         aria-label="Menú de usuario" data-bs-toggle="dropdown" role="button" aria-haspopup="true"
                         aria-expanded="false">
                         <span class="userbutton">
-                            <span class="usertext mr-1 text-light">DARWIN ANDRES SARANGO SOTO</span>
+                            <span class="usertext mr-1 text-light">{{  nombreU}} {{ apellidoU}}</span>
                         </span>
                         <b class="caret"></b>
                     </a>
@@ -265,13 +266,13 @@
                 </ul>
                 <h3>Mis tareas</h3>
                 <ul>
-                    <li><a href="/estudiante/curso/tareas"><i class="fas fa-tasks"></i> Ver </a></li>  
+                    <li><a href="/estudiante/curso/tareas"><i class="fas fa-tasks"></i> Ver </a></li>
                 </ul>
             </div>
         </aside>
     </div>
     <section class="main-content">
-        
+
         {% block content %}
         {% endblock %}
     </section>
