@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Docente - Gestión de Tareas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+
+        header {
+            background: #003366;
+            color: #fff;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        header h1 img {
+            width: 50px;
+            height: 50px;
+        }
+
+        .perfil {
+            display: flex;
+            align-items: center;
+        }
+
+        .perfil img {
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            margin-right: 0.5rem;
+        }
+
+        .container {
+            margin-top: 5rem;
+            padding: 2rem;
+        }
+
+        .card {
+            margin-bottom: 1.5rem;
+        }
+
+        .status-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            color: #fff;
+        }
+
+        .status-respondido {
+            background-color: #28a745;
+        }
+
+        .status-pendiente {
+            background-color: #6c757d;
+        }
+
+        .status-no-respondido {
+            background-color: #dc3545;
+        }
+
+        .sidebar {
+            width: 20%;
+            background-color: #9dc9f5;
+            color: #fff;
+            padding: 1rem;
+            min-height: 100vh;
+            position: fixed;
+            top: 4rem;
+            left: 0;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .sidebar.hidden {
+            transform: translateX(-100%);
+        }
+
+        .sidebar .section {
+            background: #ffffff;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            color: #003366;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar .section h2 {
+            margin-top: 0;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-bottom: 2px solid #003366;
+            padding-bottom: 0.5rem;
+        }
+
+        .sidebar .section ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar .section ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar .section ul li a {
+            color: #003366;
+            text-decoration: none;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .sidebar .section ul li a:hover {
+            text-decoration: underline;
+        }
+
+        .toggle-sidebar {
+            position: absolute;
+            top: 4rem;
+            left: 20%;
+            background-color: #003366;
+            color: #fff;
+            border: none;
+            border-radius: 0 8px 8px 0;
+            padding: 0.5rem;
+            cursor: pointer;
+            z-index: 1001;
+            transition: left 0.3s ease-in-out;
+        }
+
+        .toggle-sidebar.hidden {
+            left: 0;
+        }
+
+        .main-content {
+            margin-left: 22%;
+            padding: 2rem;
+            transition: margin-left 0.3s ease-in-out;
+        }
+
+        .main-content.fullwidth {
+            margin-left: 2%;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>
+            <img src="/static/img/logoU.jpg" alt="Universidad Nacional de Loja">
+            Gestión Docente
+        </h1>
+        <div class="perfil">
+            <img src="/static/img/darwin.jpg" alt="Foto de perfil">
+            <div class="dropdown">
+                <a href="#" tabindex="0" class="dropdown-toggle text-white" id="user-menu-toggle" aria-label="Menú de usuario" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                    <span class="usertext">Docente: Darwin Granda</span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="user-menu-toggle">
+                    <li><a class="dropdown-item" href="#">Editar perfil</a></li>
+                    <li><a class="dropdown-item" href="#">Configuración</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item text-danger" href="/logout">Cerrar sesión</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <button class="toggle-sidebar" onclick="toggleSidebar()">&gt;</button>
+
+    <div class="sidebar">
+        <div class="section">
+            <h2>Menú</h2>
+            <ul>
+                <li><a href="#"><i class="fas fa-home"></i> Inicio</a></li>
+                <li><a href="#"><i class="fas fa-book"></i> Mis Cursos</a></li>
+                <li><a href="#"><i class="fas fa-clipboard-list"></i> Evaluaciones</a></li>
+                <li><a href="#"><i class="fas fa-envelope"></i> Mensajes</a></li>
+                <li><a href="#"><i class="fas fa-cog"></i> Configuración</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="container">
+            <h2 class="mb-4">Cursos Impartidos</h2>
+            <div class="accordion" id="accordionCursos">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            Diseño de Software
+                        </button>
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionCursos">
+                        <div class="accordion-body">
+                            <h3>Estudiantes</h3>
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Estado Test</th>
+                                        <th>Estado Tarea</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Maria López</td>
+                                        <td><span class="status-badge status-respondido">Respondido</span></td>
+                                        <td><span class="status-badge status-pendiente">Pendiente</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Carlos Martínez</td>
+                                        <td><span class="status-badge status-pendiente">Pendiente</span></td>
+                                        <td><span class="status-badge status-no-respondido">No Subido</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Ana Gómez</td>
+                                        <td><span class="status-badge status-respondido">Respondido</span></td>
+                                        <td><span class="status-badge status-respondido">Subido</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingTwo">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            Programación Avanzada
+                        </button>
+                    </h2>
+                    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionCursos">
+                        <div class="accordion-body">
+                            <h3>Estudiantes</h3>
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Estado Test</th>
+                                        <th>Estado Tarea</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Pedro Sánchez</td>
+                                        <td><span class="status-badge status-pendiente">Pendiente</span></td>
+                                        <td><span class="status-badge status-respondido">Subido</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Luisa Fernández</td>
+                                        <td><span class="status-badge status-respondido">Respondido</span></td>
+                                        <td><span class="status-badge status-no-respondido">No Subido</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Juan Herrera</td>
+                                        <td><span class="status-badge status-pendiente">Pendiente</span></td>
+                                        <td><span class="status-badge status-pendiente">Pendiente</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingThree">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                            Bases de Datos
+                        </button>
+                    </h2>
+                    <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionCursos">
+                        <div class="accordion-body">
+                            <h3>Estudiantes</h3>
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Estado Test</th>
+                                        <th>Estado Tarea</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Sofía Méndez</td>
+                                        <td><span class="status-badge status-respondido">Respondido</span></td>
+                                        <td><span class="status-badge status-respondido">Subido</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Andrés Torres</td>
+                                        <td><span class="status-badge status-pendiente">Pendiente</span></td>
+                                        <td><span class="status-badge status-no-respondido">No Subido</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Lucía Rivera</td>
+                                        <td><span class="status-badge status-respondido">Respondido</span></td>
+                                        <td><span class="status-badge status-pendiente">Pendiente</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingFour">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                            Redes de Computadoras
+                        </button>
+                    </h2>
+                    <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#accordionCursos">
+                        <div class="accordion-body">
+                            <h3>Estudiantes</h3>
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Estado Test</th>
+                                        <th>Estado Tarea</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Gabriel Pérez</td>
+                                        <td><span class="status-badge status-pendiente">Pendiente</span></td>
+                                        <td><span class="status-badge status-respondido">Subido</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Fernanda Castillo</td>
+                                        <td><span class="status-badge status-respondido">Respondido</span></td>
+                                        <td><span class="status-badge status-no-respondido">No Subido</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Oscar Ramírez</td>
+                                        <td><span class="status-badge status-pendiente">Pendiente</span></td>
+                                        <td><span class="status-badge status-pendiente">Pendiente</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            const toggleButton = document.querySelector('.toggle-sidebar');
+            const mainContent = document.querySelector('.main-content');
+
+            sidebar.classList.toggle('hidden');
+            toggleButton.classList.toggle('hidden');
+            mainContent.classList.toggle('fullwidth');
+        }
+    </script>
+</body>
+
+</html>
