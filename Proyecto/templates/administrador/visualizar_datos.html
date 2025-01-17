@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualizar Datos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #74b9ff, #a29bfe);
+            color: #2d3436;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #0984e3;
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2rem;
+        }
+        main {
+            padding: 2rem 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        section {
+            background: #070404;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            width: 100%;
+            max-width: 800px;
+        }
+        h2 {
+            color: #0984e3;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        li {
+            background: #2d3436;
+            margin: 0.5rem 0;
+            padding: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            color: #fff;
+        }
+        li span {
+            font-weight: bold;
+            color: #74b9ff;
+        }
+        .volver {
+            text-align: center;
+            margin-top: 2rem;
+        }
+        .volver a button {
+            width: auto;
+            padding: 0.8rem 1.5rem;
+            background: #0984e3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        .volver a button:hover {
+            background: #74b9ff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Visualizar Datos</h1>
+    </header>
+    <main>
+        <section>
+            <h2>Estudiantes</h2>
+            <ul>
+                <li><span>Nombre:</span> Juan Pérez - <span>Paralelo:</span> A</li>
+                <li><span>Nombre:</span> Ana Martínez - <span>Paralelo:</span> B</li>
+                <li><span>Nombre:</span> Luis Gómez - <span>Paralelo:</span> C</li>
+                <li><span>Nombre:</span> María Fernández - <span>Paralelo:</span> A</li>
+            </ul>
+        </section>
+        <section>
+            <h2>Paralelos</h2>
+            <ul>
+                <li><span>Paralelo:</span> A - <span>Total Estudiantes:</span> 25</li>
+                <li><span>Paralelo:</span> B - <span>Total Estudiantes:</span> 30</li>
+                <li><span>Paralelo:</span> C - <span>Total Estudiantes:</span> 20</li>
+            </ul>
+        </section>
+        <div class="volver">
+            <a href="/administrador">
+                <button>Volver al Administrador</button>
+            </a>
+        </div>
+    </main>
+</body>
+</html>

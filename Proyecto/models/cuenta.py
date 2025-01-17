@@ -1,5 +1,7 @@
 from controls.tda.linked.linkedList import Linked_List
 from controls.tda.rolContol import RolControl
+from controls.tda.notificacionControl import NotificacionControl
+#COMPLETAR
 
 class Cuenta:
     def __init__(self):
@@ -9,7 +11,7 @@ class Cuenta:
         self.__estado = ""
         self.__idUsuario = 0
         self.__roles = Linked_List()
-        
+        self.__notificaciones = Linked_List()
 
     @property
     def _id(self):
@@ -58,6 +60,18 @@ class Cuenta:
     @_roles.setter
     def _roles(self, value):
         self.__roles = value
+
+    @property
+    def _notificaciones(self):
+        return self.__notificaciones
+
+    @_notificaciones.setter
+    def _notificaciones(self, value):
+        self.__notificaciones = value
+
+        
+
+   
         
     @property
     def serializable(self):
@@ -70,7 +84,7 @@ class Cuenta:
         }
         
     @classmethod
-    def deserializar(cls, dic):
+    def deserializar(self, dic):
         cuenta = Cuenta()
         cuenta._id = dic["id"]
         cuenta._correo = dic["correo"]
@@ -78,12 +92,28 @@ class Cuenta:
         cuenta._estado = dic["estado"]
         cuenta._idUsuario = dic["idusuario"]
         rc = RolControl()
+        print("Estamos aqui")
+        print(rc._list())
         if rc._list().isEmpty:
+            print("Estamos aqui")
             roles = Linked_List()
         else:
+            print("Else")
             roles = rc._list()
+            print(roles)
+            print(cuenta._id)
             roles = roles.lineal_binary_search_models(str(cuenta._id),"_idCuenta")
+            print(roles)
         cuenta._roles = roles
+        print(cuenta._roles)
+        print("############")
+        nc = NotificacionControl()
+        if nc._list().isEmpty:
+            notificaciones = Linked_List()
+        else:
+            notificaciones = nc._list()
+            notificaciones = notificaciones.lineal_binary_search_models(str(cuenta._id),"_idCuenta")
+        cuenta._notificaciones = notificaciones
         return cuenta
 
         

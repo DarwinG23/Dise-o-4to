@@ -1,0 +1,85 @@
+{% extends 'estudiante/estudianteInicio.html' %}
+
+{% block content %}
+<style>
+    .intro-container {
+        margin-top: 2rem;
+        padding: 2rem;
+        background-color: #ffffff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .intro-container h2 {
+        color: #003366;
+        font-weight: bold;
+        margin-bottom: 1rem;
+    }
+
+    .intro-container p {
+        font-size: 1rem;
+        line-height: 1.6;
+        color: #555;
+        margin-bottom: 1rem;
+    }
+
+    .intro-container ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .intro-container ul li {
+        margin-bottom: 0.5rem;
+        font-size: 1rem;
+        color: #333;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .intro-container ul li i {
+        color: #0056b3;
+    }
+
+    .btn-start {
+        background-color: #0056b3;
+        border: none;
+        color: #fff;
+        padding: 10px 20px;
+        font-size: 1.2rem;
+        border-radius: 5px;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+        text-transform: uppercase;
+    }
+
+    .btn-start:hover {
+        background-color: #003366;
+        transform: scale(1.05);
+    }
+
+    .btn-start i {
+        margin-left: 0.5rem;
+    }
+</style>
+
+<div class="container">
+    <div class="intro-container">
+        <h2>Instrucciones para el Test</h2>
+        <p>Antes de comenzar el test, por favor lee cuidadosamente las siguientes instrucciones para asegurarte de que entiendes cómo responder cada pregunta:</p>
+        <ul>
+            <li><i class="fas fa-check-circle"></i> Selecciona la opción que mejor refleje cómo te sientes.</li>
+            <li><i class="fas fa-check-circle"></i> No hay respuestas correctas o incorrectas.</li>
+            <li><i class="fas fa-check-circle"></i> Responde basándote en cómo te has sentido durante la última semana.</li>
+            <li><i class="fas fa-check-circle"></i> Tómate tu tiempo, pero intenta ser lo más sincero posible.</li>
+        </ul>
+        <p>Cuando estés listo, haz clic en el botón "Comenzar Test" para iniciar.</p>
+        <div class="text-center mt-4">
+            <a href="/estudiante/tests/ver" class="btn btn-start">
+                Comenzar Test <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
