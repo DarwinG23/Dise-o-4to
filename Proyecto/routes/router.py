@@ -110,25 +110,26 @@ def docente():
     return render_template('/docente/docente.html')
 
 
-@router.route('/docente/docenteInicio', methods=['GET'])
+@router.route('/docenteInicio', methods=['GET'])
 def docenteInicio():
-    return render_template('/docente/docenteInicio.html')
+    return render_template('/docente/docenteCursos.html')
 
-@router.route('/docente/crearTarea', methods=['GET'])
-def crearTarea():
-    return render_template('/docente/crearTarea.html')
 
-@router.route('/docente/eliminarAsignados', methods=['GET'])
-def eliminarAsignados():
-    return render_template('/docente/eliminarAsignados.html')
+# @router.route('/docente/crearTarea', methods=['GET'])
+# def crearTarea():
+#     return render_template('/docente/crearTarea.html')
 
-@router.route('/docente/evaluacionEstres', methods=['GET'])
-def evaluacionEstres():
-    return render_template('/docente/evaluacionEstres.html')
+# @router.route('/docente/eliminarAsignados', methods=['GET'])
+# def eliminarAsignados():
+#     return render_template('/docente/eliminarAsignados.html')
 
-@router.route('/docente/gestionGeneral', methods=['GET'])
-def gestionGeneral():
-    return render_template('/docente/gestionGeneral.html')
+# @router.route('/docente/evaluacionEstres', methods=['GET'])
+# def evaluacionEstres():
+#     return render_template('/docente/evaluacionEstres.html')
+
+# @router.route('/docente/gestionGeneral', methods=['GET'])
+# def gestionGeneral():
+#     return render_template('/docente/gestionGeneral.html')
 
 #---------------------------------------------Administrador-----------------------------------------------------#
 @router.route('/administrador', methods=['GET'])
