@@ -7,6 +7,8 @@ from io import BytesIO
 from controls.util.cedula import Cedula
 from controls.tda.cuentaControl import CuentaControl
 from controls.tda.usuarioControl import UsuarioControl
+from controls.tda.rolContol import RolControl
+from controls.tda.linked.linkedList import Linked_List
 router = Blueprint('router', __name__)
 
 
@@ -58,10 +60,23 @@ def login():
 @router.route('/presentacion') 
 def presentacion():
     return render_template('/presentacion/presentacion.html')
+
+
+
 #------------ Vista Estudiante--------------------#
 @router.route('/estudiante')
 def estudiante():
-    return render_template('/estudiante/estudiante.html')
+    rc = RolControl()
+    uc = UsuarioControl()
+    rol = rc._list()
+    usuario = uc._list()
+    nombreRol = rol.binary_search_models("Estudiante", "_nombre")
+    nombreU = usuario.binary_search_models(1, "_id")
+    apellidoU = usuario.binary_search_models(1, "_id")
+    return render_template('/estudiante/estudianteInicio.html', roles = nombreRol._nombre, nombreU = nombreU._nombre, apellidoU = apellidoU._apellido)
+
+
+
 
 @router.route('/estudiante/inicioTest')
 def testInicio():
@@ -75,10 +90,6 @@ def verTests():
 def tareas():
     return render_template('/estudiante/curso/tareas.html')
 
-@router.route('/logout')
-def logout():
-    return render_template(url_for('/'))
-
 @router.route('/estudiante/inicioEstudiante', methods=['GET'])
 def inicioEstudiante():
     return render_template('/estudiante/inicioEstudiante.html')
@@ -86,6 +97,12 @@ def inicioEstudiante():
 @router.route('/estudiante/perfil', methods=['GET'])
 def perfil():
     return render_template('/estudiante/perfil.html')
+
+# @router.route('/logout')
+# def logout():
+#     return render_template(url_for('/'))
+
+
 
 #------------ Vista Docente------------------------#
 @router.route('/docente')
