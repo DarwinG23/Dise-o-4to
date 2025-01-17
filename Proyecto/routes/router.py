@@ -17,6 +17,7 @@ from controls.tda.docenteControl import DocenteControl
 from controls.tda.administradorControl import AdministradorControl
 from datetime import datetime
 from controls.tda.cursoControl import CursoControl
+import json
 router = Blueprint('router', __name__)
 
 
@@ -164,6 +165,15 @@ def perfil():
 def logout():
     return render_template("inicio.html")
 
+@router.route('/estudiante/asignarEstudiante', methods=['POST'])
+def asignarEstudiante():
+    estudiantes_seleccionados = request.form.getlist('estudiantes')
+    
+    print("cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc")
+    print(estudiantes_seleccionados)
+    
+    return render_template('/administrador/asignarCurso.html')
+
 
 
 #------------ Vista Docente------------------------#
@@ -177,9 +187,36 @@ def docenteInicio():
     return render_template('/docente/docenteCursos.html')
 
 
-# @router.route('/docente/crearTarea', methods=['GET'])
-# def crearTarea():
-#     return render_template('/docente/crearTarea.html')
+@router.route('/docente/crearAsignacion/<cursos>', methods=['GET'])
+def crearTarea(cursos):
+    cursos_lista = eval(cursos)
+    ec = EstudianteControl()
+    estudiantes = ec._list()
+    estudiantes = estudiantes.toArray
+    listaEst = Linked_List()
+    for curso in cursos_lista:
+        if curso["nombre"] != "Sin cursos":
+            for estudia in estudiantes:
+                if estudia._idCurso == curso["id"]:
+                    listaEst.addNode(estudia)
+                    
+                    
+    
+    print("$$$$$$$$$$$$$$$$$$$$$$4")
+    listaEst.print
+    
+    arrayEst = listaEst.toArray
+    uc= UsuarioControl()
+    usuarios = uc._list()
+    lista = Linked_List()
+    
+    for est in arrayEst:
+        usuario = usuarios.binary_search_models(est._idUsuario, "_id")
+        if usuario != -1:
+            lista.addNode(usuario)
+    
+    lista.print
+    return render_template('/docente/crearAsignacion.html', cursos = cursos_lista, estudiantes = ec.to_dic_lista(listaEst), usuarios = uc.to_dic_lista(lista))
 
 # @router.route('/docente/eliminarAsignados', methods=['GET'])
 # def eliminarAsignados():
@@ -225,4 +262,23 @@ def crearCursoPost():
     cc.crearCurso(data["nombre"], data["paralelo"], data["idDocente"])
     flash('Curso creado con exito', 'success')
     return redirect(url_for('router.administrador'))
+
+@router.route('/administrador/asignarCurso')
+def asignarCurso():
+    cc = CursoControl()
+    cursos = cc._list()
+    ec = EstudianteControl()
+    estudiantes = ec._list()
+    
+    estArray = estudiantes.toArray 
+    uc = UsuarioControl()
+    usuarios = uc._list()
+    lista = Linked_List()
+    
+    for est in estArray:
+        usuario = usuarios.binary_search_models(est._idUsuario, "_id")
+        if usuario != -1:
+            lista.addNode(usuario)
+    
+    return render_template('administrador/asignarCurso.html', cursos = cc.to_dic_lista(cursos), estudiantes = ec.to_dic_lista(lista))
 
