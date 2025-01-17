@@ -13,6 +13,7 @@ from controls.tda.estudianteControl import EstudianteControl
 from controls.tda.docenteControl import DocenteControl
 from controls.tda.administradorControl import AdministradorControl
 from datetime import datetime
+from controls.tda.cursoControl import CursoControl
 router = Blueprint('router', __name__)
 
 
@@ -37,7 +38,13 @@ def inicio():
 def login():
     data = request.form
     cc = CuentaControl()
-    login, rol = cc.iniciarSesion(data["correo"], data["contrasenia"]) #Aqui llamo al metodo del controlador cc
+    login, rol, cursos, tiene, nombreRol, nombre, apellido = cc.iniciarSesion(data["correo"], data["contrasenia"]) #Aqui llamo al metodo del controlador cc
+    print("##################dasdsd################3")
+    print(login)
+    print(rol)
+    cursos.print
+    print(tiene)
+    
     if login == -1:
         flash('Usuario no encontrado', 'error')
         return redirect(url_for('router.inicio'))
@@ -46,11 +53,11 @@ def login():
         return redirect(url_for('router.inicio'))
     else:
         if rol == "Administrador":
-            return render_template('administrador/administrador.html')
+            return render_template('administrador/administrador.html', cursos = cc.to_dic_lista(cursos), tiene = tiene, roles = nombreRol, nombreU = nombre, apellidoU = apellido)
         elif rol == "Docente":
-            return render_template('docente/docenteInicio.html')
+            return render_template('docente/docenteInicio.html', cursos = cc.to_dic_lista(cursos), tiene = tiene, roles = nombreRol, nombreU = nombre, apellidoU = apellido)
         elif rol == "Estudiante":
-            return render_template('estudiante/inicioEstudiante.html')
+            return render_template('estudiante/inicioEstudiante.html', cursos = cc.to_dic_lista(cursos), tiene = tiene, roles = nombreRol, nombreU = nombre, apellidoU = apellido)
         
 @router.route('/registrarEstudiante')
 def registrarEstudiante():
@@ -188,5 +195,15 @@ def configurar_alertas():
 def visualizar_datos():
     return render_template('administrador/visualizar_datos.html')
 
+@router.route('/administrador/crearCurso')
+def crearCurso():
+    return render_template('administrador/crearCurso.html')
 
+@router.route('/administrador/crearCursoPost', methods=['POST'])
+def crearCursoPost():
+    data = request.form
+    cc = CursoControl()
+    cc.crearCurso(data["nombre"], data["paralelo"], data["idDocente"])
+    flash('Curso creado con exito', 'success')
+    return redirect(url_for('router.administrador'))
 

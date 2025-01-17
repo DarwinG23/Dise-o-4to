@@ -84,8 +84,8 @@ class Curso:
         curso._id = data["id"]
         curso._nombre = data["nombre"]
         curso._paralelo = data["paralelo"]
-        curso._numParticipantes = data["numParticipantes"]
-        curso._idDocente = data["idDocente"]
+        curso._numParticipantes = data["numparticipantes"]
+        curso._idDocente = data["iddocente"]
         
         ac = AsignacionControl()
         if ac._list().isEmpty:
@@ -103,3 +103,6 @@ class Curso:
             estudiantes = estudiantes.lineal_binary_search_models(str(curso._id),"_idCurso")
         
         return curso
+    
+    def __str__(self):
+        return "Curso: " + self.__nombre + " Paralelo: " + self.__paralelo 

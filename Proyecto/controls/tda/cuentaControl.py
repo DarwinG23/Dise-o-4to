@@ -1,6 +1,10 @@
 from controls.dao.daoAdapter import DaoAdapter
 from models.cuenta import Cuenta
 from controls.tda.cursoControl import CursoControl
+from controls.tda.docenteControl import DocenteControl
+from controls.tda.estudianteControl import EstudianteControl
+from controls.tda.linked.linkedList import Linked_List
+from controls.tda.usuarioControl import UsuarioControl
 
 class CuentaControl(DaoAdapter):
     def __init__(self):
@@ -54,12 +58,37 @@ class CuentaControl(DaoAdapter):
                 rol = "Docente"
             elif estudiante != -1:
                 rol = "Estudiante"
+            uc = UsuarioControl()
+            usuario = uc._list().binary_search_models(cuenta._idUsuario, "_id")
         else:
             logueado = 0
-            
+        
+        cursos = Linked_List()
+        cc = CursoControl()
         if rol == "Docente" or rol == "Estudiante":
-            cc = CursoControl()
-        return logueado, rol
+            if rol == "Docente":
+                dc = DocenteControl()
+                docente = dc._list().binary_search_models(cuenta._idUsuario, "_idUsuario")
+                cursos = cc._list().lineal_binary_search_models(docente._id, "_idDocente")
+            else:
+                ec = EstudianteControl()
+                estudiantes = ec._list().lineal_binary_search_models(cuenta._idUsuario, "_idUsuario")
+                estudiantes = estudiantes.toArray
+                for est in estudiantes:
+                    curso = cc._list().binary_search_models(est._idCurso, "_id")
+                    cursos.addNode(curso)
+        tiene = "Falso"                    
+        if cursos._length > 1:
+            tiene = "Verdadero"
+            
+        
+        
+        print("##################################3")
+        print(logueado)
+        print(rol)
+        cursos.print
+        print(tiene)
+        return logueado, rol, cursos, tiene, rol, usuario._nombre, usuario._apellido
     
     
 

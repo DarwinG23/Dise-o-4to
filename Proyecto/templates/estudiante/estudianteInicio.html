@@ -219,7 +219,7 @@
                 </div>
             </div>
             <div class="perfil">
-                <h1 class="fs-6 text" >Conectado: {{ roles }} </h1>
+                <h1 class="fs-6 text text-white" >Conectado: {{ roles }} </h1>
                 <img src="/static/img/perfil.png" alt="Foto de perfil">
                 <div class="dropdown">
                     <a href="#" tabindex="0" class="d-inline-block dropdown-toggle icon-no-margin" id="user-menu-toggle"
@@ -256,7 +256,8 @@
             <div class="section">
                 <h3>Mis Cursos</h3>
                 <ul>
-                    <li><a href="#"><i class="fas fa-book"></i> Diseño de Software</a></li>
+                    {%block cursos%}
+                    {%endblock%}
                 </ul>
                 <h3>Mis Tests</h3>
                 <ul>

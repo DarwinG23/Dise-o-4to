@@ -25,4 +25,10 @@ class CursoControl(DaoAdapter):
     
     def merge(self, pos):
         self._merge(self._curso, pos)
-    
+        
+    def crearCurso(self, nombre, paralelo, idDocente):
+        self._curso._nombre = nombre
+        self._curso._paralelo = paralelo
+        self._curso._numParticipantes = 0
+        self._curso._idDocente = idDocente
+        self.save
