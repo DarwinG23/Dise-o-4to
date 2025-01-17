@@ -25,4 +25,11 @@ class EstudianteControl(DaoAdapter):
     
     def merge(self, pos):
         self._merge(self._estudiante, pos)
+        
+    def agregarDatos(self, matricula, contacto, idUsuario):
+        self._estudiante._matricula = matricula
+        self._estudiante._contactoEmergencia = contacto
+        self._estudiante._idUsuario = idUsuario
+        self.save
+        
     

@@ -25,4 +25,10 @@ class DocenteControl(DaoAdapter):
     
     def merge(self, pos):
         self._merge(self._docente, pos)
+        
+    def agregarTitulo(self, titulo, idUsuario):
+        self._docente._titulo = titulo
+        self._docente._idUsuario = idUsuario
+        self.save
+        
     
