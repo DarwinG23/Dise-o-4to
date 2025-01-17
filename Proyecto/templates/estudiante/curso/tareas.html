@@ -77,38 +77,17 @@ h1 {
 <div class="timeline-container">
     <h1>Línea De Tiempo</h1>
     <div class="timeline">
-      <div class="timeline-item">
-        <span class="date">viernes, 10 de enero de 2025</span>
-        <div class="assignment">
-          <span class="assignment-name">"Vencimiento de Trabajo práctico N°2"</span>
-          <span class="due-time">23:59</span>
-        </div>
-        <span class="course">"A - Metodología de la Investigación en Computación (SEP.24-FEB.25 GRADO)"</span>
-      </div>
-      <div class="timeline-item">
-        <span class="date">lunes, 13 de enero de 2025</span>
-        <div class="assignment">
-          <span class="assignment-name">"Vencimiento de Ensayo 10"</span>
-          <span class="due-time">23:59</span>
-        </div>
-        <span class="course">"A - Sistemas Operativos (SEP.24-FEB.25 GRADO)"</span>
-      </div>
-      <div class="timeline-item">
-        <span class="date">lunes, 13 de enero de 2025</span>
-        <div class="assignment">
-          <span class="assignment-name">"Vencimiento de Ensayo 9"</span>
-          <span class="due-time">23:59</span>
-        </div>
-        <span class="course">"A - Sistemas Operativos (SEP.24-FEB.25 GRADO)"</span>
-      </div>
-      <div class="timeline-item">
-        <span class="date">miércoles, 15 de enero de 2025</span>
-        <div class="assignment">
-          <span class="assignment-name">"Vencimiento de Trabajo práctico N°3"</span>
-          <span class="due-time">23:59</span>
-        </div>
-        <span class="course">"A - Metodología de la Investigación en Computación (SEP.24-FEB.25 GRADO)"</span>
-      </div>
+      <h1>Asignaciones</h1>
+            <ul>
+                {% for asignacion in asignaciones %}
+                <li>
+                    <strong>Asignación ID:</strong> {{ asignacion.id }} <br>
+                    <strong>Fecha de Inicio:</strong> {{ asignacion.fechaInicio }} <br>
+                    <strong>Fecha de Fin:</strong> {{ asignacion.fechaFin }} <br>
+                    <strong>Estado:</strong> {{ asignacion.estado }}
+                </li>
+                {% endfor %}
+            </ul>
     </div>
   </div>
 {% endblock %}

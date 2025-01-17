@@ -26,3 +26,9 @@ class AsignacionControl(DaoAdapter):
     def merge(self, pos):
         self._merge(self._asignacion, pos)
     
+
+    def obtener_asignaciones(self):
+        """Obtiene todas las asignaciones en formato serializado."""
+        asignaciones = self._list()  
+        return [asignacion.serializar for asignacion in asignaciones]
+    
