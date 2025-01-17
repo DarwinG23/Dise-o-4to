@@ -5,6 +5,7 @@ from controls.tda.estudianteControl import EstudianteControl
 class Curso:
     def __init__(self):
         self.__id = 0
+        self.__nombre = ""
         self.__numero = ""
         self.__paralelo = ""
         self.__numParticipantes = 0
@@ -19,6 +20,14 @@ class Curso:
     @_id.setter
     def _id(self, value):
         self.__id = value
+    
+    @property
+    def _nombre(self):
+        return self.__nombre
+    
+    @_nombre.setter
+    def _nombre(self, value):
+        self.__nombre = value
 
     @property
     def _numero(self):
@@ -72,6 +81,7 @@ class Curso:
     def serializable(self):
         return {
             "id": self.__id,
+            "nombre": self.__nombre,
             "numero": self.__numero,
             "paralelo": self.__paralelo,
             "numParticipantes": self.__numParticipantes,
@@ -82,6 +92,7 @@ class Curso:
     def deserializar(self, data):
         curso = Curso()
         curso._id = data["id"]
+        curso._nombre = data["nombre"]
         curso._numero = data["numero"]
         curso._paralelo = data["paralelo"]
         curso._numParticipantes = data["numParticipantes"]

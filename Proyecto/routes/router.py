@@ -1,7 +1,10 @@
-from flask import Blueprint, jsonify, abort , request, render_template, redirect, make_response, url_for, flash, Flask
+import os
+from flask import Blueprint, app, jsonify, abort , request, render_template, redirect, make_response, url_for, flash, Flask
 from flask_cors import CORS
 import time, math, datetime
 import random
+from controls.tda.asignacionControl import AsignacionControl
+from controls.tda.cursoControl import CursoControl
 from controls.util.read import Read
 from io import BytesIO
 from controls.util.cedula import Cedula
@@ -70,13 +73,30 @@ def estudiante():
     uc = UsuarioControl()
     rol = rc._list()
     usuario = uc._list()
+
     nombreRol = rol.binary_search_models("Estudiante", "_nombre")
     nombreU = usuario.binary_search_models(1, "_id")
     apellidoU = usuario.binary_search_models(1, "_id")
-    return render_template('/estudiante/estudianteInicio.html', roles = nombreRol._nombre, nombreU = nombreU._nombre, apellidoU = apellidoU._apellido)
+    
+    return render_template(
+        '/estudiante/estudianteInicio.html', 
+        roles=nombreRol._nombre, 
+        nombreU=nombreU._nombre, 
+        apellidoU=apellidoU._apellido
+    )
+
+
+@router.route('/estudiante/curso/tareas')
+def tareas():
+    control = AsignacionControl()
+    asignaciones = control.obtener_asignaciones()
+    return render_template('/estudiante/curso/tareas.html', asignaciones=asignaciones)
 
 
 
+@router.route('/estudiante/subir_tarea')
+def subir_tarea():
+    return render_template('/estudiante/curso/subirTarea.html')
 
 @router.route('/estudiante/inicioTest')
 def testInicio():
@@ -86,9 +106,7 @@ def testInicio():
 def verTests():
     return render_template('/estudiante/testsE/test.html')
 
-@router.route('/estudiante/curso/tareas')
-def tareas():
-    return render_template('/estudiante/curso/tareas.html')
+
 
 @router.route('/estudiante/inicioEstudiante', methods=['GET'])
 def inicioEstudiante():

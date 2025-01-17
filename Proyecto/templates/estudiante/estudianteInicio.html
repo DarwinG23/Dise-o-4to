@@ -202,31 +202,46 @@
         <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
             <div class="container-fluid">
                 <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav">
-                        <li class="nav-item dropdown">
-                            <a class="nav-link text-white dropdown-toggle" href="#" role="button"
-                                data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="fas fa-envelope"></i> Mensajes
-                            </a>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link text-white dropdown-toggle" href="#" role="button"
-                                data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="fas fa-bell"></i> Notificaciones
-                            </a>
-                        </li>
-                    </ul>
+
+                    <div class="dropdown">
+                        <a href="#" tabindex="0" class="d-inline-block dropdown-toggle icon-no-margin"
+                            id="messages-menu-toggle" aria-label="Menú de mensajes" data-bs-toggle="dropdown"
+                            role="button" aria-haspopup="true" aria-expanded="false"
+                            style="color: white; text-decoration: none;">
+                            <span class="userbutton">
+                                <i class="fas fa-envelope mr-1 text-light"></i> Mensajes
+                            </span>
+                        </a>
+                        <b class="caret" style="float: right;"></b>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="messages-menu-toggle">
+                            <li><a class="dropdown-item" href="#">Hola</a></li>
+                        </ul>
+                    </div>
+                    <div class="dropdown">
+                        <a href="#" tabindex="0" class="d-inline-block dropdown-toggle icon-no-margin"
+                            id="notifications-menu-toggle" aria-label="Menú de notificaciones" data-bs-toggle="dropdown"
+                            role="button" aria-haspopup="true" aria-expanded="false"
+                            style="color: white; text-decoration: none;">
+                            <span class="userbutton">
+                                <i class="fas fa-bell mr-1 text-light"></i> Notificaciones
+                            </span>
+                        </a>
+                        <b class="caret" style="float: right;"></b>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notifications-menu-toggle">
+                            <li><a class="dropdown-item" href="#">Nueva Tarea Asignada</a></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
             <div class="perfil">
-                <h1 class="fs-6 text" >Conectado: {{ roles }} </h1>
+                <h1 class="fs-6 text">Conectado: {{ roles }} </h1>
                 <img src="/static/img/perfil.png" alt="Foto de perfil">
                 <div class="dropdown">
                     <a href="#" tabindex="0" class="d-inline-block dropdown-toggle icon-no-margin" id="user-menu-toggle"
                         aria-label="Menú de usuario" data-bs-toggle="dropdown" role="button" aria-haspopup="true"
                         aria-expanded="false">
                         <span class="userbutton">
-                            <span class="usertext mr-1 text-light">{{  nombreU}} {{ apellidoU}}</span>
+                            <span class="usertext mr-1 text-light">{{ nombreU }} {{ apellidoU }}</span>
                         </span>
                         <b class="caret"></b>
                     </a>
@@ -249,32 +264,34 @@
             <div class="section">
                 <h2>Área Personal</h2>
                 <ul>
-                    <li><a href="/estudiante/inicio"><i class="fas fa-home"></i> Página principal del sitio</a></li>
+                    <li><a href="/estudiante"><i class="fas fa-home"></i> Página principal del sitio</a></li>
                 </ul>
             </div>
 
             <div class="section">
                 <h3>Mis Cursos</h3>
                 <ul>
-                    <li><a href="#"><i class="fas fa-book"></i> Diseño de Software</a></li>
-                </ul>
-                <h3>Mis Tests</h3>
-                <ul>
-                    <li><a href="/estudiante/inicioTest"><i class="fas fa-clipboard-list"></i> Test 1</a></li>
-                    <li><a href="#"><i class="fas fa-clipboard-list"></i> Test 2</a></li>
-                    <li><a href="#"><i class="fas fa-clipboard-list"></i> Test 3</a></li>
-                </ul>
-                <h3>Mis tareas</h3>
-                <ul>
-                    <li><a href="/estudiante/curso/tareas"><i class="fas fa-tasks"></i> Ver </a></li>
-                </ul>
+                    <li><a href="/estudiante/cursos"><i class="fas fa-book"></i> Ver cursos</a></li>
+
+                    <h3>Mis Tests</h3>
+                    <ul>
+                        <li><a href="/estudiante/inicioTest"><i class="fas fa-clipboard-list"></i> Test 1</a></li>
+                        <li><a href="#"><i class="fas fa-clipboard-list"></i> Test 2</a></li>
+                        <li><a href="#"><i class="fas fa-clipboard-list"></i> Test 3</a></li>
+                    </ul>
+
+
             </div>
         </aside>
     </div>
     <section class="main-content">
+        <!-- Archivo: templates/estudiante/curso/tareas.html -->
+        <section class="main-content">
+            {% block content %}
+           
+            {% endblock %}
+        </section>
 
-        {% block content %}
-        {% endblock %}
     </section>
     <!-- <footer>
         <p>&copy; 2025 Universidad Nacional de Loja</p>
