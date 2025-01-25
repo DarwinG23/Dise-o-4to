@@ -234,7 +234,7 @@
                 </div>
             </div>
             <div class="perfil">
-                <h1 class="fs-6 text">Conectado: {{ roles }} </h1>
+                <h1 class="fs-6 text text-white" >Conectado: {{ roles }} </h1>
                 <img src="/static/img/perfil.png" alt="Foto de perfil">
                 <div class="dropdown">
                     <a href="#" tabindex="0" class="d-inline-block dropdown-toggle icon-no-margin" id="user-menu-toggle"
@@ -271,16 +271,19 @@
             <div class="section">
                 <h3>Mis Cursos</h3>
                 <ul>
-                    <li><a href="/estudiante/cursos"><i class="fas fa-book"></i> Ver cursos</a></li>
-
-                    <h3>Mis Tests</h3>
-                    <ul>
-                        <li><a href="/estudiante/inicioTest"><i class="fas fa-clipboard-list"></i> Test 1</a></li>
-                        <li><a href="#"><i class="fas fa-clipboard-list"></i> Test 2</a></li>
-                        <li><a href="#"><i class="fas fa-clipboard-list"></i> Test 3</a></li>
-                    </ul>
-
-
+                    {%block cursos%}
+                    {%endblock%}
+                </ul>
+                <h3>Mis Tests</h3>
+                <ul>
+                    <li><a href="/estudiante/inicioTest"><i class="fas fa-clipboard-list"></i> Test 1</a></li>
+                    <li><a href="#"><i class="fas fa-clipboard-list"></i> Test 2</a></li>
+                    <li><a href="#"><i class="fas fa-clipboard-list"></i> Test 3</a></li>
+                </ul>
+                <h3>Mis tareas</h3>
+                <ul>
+                    <li><a href="/estudiante/curso/tareas"><i class="fas fa-tasks"></i> Ver </a></li>
+                </ul>
             </div>
         </aside>
     </div>

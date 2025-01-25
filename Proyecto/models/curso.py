@@ -6,7 +6,6 @@ class Curso:
     def __init__(self):
         self.__id = 0
         self.__nombre = ""
-        self.__numero = ""
         self.__paralelo = ""
         self.__numParticipantes = 0
         self.__idDocente = 0
@@ -30,12 +29,12 @@ class Curso:
         self.__nombre = value
 
     @property
-    def _numero(self):
-        return self.__numero
+    def _nombre(self):
+        return self.__nombre
 
-    @_numero.setter
-    def _numero(self, value):
-        self.__numero = value
+    @_nombre.setter
+    def _nombre(self, value):
+        self.__nombre = value
 
     @property
     def _paralelo(self):
@@ -82,7 +81,6 @@ class Curso:
         return {
             "id": self.__id,
             "nombre": self.__nombre,
-            "numero": self.__numero,
             "paralelo": self.__paralelo,
             "numParticipantes": self.__numParticipantes,
             "idDocente": self.__idDocente
@@ -93,10 +91,9 @@ class Curso:
         curso = Curso()
         curso._id = data["id"]
         curso._nombre = data["nombre"]
-        curso._numero = data["numero"]
         curso._paralelo = data["paralelo"]
-        curso._numParticipantes = data["numParticipantes"]
-        curso._idDocente = data["idDocente"]
+        curso._numParticipantes = data["numparticipantes"]
+        curso._idDocente = data["iddocente"]
         
         ac = AsignacionControl()
         if ac._list().isEmpty:
@@ -114,3 +111,6 @@ class Curso:
             estudiantes = estudiantes.lineal_binary_search_models(str(curso._id),"_idCurso")
         
         return curso
+    
+    def __str__(self):
+        return "Curso: " + self.__nombre + " Paralelo: " + self.__paralelo 

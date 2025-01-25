@@ -25,4 +25,20 @@ class RolControl(DaoAdapter):
     
     def merge(self, pos):
         self._merge(self._rol, pos)
+
+    
+    def crearRol(self, nombre, idCuenta):
+        self._rol._nombre = nombre
+        detalle = "Sin detelle"
+        if nombre == "Administrador":
+            detalle = "Rol con permisos de administrador"
+        elif nombre == "Docente":
+            detalle = "Rol con permisos de docente"
+        elif nombre == "Estudiante":
+            detalle = "Rol con permisos de estudiante"
+        self._rol._detalle = detalle
+        self._rol._estado = 1
+        self._rol._idCuenta = idCuenta
+        self.save
+         
     

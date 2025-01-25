@@ -12,6 +12,11 @@ from controls.tda.cuentaControl import CuentaControl
 from controls.tda.usuarioControl import UsuarioControl
 from controls.tda.rolContol import RolControl
 from controls.tda.linked.linkedList import Linked_List
+from controls.tda.estudianteControl import EstudianteControl
+from controls.tda.docenteControl import DocenteControl
+from controls.tda.administradorControl import AdministradorControl
+from datetime import datetime
+from controls.tda.cursoControl import CursoControl
 router = Blueprint('router', __name__)
 
 
@@ -36,29 +41,68 @@ def inicio():
 def login():
     data = request.form
     cc = CuentaControl()
-    cuenta = cc._list().binary_search_models(data["correo"], "_correo")
-    if cuenta == -1:
+    login, rol, cursos, tiene, nombreRol, nombre, apellido = cc.iniciarSesion(data["correo"], data["contrasenia"]) #Aqui llamo al metodo del controlador cc
+    print("##################dasdsd################3")
+    print(login)
+    print(rol)
+    cursos.print
+    print(tiene)
+    
+    if login == -1:
         flash('Usuario no encontrado', 'error')
         return redirect(url_for('router.inicio'))
-    elif cuenta._contrasena == data["contrasenia"]:
-        #uc = UsuarioControl()
-        #listaUsuarios = uc._list()
-        #usuario = listaUsuarios.binary_search_models(cuenta._idUsuario, "_id")
-        roles = cuenta._roles
-        roles.print
-        admin = roles.binary_search_models("Administrador", "_nombre")
-        docente = roles.binary_search_models("Docente", "_nombre")
-        estudiante = roles.binary_search_models("Estudiante", "_nombre")
-        
-        if admin != -1:
-            return render_template('administrador/administrador.html')
-        elif docente != -1:
-            return render_template('docente/docenteInicio.html')
-        elif estudiante != -1:
-            return render_template('estudiante/inicioEstudiante.html')
-    else:
+    elif login == 0:
         flash('Contraseña incorrecta', 'error')
         return redirect(url_for('router.inicio'))
+    else:
+        if rol == "Administrador":
+            return render_template('administrador/administrador.html', cursos = cc.to_dic_lista(cursos), tiene = tiene, roles = nombreRol, nombreU = nombre, apellidoU = apellido)
+        elif rol == "Docente":
+            return render_template('docente/docenteInicio.html', cursos = cc.to_dic_lista(cursos), tiene = tiene, roles = nombreRol, nombreU = nombre, apellidoU = apellido)
+        elif rol == "Estudiante":
+            return render_template('estudiante/inicioEstudiante.html', cursos = cc.to_dic_lista(cursos), tiene = tiene, roles = nombreRol, nombreU = nombre, apellidoU = apellido)
+        
+@router.route('/registrarEstudiante')
+def registrarEstudiante():
+    return render_template('registro.html',usuario = "Estudiante")   
+
+@router.route('/registrarDocente')
+def registrarDocente():
+    return render_template('registro.html',usuario = "Docente")
+
+@router.route('/registrarAdministrador')
+def registrarAdministrador():
+    return render_template('registro.html',usuario = "Administrador") 
+        
+@router.route('/registro/<rol>', methods=["POST"])
+def registro(rol):
+    data = request.form
+    uc = UsuarioControl()
+    cc = CuentaControl()
+    rc = RolControl()
+    # Convertir la cadena a un objeto datetime
+    fecha_objeto = datetime.strptime(data["fechaNacimiento"], "%Y-%m-%d")
+    fecha_formateada = fecha_objeto.strftime("%d/%m/%Y")
+    fecha_formateada = str(fecha_formateada)
+
+    uc.crearUsuario(data["nombre"],data["apellido"], data['ci'], fecha_formateada, data['telefono'], data['direccion'])
+    usuario = uc._list().getData(uc._list()._length-1)
+    cc.crearCuenta(data['correo'], data['contrasenia'], usuario._id)
+    cuenta = cc._list().getData(cc._list()._length-1)
+    rc.crearRol(rol, cuenta._id)
+    
+    if rol == "Estudiante":
+        ec = EstudianteControl()
+        ec.agregarDatos(data["matricula"], data["contacto"], usuario._id)
+    elif rol == "Docente":
+        dc = DocenteControl()
+        dc.agregarTitulo(data["titulo"],  usuario._id)
+    elif rol == "Administrador":
+        ac = AdministradorControl()
+        ac.agregarDatos(usuario._id)
+        
+    flash('Cuenta creada con exito', 'success')
+    return redirect(url_for('router.inicio'))
 #---------------------------------------------Presentación-----------------------------------------------#
 @router.route('/presentacion') 
 def presentacion():
@@ -116,9 +160,9 @@ def inicioEstudiante():
 def perfil():
     return render_template('/estudiante/perfil.html')
 
-# @router.route('/logout')
-# def logout():
-#     return render_template(url_for('/'))
+@router.route('/logout')
+def logout():
+    return render_template("inicio.html")
 
 
 
@@ -128,25 +172,26 @@ def docente():
     return render_template('/docente/docente.html')
 
 
-@router.route('/docente/docenteInicio', methods=['GET'])
+@router.route('/docenteInicio', methods=['GET'])
 def docenteInicio():
-    return render_template('/docente/docenteInicio.html')
+    return render_template('/docente/docenteCursos.html')
 
-@router.route('/docente/crearTarea', methods=['GET'])
-def crearTarea():
-    return render_template('/docente/crearTarea.html')
 
-@router.route('/docente/eliminarAsignados', methods=['GET'])
-def eliminarAsignados():
-    return render_template('/docente/eliminarAsignados.html')
+# @router.route('/docente/crearTarea', methods=['GET'])
+# def crearTarea():
+#     return render_template('/docente/crearTarea.html')
 
-@router.route('/docente/evaluacionEstres', methods=['GET'])
-def evaluacionEstres():
-    return render_template('/docente/evaluacionEstres.html')
+# @router.route('/docente/eliminarAsignados', methods=['GET'])
+# def eliminarAsignados():
+#     return render_template('/docente/eliminarAsignados.html')
 
-@router.route('/docente/gestionGeneral', methods=['GET'])
-def gestionGeneral():
-    return render_template('/docente/gestionGeneral.html')
+# @router.route('/docente/evaluacionEstres', methods=['GET'])
+# def evaluacionEstres():
+#     return render_template('/docente/evaluacionEstres.html')
+
+# @router.route('/docente/gestionGeneral', methods=['GET'])
+# def gestionGeneral():
+#     return render_template('/docente/gestionGeneral.html')
 
 #---------------------------------------------Administrador-----------------------------------------------------#
 @router.route('/administrador', methods=['GET'])
@@ -169,5 +214,15 @@ def configurar_alertas():
 def visualizar_datos():
     return render_template('administrador/visualizar_datos.html')
 
+@router.route('/administrador/crearCurso')
+def crearCurso():
+    return render_template('administrador/crearCurso.html')
 
+@router.route('/administrador/crearCursoPost', methods=['POST'])
+def crearCursoPost():
+    data = request.form
+    cc = CursoControl()
+    cc.crearCurso(data["nombre"], data["paralelo"], data["idDocente"])
+    flash('Curso creado con exito', 'success')
+    return redirect(url_for('router.administrador'))
 
