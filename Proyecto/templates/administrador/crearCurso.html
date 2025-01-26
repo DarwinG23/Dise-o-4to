@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestionar Cursos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #0078D4;
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2rem;
+        }
+        main {
+            padding: 2rem 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        section {
+            margin-bottom: 2rem;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            width: 100%;
+            max-width: 600px;
+        }
+        h2 {
+            color: #0078D4;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        label {
+            font-weight: bold;
+        }
+        input, button {
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        input:focus {
+            outline: none;
+            border-color: #0078D4;
+            box-shadow: 0 0 5px rgba(0, 120, 212, 0.5);
+        }
+        button {
+            background: #0078D4;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+        button:hover {
+            background: #005bb5;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .volver {
+            text-align: center;
+            margin-top: 2rem;
+        }
+        .volver a button {
+            width: auto;
+            padding: 0.8rem 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Gestionar Cursos</h1>
+    </header>
+    <main>
+        <section>
+            <h2>Añadir Curso</h2>
+            <form action="/administrador/crearCursoPost" method="post">
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombre" name="nombre" required>
+                <label for="paralelo">Paralelo:</label>
+                <input type="text" id="paralelo" name="paralelo" required>
+                <label for="idDocente">ID del Docente:</label>
+                <input type="text" id="idDocente" name="idDocente" required>
+                <button type="submit">Añadir</button>
+            </form>
+        </section>
+        <section>
+            <h2>Actualizar Curso</h2>
+            <form action="/actualizar_curso" method="post">
+                <label for="id">ID del Curso:</label>
+                <input type="text" id="id" name="id" required>
+                <label for="nuevo_nombre">Nuevo Nombre:</label>
+                <input type="text" id="nuevo_nombre" name="nuevo_nombre">
+                <label for="nuevo_paralelo">Nuevo Paralelo:</label>
+                <input type="text" id="nuevo_paralelo" name="nuevo_paralelo">
+                <label for="nuevo_idDocente">Nuevo ID del Docente:</label>
+                <input type="text" id="nuevo_idDocente" name="nuevo_idDocente">
+                <button type="submit">Actualizar</button>
+            </form>
+        </section>
+        <section>
+            <h2>Eliminar Curso</h2>
+            <form action="/eliminar_curso" method="post">
+                <label for="id_eliminar">ID del Curso:</label>
+                <input type="text" id="id_eliminar" name="id" required>
+                <button type="submit">Eliminar</button>
+            </form>
+        </section>
+        <div class="volver">
+            <a href="/administrador">
+                <button>Volver al Administrador</button>
+            </a>
+        </div>
+    </main>
+</body>
+</html>

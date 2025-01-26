@@ -25,4 +25,8 @@ class AdministradorControl(DaoAdapter):
     
     def merge(self, pos):
         self._merge(self._administrador, pos)
+        
+    def agregarDatos(self, idUsuario):
+        self._administrador._idUsuario = idUsuario
+        self.save
     

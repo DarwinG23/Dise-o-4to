@@ -45,7 +45,7 @@ class Linked_List(object):
         else:
             return "List is Empty"
     
-    def _getLast_(self, poss):
+    def _getLast_(self):
         if not self.isEmpty:
             return self.__last
         else:
@@ -133,7 +133,6 @@ class Linked_List(object):
         else:
             node = self.getNode(poss)
             node._data = data
-            node._data._reportes.print
 
 
     @property
@@ -312,7 +311,6 @@ class Linked_List(object):
                         order = QuickSort()
                         array = order.quicksort_models_descent(array, 0, len(array) - 1, atribute)
                     elif method == 4:
-                        print("entro en merge descent")
                         order = MergeSort()
                         array = order.mergeSort_models_descent(array, atribute)
                     elif method == 5:

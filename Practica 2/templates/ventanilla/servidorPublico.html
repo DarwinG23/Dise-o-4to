@@ -1,0 +1,166 @@
+{% extends "menu.html" %}
+{% block content %}
+<script>
+    // $(document).ready(function(){
+    //     $("#tipo").change(function(){
+    //         create();
+    //     });
+    // });
+
+    $(document).ready(function(){
+        $("#link").click(function(){
+            create();
+        });
+
+        $("#busqueda").change(function(){
+            elegir_busqueda();
+        });
+
+        $("#busca").click(function(){
+            buscar();
+        });
+
+
+
+        // $("#tipo").change(function(){
+        //     create();
+        // });
+    });
+
+
+    function tabla(url){
+        $.ajax({
+            method: "GET",
+            url: url,
+            contentType: 'json',
+            success: function(data){
+                //console.log(data);
+                console.log(url);
+                if(data.code == '200'){
+                    var html = '';
+                        $.each(data.data, function(i, info){
+                            console.log(info);
+                            html+="<tr>";
+                            html+= "<td>"+(i+1)+"</td>";
+                            html+= "<td>"+info.nombre+"</td>";
+                            html+= "<td>"+info.apellido+"</td>";
+                            html+= "<td>"+info.cedula+"</td>";
+                            html+= "<td>"+'<a href="/servidores/editar/'+info.id+'" class="btn btn-info">Modificar</a>'+"</td>";
+                            html+= "<td>"+'<a href="/servidores/atenciones/'+info.id+'" class="btn btn-info">Atenciones</a>'+"</td>";
+                            html+= "<td>"+'<a href="/servidores/eliminar/'+info.id+'" class="btn btn-info">Eliminar</a>'+"</td>";
+                            html+="</tr>";
+                            
+                        });
+                    
+                        $("#tabla tbody").html(html);
+                }else{
+                    html += "<tr><td colspan='7'>No se encontraron datos</td></tr>";
+                    $("#tabla tbody").html(html);
+                }
+                
+            }
+
+
+        });
+    }
+
+    function create(){
+        var aux = $("#tipo").prop("checked");
+        var select = $("#criterio").find(":selected").val();
+        var metodo = $("#metodo").find(":selected").val();
+        if(aux){
+            tabla("http://localhost:5000/servidores/2/"+select+"/"+metodo);
+            //$("#link").attr("href", "/servidores/2/_nombre");
+        }else{
+            tabla("http://localhost:5000/servidores/1/"+select+"/"+metodo);
+            //$("#link").attr("href", "/servidores/1/_nombre");
+        }
+    }
+
+    function buscar(){
+        var atributo = $("#criterio").find(":selected").val();
+        var metodo = $("#busqueda").find(":selected").val();
+        var valor = $("#valor").val();
+        if(metodo == 1){
+            tabla("http://localhost:5000/servidores/busqueda/1/"+valor+"/"+atributo);
+        }else{
+            tabla("http://localhost:5000/servidores/busqueda/2/"+valor+"/"+atributo);
+        }
+    }
+
+
+    function elegir_busqueda(){
+        var metodo = $("#busqueda").find(":selected").val();
+        if(metodo == 1){
+            $("#criterio").html('<option value="_nombre">Nombre</option><option value="_apellido">Apellido</option>');
+        }else{
+            $("#criterio").html('<option value="_cedula">Cedula</option>');
+        }
+    }
+    
+</script>
+<div class="text-center">
+    <h1 class="display-4">SERVIDORES PUBLICOS</h1>
+</div>
+<div class="row">
+    <table id="tabla" class="table text-black">
+        <div class="row mb-4">
+            <div class="row mx-4">
+                <label class="row mx-2">Criterio:</label>
+                <select id="criterio">
+                    <option value="_nombre">Nombre</option>
+                    <option value="_apellido">Apellido</option>
+                </select>
+            </div>
+            <div class="row mx-4">
+                <label class="row mx-2">Método:</label>
+                <select id="metodo">                   
+                    <option value="3">QuickSort</option>
+                    <option value="4">MergeSort</option>
+                    <option value="5">ShellSort</option>
+                </select>
+            </div>
+            <div class="row mx-4">
+                <input type="checkbox" value="DESCENDENTE" id="tipo"/> DESCENDENTE 
+            </div>
+                <button class="btn btn-info"  id="link">ORDENAR</button>          
+        </div>
+        
+        <div class="row mb-4">
+            <div class="row mx-4">
+                <label class="row mx-2">Método:</label>
+                <select id="busqueda">                   
+                    <option value="1">Lineal-Binario</option>
+                    <option value="2">Binario</option>
+                </select>
+            </div>
+            <div class="row mx-4">
+                <input type="text" id="valor" placeholder="Ingrese el valor a buscar">
+            </div>
+            <button class="btn btn-info"  id="busca">BUSCAR</button>    
+        </div>
+
+
+        <thead>
+            <th>Nro</th>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>dni</th>
+            <th>Actions</th>
+        </thead>
+        <tbody>
+            {% for item in lista %}
+                <tr>
+                    <td>{{item.id}}</td>
+                    <td>{{item.nombre}}</td>
+                    <td>{{item.apellido}}</td>
+                    <td>{{item.cedula}}</td>
+                    <td><a href="/servidores/editar/{{item.id}}" class="btn btn-info">Modificar</a></td>
+                    <td><a href="/servidores/atenciones/{{item.id}}" class="btn btn-info">Atenciones</a></td>
+                    <td><a href="/servidores/eliminar/{{item.id}}" class="btn btn-info">Eliminar</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

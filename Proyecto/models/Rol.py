@@ -89,10 +89,8 @@ class Rol:
         rol._idCuenta = data["idcuenta"]
         #Consulta a la bdd para obtener los permisos del rol
         pc = PermisoControl()
-        if pc._list().isEmpty:
-            permisos = Linked_List()
-        else:
-            permisos = pc._list() #Obtenermos todos los permisos de la bdd
+        permisos = pc._list()
+        if not permisos.isEmpty:
             permisos = permisos.lineal_binary_search_models(str(rol._id),"_idRol") #IMPORTANTE: Buscamos los permisos del rol
             #IMPORTANTE: al buscar debemos colocar un guion bajo "_" seguido del nombre del atributo como se ve "_idRol"
         rol._permisos = permisos

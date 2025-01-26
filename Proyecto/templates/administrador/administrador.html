@@ -1,109 +1,48 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel del Administrador</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+{% extends 'estudiante/estudianteInicio.html' %}
 
-        body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #74b9ff, #a29bfe);
-            color: #2d3436;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 800px;
-            background: #070404;
-            border-radius: 15px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-            padding: 30px 40px;
-            color: #ffffff;
-            text-align: center;
-        }
-
-        .header {
-            background: #0984e3;
-            color: #ffffff;
-            padding: 20px;
-            border-radius: 15px 15px 0 0;
-            font-size: 2.5em;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-
-        .button {
-            font-size: 1.2em;
-            padding: 15px;
-            background: linear-gradient(135deg, #6c5ce7, #0984e3);
-            color: #ffffff;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            margin: 10px 0;
-            width: 100%;
-            transition: transform 0.2s ease, background-color 0.3s ease;
-        }
-
-        .button:hover {
-            transform: scale(1.05);
-            background: linear-gradient(135deg, #4b49e6, #086fd8);
-        }
-
-        .footer {
-            margin-top: 20px;
-            font-size: 0.85em;
-            color: #636e72;
-        }
-
-        .footer a {
-            color: #0984e3;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        .footer a:hover {
-            text-decoration: underline;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="header">Panel del Administrador</div>
-        <!-- Redirige a las distintas secciones del panel -->
-        <section>
-            <a href="/administrador/gestionar_usuarios">
-                <button class="button">Gestionar Usuarios</button>
-            </a>
-        </section>
-        <section>
-            <a href="/administrador/gestionar_tecnicas">
-                <button class="button">Gestionar Técnicas</button>
-            </a>
-        </section>
-        <section>
-            <a href="/administrador/configurar_alertas">
-                <button class="button">Configurar Alertas</button>
-            </a>
-        </section>
-        <section>
-            <a href="/administrador/visualizar_datos">
-                <button class="button">Visualizar Datos</button>
-            </a>
-        </section>
-        <div class="footer">
-            <p>© 2025 Panel de Administración | <a href="/soporte">Soporte</a></p>
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white text-center">
+            <h2>Panel del Administrador</h2>
+        </div>
+        <div class="card-body text-center">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <a href="/administrador/gestionar_usuarios" class="btn btn-lg btn-primary w-100">
+                        Gestionar Usuarios
+                    </a>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <a href="/administrador/gestionar_tecnicas" class="btn btn-lg btn-primary w-100">
+                        Gestionar Técnicas
+                    </a>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <a href="/administrador/configurar_alertas" class="btn btn-lg btn-primary w-100">
+                        Configurar Alertas
+                    </a>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <a href="/administrador/visualizar_datos" class="btn btn-lg btn-primary w-100">
+                        Visualizar Datos
+                    </a>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <a href="/administrador/crearCurso" class="btn btn-lg btn-primary w-100">
+                        Crear Cursos
+                    </a>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <a href="/administrador/asignarCurso" class="btn btn-lg btn-primary w-100">
+                        Asignar Cursos
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer text-center text-muted">
+            <p>© 2025 Panel de Administración | <a href="/soporte" class="text-primary">Soporte</a></p>
         </div>
     </div>
-</body>
-</html>
+</div>
+{% endblock %}

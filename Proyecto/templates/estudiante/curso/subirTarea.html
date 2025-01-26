@@ -1,0 +1,65 @@
+{% extends "estudiante/estudianteInicio.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white d-flex align-items-center">
+            <h3 class="m-0"><i class="fas fa-upload me-2"></i> Subir Tarea</h3>
+        </div>
+        <div class="card-body">
+            <form action="/estudiante/subir_tarea" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+                <div class="mb-4">
+                    <label for="nombre_tarea" class="form-label fw-bold">Nombre de la Tarea</label>
+                    <input 
+                        type="text" 
+                        class="form-control border-primary" 
+                        id="nombre_tarea" 
+                        name="nombre_tarea" 
+                        placeholder="Ingrese el nombre de la tarea" 
+                        required
+                    >
+                    <div class="invalid-feedback">Por favor, ingrese el nombre de la tarea.</div>
+                </div>
+                <div class="mb-4">
+                    <label for="archivo_tarea" class="form-label fw-bold">Archivo</label>
+                    <div class="input-group">
+                        <input 
+                            type="file" 
+                            class="form-control border-primary" 
+                            id="archivo_tarea" 
+                            name="archivo_tarea" 
+                            required
+                        >
+                        <button class="btn btn-outline-primary" type="button" onclick="document.getElementById('archivo_tarea').click();">
+                            <i class="fas fa-folder-open"></i> Seleccionar Archivo
+                        </button>
+                    </div>
+                    <div class="invalid-feedback">Por favor, seleccione un archivo para subir.</div>
+                </div>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="fas fa-paper-plane"></i> Subir Tarea
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Habilitar validación nativa del formulario
+    (function () {
+        'use strict'
+        const forms = document.querySelectorAll('.needs-validation')
+        Array.from(forms).forEach(form => {
+            form.addEventListener('submit', event => {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+                form.classList.add('was-validated')
+            }, false)
+        })
+    })()
+</script>
+{% endblock %}

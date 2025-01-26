@@ -89,17 +89,12 @@ class Estudiante:
         estudiante._idUsuario = data["idusuario"]
         rc= RecomendacionControl()
         ac = AsignacionControl()
-        
-        if rc._list().isEmpty:
-            recomendaciones = Linked_List()
-        else:
-            recomendaciones = rc._list()
+        recomendaciones = rc._list()
+        if not recomendaciones.isEmpty:
             recomendaciones = recomendaciones.lineal_binary_search_models(str(estudiante._id),"_idEstudiante")
         estudiante._recomendaciones = recomendaciones
-        if ac._list().isEmpty:
-            asignaciones = Linked_List()
-        else:
-            asignaciones = ac._list()
+        asignaciones = ac._list()
+        if not asignaciones.isEmpty:
             asignaciones = asignaciones.lineal_binary_search_models(str(estudiante._id),"_idEstudiante")
         estudiante._asignaciones = asignaciones
         

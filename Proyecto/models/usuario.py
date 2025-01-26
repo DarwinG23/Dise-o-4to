@@ -88,7 +88,11 @@ class Usuario:
         usuario._fechaNacimiento = data["fechanacimiento"]
         usuario._direccion = data["direccion"]
         usuario._telefono = data["telefono"]
-        return usuario
+        return usuario 
+    
+    def __str__(self):
+        return str(self._nombre) + " " + str(self._apellido) + " " + str(self._id)
+        
 
         
     
