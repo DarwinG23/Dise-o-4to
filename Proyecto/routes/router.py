@@ -17,6 +17,7 @@ from controls.tda.docenteControl import DocenteControl
 from controls.tda.administradorControl import AdministradorControl
 from datetime import datetime
 from controls.tda.cursoControl import CursoControl
+import json
 router = Blueprint('router', __name__)
 
 
@@ -42,12 +43,6 @@ def login():
     data = request.form
     cc = CuentaControl()
     login, rol, cursos, tiene, nombreRol, nombre, apellido = cc.iniciarSesion(data["correo"], data["contrasenia"]) #Aqui llamo al metodo del controlador cc
-    print("##################dasdsd################3")
-    print(login)
-    print(rol)
-    cursos.print
-    print(tiene)
-    
     if login == -1:
         flash('Usuario no encontrado', 'error')
         return redirect(url_for('router.inicio'))
@@ -86,20 +81,20 @@ def registro(rol):
     fecha_formateada = str(fecha_formateada)
 
     uc.crearUsuario(data["nombre"],data["apellido"], data['ci'], fecha_formateada, data['telefono'], data['direccion'])
-    usuario = uc._list().getData(uc._list()._length-1)
-    cc.crearCuenta(data['correo'], data['contrasenia'], usuario._id)
+    legth = uc._list()._length
+    cc.crearCuenta(data['correo'], data['contrasenia'], legth) 
     cuenta = cc._list().getData(cc._list()._length-1)
     rc.crearRol(rol, cuenta._id)
     
     if rol == "Estudiante":
         ec = EstudianteControl()
-        ec.agregarDatos(data["matricula"], data["contacto"], usuario._id)
+        ec.agregarDatos(data["matricula"], data["contacto"], legth)
     elif rol == "Docente":
         dc = DocenteControl()
-        dc.agregarTitulo(data["titulo"],  usuario._id)
+        dc.agregarTitulo(data["titulo"],  legth)
     elif rol == "Administrador":
         ac = AdministradorControl()
-        ac.agregarDatos(usuario._id)
+        ac.agregarDatos(legth)
         
     flash('Cuenta creada con exito', 'success')
     return redirect(url_for('router.inicio'))
@@ -164,6 +159,13 @@ def perfil():
 def logout():
     return render_template("inicio.html")
 
+@router.route('/estudiante/asignarEstudiante', methods=['POST'])
+def asignarEstudiante():
+    estudiantes_seleccionados = request.form.getlist('estudiantes')
+    
+    
+    return render_template('/administrador/asignarCurso.html')
+
 
 
 #------------ Vista Docente------------------------#
@@ -177,9 +179,34 @@ def docenteInicio():
     return render_template('/docente/docenteCursos.html')
 
 
-# @router.route('/docente/crearTarea', methods=['GET'])
-# def crearTarea():
-#     return render_template('/docente/crearTarea.html')
+@router.route('/docente/crearAsignacion/<cursos>', methods=['GET'])
+def crearTarea(cursos):
+    cursos_lista = eval(cursos)
+    ec = EstudianteControl()
+    estudiantes = ec._list()
+    estudiantes = estudiantes.toArray
+    listaEst = Linked_List()
+    for curso in cursos_lista:
+        if curso["nombre"] != "Sin cursos":
+            for estudia in estudiantes:
+                if estudia._idCurso == curso["id"]:
+                    listaEst.addNode(estudia)
+                    
+                    
+
+    
+    arrayEst = listaEst.toArray
+    uc= UsuarioControl()
+    usuarios = uc._list()
+    lista = Linked_List()
+    
+    for est in arrayEst:
+        usuario = usuarios.binary_search_models(est._idUsuario, "_id")
+        if usuario != -1:
+            lista.addNode(usuario)
+    
+
+    return render_template('/docente/crearAsignacion.html', cursos = cursos_lista, estudiantes = ec.to_dic_lista(listaEst), usuarios = uc.to_dic_lista(lista))
 
 # @router.route('/docente/eliminarAsignados', methods=['GET'])
 # def eliminarAsignados():
@@ -198,9 +225,42 @@ def docenteInicio():
 def administrador():
     return render_template('administrador/administrador.html')
 
+#Presentar la lista de usuarios
 @router.route('/administrador/gestionar_usuarios', methods=['GET'])
 def gestionar_usuarios():
-    return render_template('administrador/gestionar_usuarios.html')
+    uc = UsuarioControl() #Creo un objeto de la clase UsuarioControl
+    listaUsuarios = uc._list() #Obtengo la lista de usuarios
+    listaUsuarios.sort_models("_id",1,4) #La ordeno por id para presentarla
+    return render_template('administrador/crud/listaUsuario.html', lista = uc.to_dic_lista(listaUsuarios)) #Los envio al html
+
+#ORDENA LOS USUARIOS
+@router.route('/usuarios/ordenar/<tipo>/<attr>/<metodo>') 
+def ordenar_usuarios(tipo, attr, metodo):
+    uc = UsuarioControl()
+    list = uc._list()
+    list.sort_models(attr,int(tipo),int(metodo))
+    return make_response(
+        jsonify({"msg": "OK", "code": 200, "data": uc.to_dic_lista(list)}),
+        200
+    )
+    
+#BUSCA LOS USUARIOS
+@router.route('/usuarios/busqueda/<tipo>/<data>/<attr>')
+def buscar_usuarios(tipo, data, attr):
+    uc = UsuarioControl()
+    list = uc._list()
+    if tipo == "1":
+        list = list.lineal_binary_search_models(data, attr)
+    elif tipo == "2":
+        dato = list.binary_search_models(data, attr)
+        list.clear
+        if dato != -1:     
+            list.addNode(dato)
+        
+    return make_response(
+        jsonify({"msg": "OK", "code": 200, "data": uc.to_dic_lista(list)}),
+        200
+    )
 
 @router.route('/administrador/gestionar_tecnicas', methods=['GET'])
 def gestionar_tecnicas():
@@ -225,4 +285,23 @@ def crearCursoPost():
     cc.crearCurso(data["nombre"], data["paralelo"], data["idDocente"])
     flash('Curso creado con exito', 'success')
     return redirect(url_for('router.administrador'))
+
+@router.route('/administrador/asignarCurso')
+def asignarCurso():
+    cc = CursoControl()
+    cursos = cc._list()
+    ec = EstudianteControl()
+    estudiantes = ec._list()
+    
+    estArray = estudiantes.toArray 
+    uc = UsuarioControl()
+    usuarios = uc._list()
+    lista = Linked_List()
+    
+    for est in estArray:
+        usuario = usuarios.binary_search_models(est._idUsuario, "_id")
+        if usuario != -1:
+            lista.addNode(usuario)
+    
+    return render_template('administrador/asignarCurso.html', cursos = cc.to_dic_lista(cursos), estudiantes = ec.to_dic_lista(lista))
 

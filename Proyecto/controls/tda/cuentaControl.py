@@ -60,35 +60,35 @@ class CuentaControl(DaoAdapter):
                 rol = "Estudiante"
             uc = UsuarioControl()
             usuario = uc._list().binary_search_models(cuenta._idUsuario, "_id")
+            
+            cursos = Linked_List()
+            cc = CursoControl()
+            if rol == "Docente" or rol == "Estudiante":
+                if rol == "Docente":
+                    dc = DocenteControl()
+                    docente = dc._list().binary_search_models(cuenta._idUsuario, "_idUsuario")
+                    cursos = cc._list().lineal_binary_search_models(docente._id, "_idDocente")
+                else:
+                    ec = EstudianteControl()
+                    estudiantes = ec._list().lineal_binary_search_models(str(cuenta._idUsuario), "_idUsuario")
+                    estudiantes = estudiantes.toArray
+                    for est in estudiantes:
+                        curso = cc._list().binary_search_models(est._idCurso, "_id")
+                        cursos.addNode(curso)
+                    
+                    
+            tiene = "Falso"                    
+            if cursos._length > 1:
+                tiene = "Verdadero"
+                
+            
+            return logueado, rol, cursos, tiene, rol, usuario._nombre, usuario._apellido
         else:
             logueado = 0
-        
-        cursos = Linked_List()
-        cc = CursoControl()
-        if rol == "Docente" or rol == "Estudiante":
-            if rol == "Docente":
-                dc = DocenteControl()
-                docente = dc._list().binary_search_models(cuenta._idUsuario, "_idUsuario")
-                cursos = cc._list().lineal_binary_search_models(docente._id, "_idDocente")
-            else:
-                ec = EstudianteControl()
-                estudiantes = ec._list().lineal_binary_search_models(cuenta._idUsuario, "_idUsuario")
-                estudiantes = estudiantes.toArray
-                for est in estudiantes:
-                    curso = cc._list().binary_search_models(est._idCurso, "_id")
-                    cursos.addNode(curso)
-        tiene = "Falso"                    
-        if cursos._length > 1:
-            tiene = "Verdadero"
             
+        return logueado, rol, None, None, None, None, None
         
         
-        print("##################################3")
-        print(logueado)
-        print(rol)
-        cursos.print
-        print(tiene)
-        return logueado, rol, cursos, tiene, rol, usuario._nombre, usuario._apellido
     
     
 

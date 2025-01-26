@@ -77,10 +77,8 @@ class Pregunta:
         pregunta._respuesta = data['respuesta']
         pregunta._idTest = data['idtest']
         oc = OpcionControl()
-        if oc._list().isEmpy:
-            opciones = Linked_List()
-        else:
-            opciones = oc._list()
+        opciones = oc._list()
+        if not opciones.isEmpy:
             opciones = opciones.lineal_binary_search_models(str(pregunta._id),"_idPregunta")
         pregunta._opciones = opciones
         return pregunta

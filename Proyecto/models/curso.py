@@ -96,18 +96,14 @@ class Curso:
         curso._idDocente = data["iddocente"]
         
         ac = AsignacionControl()
-        if ac._list().isEmpty:
-            asignaciones = Linked_List()
-        else:
-            asignaciones = ac._list() 
+        asignaciones = ac._list()
+        if not asignaciones.isEmpty:
             asignaciones = asignaciones.lineal_binary_search_models(str(curso._id),"_idCurso") 
         curso._asignaciones = asignaciones
         
         ec = EstudianteControl()
-        if ec._list().isEmpty:
-            estudiantes = Linked_List()
-        else:
-            estudiantes = ec._list()
+        estudiantes = ec._list()
+        if not estudiantes.isEmpty:
             estudiantes = estudiantes.lineal_binary_search_models(str(curso._id),"_idCurso")
         
         return curso

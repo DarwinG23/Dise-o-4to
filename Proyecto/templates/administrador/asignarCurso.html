@@ -1,0 +1,169 @@
+{% extends 'estudiante/estudianteInicio.html' %}
+
+{% block content %}
+<style>
+    .course-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1rem;
+        padding: 2rem;
+    }
+
+    .course-card {
+        background-color: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        padding: 1.5rem;
+        text-align: center;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .course-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    .course-header {
+        margin-bottom: 1rem;
+    }
+
+    .course-name {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #003366;
+    }
+
+    .course-paralelo {
+        font-size: 1rem;
+        color: #555;
+        margin-top: 0.5rem;
+    }
+
+    .progress-container {
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+
+    .progress-bar {
+        background-color: #f3f3f3;
+        height: 8px;
+        border-radius: 5px;
+        overflow: hidden;
+        width: 100%;
+    }
+
+    .progress {
+        background-color: #00aaff;
+        height: 100%;
+        width: 60%;
+    }
+
+    .access-button {
+        background-color: #003366;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: background-color 0.3s ease;
+    }
+
+    .access-button:hover {
+        background-color: #0055aa;
+    }
+
+    @media (max-width: 768px) {
+        .course-container {
+            padding: 1rem;
+        }
+
+        .course-card {
+            padding: 1rem;
+        }
+    }
+
+    /* Modal Styles */
+    .modal-content {
+        position: relative;
+        padding: 1rem;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .modal-header {
+        font-size: 1.5rem;
+        color: #003366;
+        margin-bottom: 1rem;
+    }
+
+    .student-list {
+        list-style: none;
+        padding: 0;
+    }
+
+    .student-list li {
+        margin-bottom: 0.5rem;
+        font-size: 1rem;
+    }
+
+</style>
+
+<div class="course-container">
+    {% for curso in cursos %}
+        {% if curso.nombre != "Sin cursos" %}
+            <div class="course-card">
+                <div class="course-header">
+                    <h2 class="course-name">{{ curso.nombre }}</h2>
+                    <h4 class="course-paralelo">Paralelo: {{ curso.paralelo }}</h4>
+                </div>
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress" style="width: 60%;"></div>
+                    </div>
+                </div>
+                <button class="access-button">Asignar Docente</button>
+                <hr>
+                <button class="access-button" data-bs-toggle="modal" data-bs-target="#assignStudentModal">Asignar Estudiante</button>
+            </div>
+        {% endif %}
+    {% endfor %}
+</div>
+
+<!-- Modal Asignar Estudiante -->
+<div class="modal fade" id="assignStudentModal" tabindex="-1" aria-labelledby="assignStudentModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="assignStudentModalLabel">Seleccionar Estudiantes</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <ul class="student-list">
+            <form action="/estudiante/asignarEstudiante" method="POST">
+                {% for estudiante in estudiantes %}
+                    <li>
+                        <input type="checkbox" id="student_{{ estudiante.id }}" name="estudiantes" value="{{ estudiante.id }}">
+                        <label for="student_{{ estudiante.id }}">{{ estudiante.nombre }} {{ estudiante.apellido }}</label>
+                    </li>
+                {% endfor %}
+                    <button type="submit">Asignar</button>
+            </form>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-primary">Asignar Estudiante</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

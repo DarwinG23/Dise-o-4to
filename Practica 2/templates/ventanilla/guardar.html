@@ -1,0 +1,42 @@
+{% extends "menu.html" %}
+{% block content %}
+<div class="text-center">
+    <h1 class="display-4">VENTANILLA {{idServidor}}</h1>
+</div>
+<div class="booking-form-body">
+    <form id="form" class="custom-form booking-form" action="/servidores/atenciones/guardar/{{idServidor}}" method="post" role="form">
+        <div class="booking-form-body">
+            <div class="row">
+                
+                <div class="date col-lg-6 col-12" id="date" data-target-input="nearest">
+                    <input type="text" name="dia" class="form-control bg-transparent border-primary p-4 datetimepicker-input" placeholder="Dia" data-target="#date" data-toggle="datetimepicker"/>
+                </div>
+            
+                <div class="col-lg-6 col-12">
+                    <input type="text" name="tiempo" class="form-control" placeholder="Tiempo" required>
+                </div>
+                
+                <div class="col-lg-6 col-12">
+                    <select class="custom-select bg-transparent border-primary px-4" style="height: 49px;" name="calificacion" class="form-control">
+                        <option selected>Calficacion</option>
+                        <option value="Malo">Malo</option>
+                        <option value="Regular">Regular</option>
+                        <option value="Bueno">Bueno</option>
+                        <option value="Muy Bueno">Muy Bueno</option>
+                        <option value="Excelente">Excelente</option>
+                    </select>
+                </div>
+            
+                <div class="col-lg-6 col-12">
+                    <input type="text" name="motivo" class="form-control" placeholder="Motivo" required>
+                </div>
+
+                <div class="col-lg-4 col-md-10 col-8 mx-auto mt-2">
+                    <button id="boton" type="submit" class="form-control btn btn-success">Guardar</button>
+                </div>
+            </div>
+        </div>
+
+    </form>
+</div>
+{% endblock %}
