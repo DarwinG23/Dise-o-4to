@@ -84,16 +84,12 @@ class Docente:
         docente._idUsuario = data["idusuario"]
         rc = RecomendacionControl()
         cc = CursoControl()
-        if cc._list().isEmpty:
-            cursos = Linked_List()
-        else:
-            cursos = cc._list()
+        cursos = cc._list()
+        if not cursos.isEmpty:
             cursos = cursos.lineal_binary_search_models(str(docente._id),"_idDocente")
         docente._cursos = cursos
-        if rc._list().isEmpty:
-            recomendaciones = Linked_List()
-        else:
-            recomendaciones = rc._list()
+        recomendaciones = rc._list()
+        if not recomendaciones.isEmpty:
             recomendaciones = recomendaciones.lineal_binary_search_models(str(docente._id),"_idDocente")
         return docente
         

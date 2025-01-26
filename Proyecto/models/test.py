@@ -91,10 +91,8 @@ class Test:
         test._idAsignacion = data['idasignacion']
         test._idAdministrador = data['idadministrador']
         pc = PreguntaControl()
-        if pc._list().isEmpty:
-            preguntas = pc._list()
-        else:
-            preguntas = pc._list()
+        preguntas = pc._list()
+        if not preguntas.isEmpty:
             preguntas = preguntas.lineal_binary_search_models(str(test._id),"_idTest")
         test._preguntas = preguntas
         return test

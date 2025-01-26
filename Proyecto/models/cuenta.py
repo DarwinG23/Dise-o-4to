@@ -92,26 +92,13 @@ class Cuenta:
         cuenta._estado = dic["estado"]
         cuenta._idUsuario = dic["idusuario"]
         rc = RolControl()
-        print("Estamos aqui")
-        print(rc._list())
-        if rc._list().isEmpty:
-            print("Estamos aqui")
-            roles = Linked_List()
-        else:
-            print("Else")
-            roles = rc._list()
-            print(roles)
-            print(cuenta._id)
+        roles = rc._list()
+        if not roles.isEmpty:
             roles = roles.lineal_binary_search_models(str(cuenta._id),"_idCuenta")
-            print(roles)
         cuenta._roles = roles
-        print(cuenta._roles)
-        print("############")
         nc = NotificacionControl()
-        if nc._list().isEmpty:
-            notificaciones = Linked_List()
-        else:
-            notificaciones = nc._list()
+        notificaciones = nc._list()
+        if not  notificaciones.isEmpty:
             notificaciones = notificaciones.lineal_binary_search_models(str(cuenta._id),"_idCuenta")
         cuenta._notificaciones = notificaciones
         return cuenta
