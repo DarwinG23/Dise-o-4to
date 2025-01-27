@@ -17,26 +17,26 @@ ec = EstudianteControl()
 cuc = CursoControl()
 
 #PIMERO CREAMOS EL USUARIO
-# uc._usuario._nombre = "Darwin"
-# uc._usuario._apellido = "Sarango"
-# uc._usuario._ci = "1105630030"
-# uc._usuario._fechaNacimiento = "20/06/2004" #IMPORTANTE EL FORMATO ES DD/MM/YYYY
-# uc._usuario._direccion = "Obrapia Menfis Central" 
-# uc._usuario._telefono = "0964209135"
+# uc._usuario._nombre = "Alexander"
+# uc._usuario._apellido = "Sánchez"
+# uc._usuario._ci = "1104753890"
+# uc._usuario._fechaNacimiento = "08/09/2003" #IMPORTANTE EL FORMATO ES DD/MM/YYYY
+# uc._usuario._direccion = "Calle 10 de agosto y 9 de octubre" 
+# uc._usuario._telefono = "0980679607"
 # uc.save
 
 #SEGUNDO CREAMOS LA CUENTA
-# cc._cuenta._correo = "darwin.a.sarango@unl.edu.ec"
+# cc._cuenta._correo = "alexander.a.sanchez@unl.edu.ec"
 # cc._cuenta._contrasena = "1234"
 # cc._cuenta._estado = 1
 # cc._cuenta._idUsuario = 1
 # cc.save
 
 # TERCERO CREAMOS EL ROL
-# rc._rol._nombre = "Estudiante"
-# rc._rol._detalle = "Rol para los estudiantes"
+# rc._rol._nombre = "Docente"
+# rc._rol._detalle = "Rol para los docentes"
 # rc._rol._estado = 1
-# rc._rol._idCuenta = 4
+# rc._rol._idCuenta = 1
 # rc.save
 
 
@@ -65,9 +65,8 @@ cuc = CursoControl()
 # cc.save
 
 
-# CREAR DOCENTE
+# #CREAR DOCENTE
 # dc = DocenteControl()
-
-# dc._docente._titulo = "Ingeniero de software"
-# dc._docente._idUsuario = 3
+# dc._docente._titulo = "Ingeniero en sistemas"
+# dc._docente._idUsuario = 1
 # dc.save

@@ -1,0 +1,98 @@
+{% extends 'estudiante/estudianteInicio.html' %}
+
+{% block content %}
+<div class="card p-4">
+  <h5 class="card-title text-center mb-4 fw-bold">Asignar Tarea</h5>
+
+  <form class="row g-3" method="POST" action="/asignar_tarea" enctype="multipart/form-data">
+    <!-- Título de la tarea -->
+    <div class="col-md-12">
+      <label for="titulo" class="form-label fw-bold">Título:</label>
+      <input type="text" class="form-control" id="titulo" name="titulo" required>
+    </div>
+
+    <!-- Descripción de la tarea -->
+    <div class="col-md-12">
+      <label for="descripcion" class="form-label fw-bold">Descripción:</label>
+      <textarea class="form-control" id="descripcion" name="descripcion" rows="3" required></textarea>
+    </div>
+
+    <!-- Fecha de inicio -->
+    <div class="col-md-6">
+      <label for="fecha_inicio" class="form-label fw-bold">Fecha de inicio:</label>
+      <input type="date" class="form-control" id="fecha_inicio" name="fecha_inicio" required>
+    </div>
+
+    <!-- Fecha de fin -->
+    <div class="col-md-6">
+      <label for="fecha_fin" class="form-label fw-bold">Fecha de fin:</label>
+      <input type="date" class="form-control" id="fecha_fin" name="fecha_fin" required>
+    </div>
+
+    <!-- Estado de la tarea -->
+    <div class="col-md-12">
+      <label for="estado" class="form-label fw-bold">Estado:</label>
+      <select class="form-select" id="estado" name="estado" required>
+        <option value="No calificado" selected>No calificado</option>
+        <option value="Calificado">Calificado</option>
+        <option value="En proceso">En proceso</option>
+      </select>
+    </div>
+
+    <!-- Cargar archivo (con drag and drop y área más grande) -->
+    <div class="col-md-12">
+      <label for="archivo" class="form-label fw-bold">Cargar archivo:</label>
+      <div class="border border-primary rounded p-4 text-center" style="min-height: 150px;" id="fileDropArea">
+        <p class="mb-2 fw-bold">Arrastra y suelta tu archivo aquí</p>
+        <input type="file" class="form-control d-none" id="archivo" name="archivo" accept=".pdf, .doc, .docx, .pptx" required>
+        <p class="text-muted mb-0">Puede arrastrar y soltar archivos aquí para añadirlos - (PDF)</p>
+      </div>
+    </div>
+
+    <!-- Botón para publicar la tarea -->
+    <div class="col-12 mt-3">
+      <button class="btn btn-success w-100" type="submit">Publicar tarea</button>
+    </div>
+  </form>
+</div>
+
+<script>
+  // Función para manejar el arrastre y la caída de archivos
+  const dropArea = document.getElementById("fileDropArea");
+  const fileInput = document.getElementById("archivo");
+
+  dropArea.addEventListener("dragover", (e) => {
+    e.preventDefault(); // Evitar el comportamiento por defecto
+    dropArea.classList.add("border-success"); // Agregar borde verde cuando se está arrastrando
+  });
+
+  dropArea.addEventListener("dragleave", () => {
+    dropArea.classList.remove("border-success"); // Eliminar borde verde cuando el archivo deja de arrastrarse
+  });
+
+  dropArea.addEventListener("drop", (e) => {
+    e.preventDefault(); // Prevenir el comportamiento por defecto
+    dropArea.classList.remove("border-success");
+
+    // Obtener el archivo
+    const file = e.dataTransfer.files[0];
+    if (file) {
+      fileInput.files = e.dataTransfer.files; // Asignar el archivo al input
+      dropArea.innerHTML = `<p class="mb-2">Archivo seleccionado: ${file.name}</p>`; // Mostrar el nombre del archivo
+    }
+  });
+
+  // Hacer clic en el área de arrastre para abrir el selector de archivos
+  dropArea.addEventListener("click", () => {
+    fileInput.click();
+  });
+
+  // Actualizar el área de arrastre cuando se selecciona un archivo manualmente
+  fileInput.addEventListener("change", () => {
+    const file = fileInput.files[0];
+    if (file) {
+      dropArea.innerHTML = `<p class="mb-2">Archivo seleccionado: ${file.name}</p>`; // Mostrar el nombre del archivo
+    }
+  });
+</script>
+{% endblock %}

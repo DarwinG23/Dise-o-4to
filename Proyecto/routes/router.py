@@ -168,7 +168,7 @@ def asignarEstudiante():
 
 
 
-#------------ Vista Docente------------------------#
+#------------------------------------------------Vista Docente----------------------------------------------------------------#
 @router.route('/docente')
 def docente():
     return render_template('/docente/docente.html')
@@ -177,6 +177,21 @@ def docente():
 @router.route('/docenteInicio', methods=['GET'])
 def docenteInicio():
     return render_template('/docente/docenteCursos.html')
+
+
+
+@router.route('/docenteAd', methods=['GET'])
+def docenteAd():
+    return render_template('/docente/asignacion.html')
+
+
+@router.route('/listaEstudiantes', methods=['GET'])
+def verListaE():
+    return render_template('/docente/crud/listaEstudiantes.html')   
+
+@router.route('/tarea', methods=['GET'])
+def asignarTarea():
+    return render_template('/docente/asignarTarea.html')  
 
 
 @router.route('/docente/crearAsignacion/<cursos>', methods=['GET'])
@@ -305,3 +320,8 @@ def asignarCurso():
     
     return render_template('administrador/asignarCurso.html', cursos = cc.to_dic_lista(cursos), estudiantes = ec.to_dic_lista(lista))
 
+#---------------------------------------------Estadisticas-----------------------------------------------------#    
+@router.route('/estadisticas', methods=['GET'])
+def estadisticas():
+    # Datos de ejemplo para las estadísticas del estudiante
+    return render_template('estadisticas/estadisticasEstudiantes.html')

@@ -69,10 +69,7 @@ class Cuenta:
     def _notificaciones(self, value):
         self.__notificaciones = value
 
-        
-
-   
-        
+    
     @property
     def serializable(self):
         return {
