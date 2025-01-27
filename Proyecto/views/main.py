@@ -1,5 +1,6 @@
 import sys
 sys.path.append('..')
+from controls.tda.administradorControl import AdministradorControl
 from controls.tda.permisoControl import PermisoControl
 from controls.tda.rolContol import RolControl
 from controls.tda.cuentaControl import CuentaControl
@@ -19,24 +20,24 @@ cuc = CursoControl()
 #PIMERO CREAMOS EL USUARIO
 # uc._usuario._nombre = "Darwin"
 # uc._usuario._apellido = "Sarango"
-# uc._usuario._ci = "1105630030"
+# uc._usuario._ci = "1105630031"
 # uc._usuario._fechaNacimiento = "20/06/2004" #IMPORTANTE EL FORMATO ES DD/MM/YYYY
-# uc._usuario._direccion = "Obrapia Menfis Central" 
-# uc._usuario._telefono = "0964209135"
+# uc._usuario._direccion = "Menfis Central" 
+# uc._usuario._telefono = "0964209134"
 # uc.save
 
 #SEGUNDO CREAMOS LA CUENTA
-# cc._cuenta._correo = "darwin.a.sarango@unl.edu.ec"
+# cc._cuenta._correo = "admin.darwin@unl.edu.ec"
 # cc._cuenta._contrasena = "1234"
 # cc._cuenta._estado = 1
-# cc._cuenta._idUsuario = 1
+# cc._cuenta._idUsuario = 4
 # cc.save
 
 # TERCERO CREAMOS EL ROL
-# rc._rol._nombre = "Estudiante"
-# rc._rol._detalle = "Rol para los estudiantes"
+# rc._rol._nombre = "Administrador"
+# rc._rol._detalle = "Rol para los administradores del sistema"
 # rc._rol._estado = 1
-# rc._rol._idCuenta = 4
+# rc._rol._idCuenta = 3
 # rc.save
 
 
@@ -47,6 +48,11 @@ cuc = CursoControl()
 # pc._permiso._idRol = 1
 # pc.save
 
+
+#CREACION DE ADMINISTRADOR
+# ac = AdministradorControl()
+# ac._administrador._idUsuario = 4
+# ac.save
 
 #CREACION DE UN ESTUDIANTE
 # ec._estudiante._matricula = "697692"

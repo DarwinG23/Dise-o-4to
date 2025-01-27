@@ -4,39 +4,75 @@
 <div class="container mt-5">
     <div class="card shadow-lg">
         <div class="card-header bg-primary text-white text-center">
-            <h2>Panel del Administrador</h2>
+            <h2 class="fw-bold">Panel Administrativo</h2>
         </div>
-        <div class="card-body text-center">
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <a href="/administrador/gestionar_usuarios" class="btn btn-lg btn-primary w-100">
-                        Gestionar Usuarios
-                    </a>
+        <div class="card-body">
+            <!-- Section: Gestionar -->
+            <div class="section">
+                <h4 class="text-primary section-title">
+                    <i class="bi bi-tools me-2"></i>Gestionar
+                </h4>
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <a href="/administrador/gestionar_usuarios" class="btn btn-lg btn-outline-primary w-100 custom-btn">👤 Gestionar Usuarios</a>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <a href="/administrador/gestionar_cuentas" class="btn btn-lg btn-outline-primary w-100 custom-btn">💳 Gestionar Cuentas</a>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <a href="/administrador/gestionar_estudiantes" class="btn btn-lg btn-outline-primary w-100 custom-btn">🎓 Gestionar Estudiantes</a>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <a href="/administrador/gestionar_administradores" class="btn btn-lg btn-outline-primary w-100 custom-btn">🛠️ Gestionar Administradores</a>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <a href="/administrador/gestionar_docentes" class="btn btn-lg btn-outline-primary w-100 custom-btn">📘 Gestionar Docentes</a>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <a href="/administrador/gestionar_permisos" class="btn btn-lg btn-outline-primary w-100 custom-btn">🔐 Gestionar Permisos</a>
+                    </div>
                 </div>
-                <div class="col-md-6 mb-3">
-                    <a href="/administrador/gestionar_tecnicas" class="btn btn-lg btn-primary w-100">
-                        Gestionar Técnicas
-                    </a>
+            </div>
+
+            <!-- Section: Crear -->
+            <div class="section mt-5">
+                <h4 class="text-primary section-title">
+                    <i class="bi bi-plus-circle me-2"></i>Crear
+                </h4>
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <a href="/administrador/crearCurso" class="btn btn-lg btn-outline-success w-100 custom-btn">📚 Crear Cursos</a>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <a href="/administrador/asignarCurso" class="btn btn-lg btn-outline-success w-100 custom-btn">📌 Asignar Cursos</a>
+                    </div>
                 </div>
-                <div class="col-md-6 mb-3">
-                    <a href="/administrador/configurar_alertas" class="btn btn-lg btn-primary w-100">
-                        Configurar Alertas
-                    </a>
-                </div>
-                <div class="col-md-6 mb-3">
-                    <a href="/administrador/visualizar_datos" class="btn btn-lg btn-primary w-100">
-                        Visualizar Datos
-                    </a>
-                </div>
-                <div class="col-md-6 mb-3">
-                    <a href="/administrador/crearCurso" class="btn btn-lg btn-primary w-100">
-                        Crear Cursos
-                    </a>
-                </div>
-                <div class="col-md-6 mb-3">
-                    <a href="/administrador/asignarCurso" class="btn btn-lg btn-primary w-100">
-                        Asignar Cursos
-                    </a>
+            </div>
+
+            <!-- Section: Otros -->
+            <div class="section mt-5">
+                <h4 class="text-primary section-title">
+                    <i class="bi bi-three-dots me-2"></i>Otros
+                </h4>
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <a href="/administrador/gestionar_preguntas" class="btn btn-lg btn-outline-warning w-100 custom-btn">❓ Gestionar Preguntas</a>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <a href="/administrador/gestionar_roles" class="btn btn-lg btn-outline-warning w-100 custom-btn">🎭 Gestionar Roles</a>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <a href="/administrador/gestionar_tests" class="btn btn-lg btn-outline-warning w-100 custom-btn">📝 Gestionar Tests</a>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <a href="/administrador/gestionar_tecnicas" class="btn btn-lg btn-outline-warning w-100 custom-btn">🛠️ Gestionar Técnicas</a>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <a href="/administrador/configurar_alertas" class="btn btn-lg btn-outline-danger w-100 custom-btn">🚨 Configurar Alertas</a>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <a href="/administrador/visualizar_datos" class="btn btn-lg btn-outline-info w-100 custom-btn">📊 Visualizar Datos</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -45,4 +81,70 @@
         </div>
     </div>
 </div>
+
+<style>
+    .card {
+        border-radius: 20px;
+        overflow: hidden;
+        border: none;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        
+    }
+
+    .card-header {
+        background: linear-gradient(135deg, #84c5f4, #0078d7);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        color: white;
+    }
+
+    .section-title {
+        font-size: 1.5rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .custom-btn {
+        transition: all 0.3s ease;
+        font-size: 1rem;
+        font-weight: 500;
+    }
+
+    .custom-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    }
+
+    .custom-btn:active {
+        transform: translateY(0);
+        box-shadow: none;
+    }
+
+    .btn-outline-primary:hover {
+        background-color: #0056b3;
+        color: white;
+    }
+
+    .btn-outline-success:hover {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .btn-outline-warning:hover {
+        background-color: #ffc107;
+        color: white;
+    }
+
+    .btn-outline-danger:hover {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    .btn-outline-info:hover {
+        background-color: #17a2b8;
+        color: white;
+    }
+</style>
+
+
+
 {% endblock %}
