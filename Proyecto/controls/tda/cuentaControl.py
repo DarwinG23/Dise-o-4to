@@ -89,7 +89,17 @@ class CuentaControl(DaoAdapter):
         return logueado, rol, None, None, None, None, None
         
         
-    
+    # def modificarDatoscuenta(self, correo, contrasena, id):
+    #     cuenta = self._list().binary_search_models(correo, "_correo")
+    #     cuenta._contrasena = contrasena
+    #     cuenta._idUsuario = id
+    #     self.save
     
 
-    
+    def obtener_roles(self, correo):
+        cuenta = self._list().binary_search_models(correo, "_correo")
+        roles = cuenta._roles
+        estudiante = roles.binary_search_models("Estudiante", "_nombre")
+        if estudiante != -1:
+            return "Estudiante"
+        return self._cuenta._roles
