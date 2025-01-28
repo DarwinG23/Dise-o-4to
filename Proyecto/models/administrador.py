@@ -41,7 +41,7 @@ class Administrador:
         self.__tests = value
         
     @property
-    def serializar(self):
+    def serializable(self):
         return {
             "id": self.__id,
             "idUsuario": self.__idUsuario

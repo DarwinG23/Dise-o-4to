@@ -61,7 +61,7 @@ class Notificacion:
     def serializable(self):
         return {
             "id": self.__id,
-            "titulo": self.__titulo,
+            "titulonotificacion": self.__titulo,
             "mensaje": self.__mensaje,
             "fechaCreacion": self.__fechaCreacion,
             "horaEnvio": self.__horaEnvio,
@@ -72,9 +72,9 @@ class Notificacion:
     def deserializar(self, data):
         notificacion = Notificacion()
         notificacion._id = data['id']
-        notificacion._titulo = data['titulo']
+        notificacion._titulo = data['titulonotificacion']
         notificacion._mensaje = data['mensaje']
-        notificacion._fechaCreacion = data['fechaCreacion']
-        notificacion._horaEnvio = data['horaEnvio']
-        notificacion._idCuenta = data['idCuenta']
+        notificacion._fechaCreacion = data['fechacreacion']
+        notificacion._horaEnvio = data['horaenvio']
+        notificacion._idCuenta = data['idcuenta']
         return notificacion

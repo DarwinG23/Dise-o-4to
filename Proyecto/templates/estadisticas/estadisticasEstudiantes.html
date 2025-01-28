@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Estadísticas del Estudiante</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Estilos personalizados para hacer los gráficos más grandes */
+        .chart-container {
+            width: 100%;
+            height: 400px;  /* Altura fija para los gráficos */
+            margin-bottom: 20px;
+        }
+        .card {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Plantilla base que estás extendiendo -->
+    {% extends 'estudiante/estudianteInicio.html' %}
+    {% block content %}
+    <h3 class="mt-4 text-black fw-bold">Estadísticas (Estudiante) - Darwin Sarango: 4to-Ciclo</h3>
+        <div class="container">
+            <!--  <h1 class="mt-4 text-center">Estadísticas de Darwin Sarango</h1> --><!-- Título encima de las gráficas -->
+
+            <!-- Fila 1: Gráfico de Desempeño Académico y Nivel de Estrés -->
+            <div class="row">
+                <!-- Gráfico 1: Desempeño Académico -->
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Desempeño Académico</h5>
+                            <div class="chart-container">
+                                <canvas id="desempenoChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gráfico 2: Nivel de Estrés -->
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Nivel de Estrés</h5>
+                            <div class="chart-container">
+                                <canvas id="estresChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            // Datos falsos para los gráficos
+            const desempenoData = [80, 90, 85, 88, 92];  // Datos de desempeño académico
+            const estresData = [2, 3, 4, 2, 3];  // Datos de nivel de estrés (1-5)
+
+            // Configuración común para los gráficos
+            const commonOptions = {
+                responsive: true,
+                maintainAspectRatio: false,  // Permite que los gráficos se ajusten al contenedor
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100  // Ajusta según tus necesidades
+                    }
+                }
+            };
+
+            // Gráfico 1: Desempeño Académico
+            new Chart(document.getElementById('desempenoChart'), {
+                type: 'line',
+                data: {
+                    labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4', 'Semana 5'],
+                    datasets: [{
+                        label: 'Desempeño',
+                        data: desempenoData,
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderWidth: 2
+                    }]
+                },
+                options: commonOptions
+            });
+
+            // Gráfico 2: Nivel de Estrés
+            new Chart(document.getElementById('estresChart'), {
+                type: 'bar',
+                data: {
+                    labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4', 'Semana 5'],
+                    datasets: [{
+                        label: 'Nivel de Estrés',
+                        data: estresData,
+                        backgroundColor: 'rgba(255, 206, 86, 0.2)',
+                        borderColor: 'rgba(255, 206, 86, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: commonOptions
+            });
+        </script>
+    {% endblock %}
+</body>
+</html>

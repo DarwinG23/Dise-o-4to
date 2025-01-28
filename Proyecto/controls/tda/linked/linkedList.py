@@ -281,6 +281,7 @@ class Linked_List(object):
         if self.isEmpty:
             raise LinkedEmpty("List is Empty")
         else:  
+            print("entro")
             array = self.toArray
             self.clear
             if isinstance(array[0], object): 

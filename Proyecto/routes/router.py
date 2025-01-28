@@ -5,6 +5,9 @@ import time, math, datetime
 import random
 from controls.tda.asignacionControl import AsignacionControl
 from controls.tda.cursoControl import CursoControl
+from controls.tda.permisoControl import PermisoControl
+from controls.tda.preguntaControl import PreguntaControl
+from controls.tda.testControl import TestControl
 from controls.util.read import Read
 from io import BytesIO
 from controls.util.cedula import Cedula
@@ -18,6 +21,7 @@ from controls.tda.administradorControl import AdministradorControl
 from datetime import datetime
 from controls.tda.cursoControl import CursoControl
 import json
+import urllib.parse
 router = Blueprint('router', __name__)
 
 
@@ -56,6 +60,25 @@ def login():
             return render_template('docente/docenteInicio.html', cursos = cc.to_dic_lista(cursos), tiene = tiene, roles = nombreRol, nombreU = nombre, apellidoU = apellido)
         elif rol == "Estudiante":
             return render_template('estudiante/inicioEstudiante.html', cursos = cc.to_dic_lista(cursos), tiene = tiene, roles = nombreRol, nombreU = nombre, apellidoU = apellido)
+
+@router.route('/inicio/<roles>/<nombreU>/<apellidoU>/<cursos>/<tiene>', methods=["GET"])
+def regresarInicio(roles, nombreU, apellidoU, cursos, tiene):
+    cursos_string = cursos
+    cursos_decodificados = urllib.parse.unquote(cursos_string)
+    cursos_json = cursos_decodificados.replace("'", "\"")
+    try:
+        cursos_dic = json.loads(cursos_json)
+        if roles == "Administrador":
+            return render_template('administrador/administrador.html', roles = roles, nombreU = nombreU, apellidoU = apellidoU, cursos = cursos_dic, tiene = tiene)
+        elif roles == "Docente":
+            return render_template('docente/docenteInicio.html', roles = roles, nombreU = nombreU, apellidoU = apellidoU, cursos = cursos_dic, tiene = tiene)
+        elif roles == "Estudiante":
+            return render_template('estudiante/inicioEstudiante.html', roles = roles, nombreU = nombreU, apellidoU = apellidoU, cursos = cursos_dic, tiene = tiene)
+        else:
+            return render_template('inicio.html')
+    except json.JSONDecodeError as e:
+        print("Error al decodificar JSON:", e)
+    return render_template('inicio.html')
         
 @router.route('/registrarEstudiante')
 def registrarEstudiante():
@@ -168,7 +191,7 @@ def asignarEstudiante():
 
 
 
-#------------ Vista Docente------------------------#
+#------------------------------------------------Vista Docente----------------------------------------------------------------#
 @router.route('/docente')
 def docente():
     return render_template('/docente/docente.html')
@@ -179,8 +202,23 @@ def docenteInicio():
     return render_template('/docente/docenteCursos.html')
 
 
-@router.route('/docente/crearAsignacion/<cursos>', methods=['GET'])
-def crearTarea(cursos):
+
+@router.route('/docenteAd', methods=['GET'])
+def docenteAd():
+    return render_template('/docente/asignacion.html')
+
+
+@router.route('/listaEstudiantes', methods=['GET'])
+def verListaE():
+    return render_template('/docente/crud/listaEstudiantes.html')   
+
+@router.route('/tarea', methods=['GET'])
+def asignarTarea():
+    return render_template('/docente/asignarTarea.html')  
+
+
+@router.route('/docente/crearAsignacion/<roles>/<nombreU>/<apellidoU>/<cursos>/<tiene>', methods=['GET'])
+def crearTarea(roles, nombreU, apellidoU,cursos, tiene):
     cursos_lista = eval(cursos)
     ec = EstudianteControl()
     estudiantes = ec._list()
@@ -206,32 +244,31 @@ def crearTarea(cursos):
             lista.addNode(usuario)
     
 
-    return render_template('/docente/crearAsignacion.html', cursos = cursos_lista, estudiantes = ec.to_dic_lista(listaEst), usuarios = uc.to_dic_lista(lista))
+    return render_template('/docente/crearAsignacion.html', cursos = cursos_lista, estudiantes = ec.to_dic_lista(listaEst), usuarios = uc.to_dic_lista(lista), roles = roles, nombreU = nombreU, apellidoU = apellidoU, tiene = tiene)
 
-# @router.route('/docente/eliminarAsignados', methods=['GET'])
-# def eliminarAsignados():
-#     return render_template('/docente/eliminarAsignados.html')
+# @router.route('/docente/asignarAsignacion/<roles>/<nombreU>/<apellidoU>/<cursos>/<tiene>', methods=['POST'])
+# def asignarAsignacion(roles, nombreU, apellidoU, cursos, tiene):
+#     data = request.form
+#     print(data)
+#     return redirect(url_for('router.inicio'))
+@router.route('/docente/curso/ver', methods=['GET'])
+def verCursoDocente():
+    return render_template('/docente/curso.html')
 
-# @router.route('/docente/evaluacionEstres', methods=['GET'])
-# def evaluacionEstres():
-#     return render_template('/docente/evaluacionEstres.html')
-
-# @router.route('/docente/gestionGeneral', methods=['GET'])
-# def gestionGeneral():
-#     return render_template('/docente/gestionGeneral.html')
 
 #---------------------------------------------Administrador-----------------------------------------------------#
 @router.route('/administrador', methods=['GET'])
 def administrador():
     return render_template('administrador/administrador.html')
 
+#################################################################################################################
 #Presentar la lista de usuarios
-@router.route('/administrador/gestionar_usuarios', methods=['GET'])
-def gestionar_usuarios():
+@router.route('/administrador/gestionar_usuarios/<roles>/<nombreU>/<apellidoU>', methods=['GET'])
+def gestionar_usuarios(roles, nombreU, apellidoU):
     uc = UsuarioControl() #Creo un objeto de la clase UsuarioControl
     listaUsuarios = uc._list() #Obtengo la lista de usuarios
     listaUsuarios.sort_models("_id",1,4) #La ordeno por id para presentarla
-    return render_template('administrador/crud/listaUsuario.html', lista = uc.to_dic_lista(listaUsuarios)) #Los envio al html
+    return render_template('administrador/crud/listaUsuario.html', roles =roles, nombreU =nombreU, apellidoU =apellidoU, lista = uc.to_dic_lista(listaUsuarios)) 
 
 #ORDENA LOS USUARIOS
 @router.route('/usuarios/ordenar/<tipo>/<attr>/<metodo>') 
@@ -262,6 +299,342 @@ def buscar_usuarios(tipo, data, attr):
         200
     )
 
+#################################################################################################################
+
+#Presentar la lista de cuentas
+@router.route('/administrador/gestionar_cuentas/<roles>/<nombreU>/<apellidoU>', methods=['GET'])
+def gestionar_cuentas(roles, nombreU, apellidoU):
+    cc = CuentaControl() #Creo un objeto de la clase UsuarioControl
+    listaCuentas = cc._list() #Obtengo la lista de usuarios
+    listaCuentas.sort_models("_id",1,4) #La ordeno por id para presentarla
+    return render_template('administrador/crud/listaCuenta.html', lista = cc.to_dic_lista(listaCuentas), roles = roles, apellidoU = apellidoU, nombreU = nombreU) #Los envio al html
+
+#ORDENAR LAS CUENTAS
+@router.route('/cuentas/ordenar/<tipo>/<attr>/<metodo>') 
+def ordenar_cuentas(tipo, attr, metodo):
+    cc = CuentaControl()
+    list = cc._list()
+    list.sort_models(attr,int(tipo),int(metodo))
+    return make_response(
+        jsonify({"msg": "OK", "code": 200, "data": cc.to_dic_lista(list)}),
+        200
+    )
+    
+#BUSCAR CUENTAS
+@router.route('/cuentas/busqueda/<tipo>/<data>/<attr>')
+def buscar_cuentas(tipo, data, attr):
+    cc = CuentaControl()
+    list = cc._list()
+    if tipo == "1":
+        list = list.lineal_binary_search_models(data, attr)
+    elif tipo == "2":
+        dato = list.binary_search_models(data, attr)
+        list.clear
+        if dato != -1:     
+            list.addNode(dato)
+        
+    return make_response(
+        jsonify({"msg": "OK", "code": 200, "data": cc.to_dic_lista(list)}),
+        200
+    )
+
+# @router.route('/administrador/modificarCuenta', methods=['POST'])
+# def modificarCuenta():
+#     data = request.form
+#     cc = CuentaControl()
+#     cc.modificarDatoscuenta(data["id"], data["correo"], data["estado"])
+#     return redirect(url_for('router.gestionar_cuentas'))
+
+#####################################################################################################
+#Presentar la lista de estudiantes
+@router.route('/administrador/gestionar_estudiantes/<roles>/<nombreU>/<apellidoU>', methods=['GET'])
+def gestionar_estudiantes(roles,nombreU, apellidoU):
+    #Falta hacer que se presente el nombre y apellido del estudiante
+    ec = EstudianteControl()
+    listaEstudiantes = ec._list()
+    listaEstudiantes.sort_models("_id",1,4) 
+    return render_template('administrador/crud/listaEstudiante.html', lista = ec.to_dic_lista(listaEstudiantes), roles = roles, nombreU = nombreU, apellidoU = apellidoU) #Los envio al html
+    
+
+#ORDENAR LOS ESTUDIANTES
+@router.route('/estudiantes/ordenar/<tipo>/<attr>/<metodo>') 
+def ordenar_estudiantes(tipo, attr, metodo):
+    ec = EstudianteControl()
+    list = ec._list()
+    list.sort_models(attr,int(tipo),int(metodo))
+    return make_response(
+        jsonify({"msg": "OK", "code": 200, "data": ec.to_dic_lista(list)}),
+        200
+    )
+    
+#BUSCAR ESTUDIANTES
+@router.route('/estudiantes/busqueda/<tipo>/<data>/<attr>')
+def buscar_estudiantes(tipo, data, attr):
+    ec = EstudianteControl()
+    list = ec._list()
+    if tipo == "1":
+        list = list.lineal_binary_search_models(data, attr)
+    elif tipo == "2":
+        dato = list.binary_search_models(data, attr)
+        list.clear
+        if dato != -1:     
+            list.addNode(dato)
+        
+    return make_response(
+        jsonify({"msg": "OK", "code": 200, "data": ec.to_dic_lista(list)}),
+        200
+    )
+
+########################################################################################################
+
+#Presentar la lista de Administradores
+@router.route('/administrador/gestionar_administradores/<roles>/<nombreU>/<apellidoU>', methods=['GET'])
+def gestionar_administradores(roles, nombreU, apellidoU):
+    #Falta hacer que se presente el nombre y apellido de los administradores
+    ac = AdministradorControl()
+    listaAdministradores = ac._list()
+    listaAdministradores.sort_models("_id",1,4) 
+    return render_template('administrador/crud/listaAdministrador.html', lista = ac.to_dic_lista(listaAdministradores), nombreU = nombreU, roles = roles, apellidoU = apellidoU) #Los envio al html
+    
+
+#ORDENAR LOS administradores
+@router.route('/administradores/ordenar/<tipo>/<attr>/<metodo>') 
+def ordenar_administradores(tipo, attr, metodo):
+    ac = AdministradorControl()
+    list = ac._list()
+    list.sort_models(attr,int(tipo),int(metodo))
+    return make_response(
+        jsonify({"msg": "OK", "code": 200, "data": ac.to_dic_lista(list)}),
+        200
+    )
+    
+#BUSCAR administradores
+@router.route('/administradores/busqueda/<tipo>/<data>/<attr>')
+def buscar_administradores(tipo, data, attr):
+    ac = AdministradorControl()
+    list = ac._list()
+    if tipo == "1":
+        list = list.lineal_binary_search_models(data, attr)
+    elif tipo == "2":
+        dato = list.binary_search_models(data, attr)
+        list.clear
+        if dato != -1:     
+            list.addNode(dato)
+        
+    return make_response(
+        jsonify({"msg": "OK", "code": 200, "data": ac.to_dic_lista(list)}),
+        200
+    )
+
+########################################################################################################
+#Presentar la lista de docentes
+@router.route('/administrador/gestionar_docentes/<roles>/<nombreU>/<apellidoU>', methods=['GET'])
+def gestionar_docentes(roles, nombreU, apellidoU):
+    #Falta hacer que se presente el nombre y apellido del Docente
+    dc = DocenteControl()
+    listaDocentes = dc._list()
+    listaDocentes.sort_models("_id",1,4) 
+    return render_template('administrador/crud/listaDocente.html', lista = dc.to_dic_lista(listaDocentes), roles = roles, nombreU = nombreU, apellidoU = apellidoU) #Los envio al html
+    
+
+#ORDENAR LOS docentes
+@router.route('/docentes/ordenar/<tipo>/<attr>/<metodo>') 
+def ordenar_docentes(tipo, attr, metodo):
+    dc = DocenteControl()
+    list = dc._list()
+    list.sort_models(attr,int(tipo),int(metodo))
+    return make_response(
+        jsonify({"msg": "OK", "code": 200, "data": dc.to_dic_lista(list)}),
+        200
+    )
+    
+#BUSCAR docentes
+@router.route('/docentes/busqueda/<tipo>/<data>/<attr>')
+def buscar_docentes(tipo, data, attr):
+    dc = DocenteControl()
+    list = dc._list()
+    if tipo == "1":
+        list = list.lineal_binary_search_models(data, attr)
+    elif tipo == "2":
+        dato = list.binary_search_models(data, attr)
+        list.clear
+        if dato != -1:     
+            list.addNode(dato)
+        
+    return make_response(
+        jsonify({"msg": "OK", "code": 200, "data": dc.to_dic_lista(list)}),
+        200
+    )
+
+
+########################################################################################################
+
+#Presentar la lista de permisos
+@router.route('/administrador/gestionar_permisos/<roles>/<nombreU>/<apellidoU>', methods=['GET'])
+def gestionar_permisos(roles, nombreU, apellidoU):
+    pc = PermisoControl()
+    listaPermisos = pc._list()
+    listaPermisos.sort_models("_id",1,4) 
+    return render_template('administrador/crud/listaPermiso.html', lista = pc.to_dic_lista(listaPermisos), roles = roles, nombreU = nombreU, apellidoU = apellidoU) #Los envio al html
+    
+
+#ORDENAR LOS ESTUDIANTES
+@router.route('/permisos/ordenar/<tipo>/<attr>/<metodo>') 
+def ordenar_permisos(tipo, attr, metodo):
+    pc = PermisoControl()
+    list = pc._list()
+    list.sort_models(attr,int(tipo),int(metodo))
+    return make_response(
+        jsonify({"msg": "OK", "code": 200, "data": pc.to_dic_lista(list)}),
+        200
+    )
+    
+#BUSCAR ESTUDIANTES
+@router.route('/permisos/busqueda/<tipo>/<data>/<attr>')
+def buscar_permisos(tipo, data, attr):
+    pc = PermisoControl()
+    list = pc._list()
+    if tipo == "1":
+        list = list.lineal_binary_search_models(data, attr)
+    elif tipo == "2":
+        dato = list.binary_search_models(data, attr)
+        list.clear
+        if dato != -1:     
+            list.addNode(dato)
+        
+    return make_response(
+        jsonify({"msg": "OK", "code": 200, "data": pc.to_dic_lista(list)}),
+        200
+    )
+
+########################################################################################################
+
+#Presentar la lista de preguntas
+@router.route('/administrador/gestionar_preguntas/<roles>/<nombreU>/<apellidoU>', methods=['GET'])
+def gestionar_preguntas(roles, nombreU, apellidoU):
+        #Falta que presente a que test esta asociada esta pregunta
+    pc = PreguntaControl()
+    listaPreguntas = pc._list()
+    listaPreguntas.sort_models("_id",1,4)
+    return render_template('administrador/crud/listaPregunta.html', lista = pc.to_dic_lista(listaPreguntas), roles = roles, nombreU=nombreU, apellidoU = apellidoU) #Los envio al html
+    
+
+#ORDENAR preguntas
+@router.route('/preguntas/ordenar/<tipo>/<attr>/<metodo>') 
+def ordenar_preguntas(tipo, attr, metodo):
+    pc = PreguntaControl()
+    list = pc._list()
+    list.sort_models(attr,int(tipo),int(metodo))
+    return make_response(
+        jsonify({"msg": "OK", "code": 200, "data": pc.to_dic_lista(list)}),
+        200
+    )
+    
+#BUSCAR pregutnas
+@router.route('/preguntas/busqueda/<tipo>/<data>/<attr>')
+def buscar_preguntas(tipo, data, attr):
+    pc = PreguntaControl()
+    list = pc._list()
+    if tipo == "1":
+        list = list.lineal_binary_search_models(data, attr)
+    elif tipo == "2":
+        dato = list.binary_search_models(data, attr)
+        list.clear
+        if dato != -1:     
+            list.addNode(dato)
+        
+    return make_response(
+        jsonify({"msg": "OK", "code": 200, "data": pc.to_dic_lista(list)}),
+        200
+    )
+
+########################################################################################################
+
+#Presentar la lista de roles
+@router.route('/administrador/gestionar_roles/<roles>/<nombreU>/<apellidoU>', methods=['GET'])
+#Falta poner que cuenta esta asociada a su rol correspondiente
+def gestionar_roles(roles, nombreU, apellidoU):
+    rc = RolControl()
+    listaRoles = rc._list()
+    listaRoles.sort_models("_id",1,4)
+    return render_template('administrador/crud/listaRol.html', lista = rc.to_dic_lista(listaRoles), roles = roles, nombreU=nombreU, apellidoU=apellidoU) #Los envio al html
+    
+
+#ORDENAR LOS roles
+@router.route('/roles/ordenar/<tipo>/<attr>/<metodo>') 
+def ordenar_roles(tipo, attr, metodo):
+    rc = RolControl()
+    list = rc._list()
+    list.sort_models(attr,int(tipo),int(metodo))
+    return make_response(
+        jsonify({"msg": "OK", "code": 200, "data": rc.to_dic_lista(list)}),
+        200
+    )
+    
+#BUSCAR roles
+@router.route('/roles/busqueda/<tipo>/<data>/<attr>')
+def buscar_roles(tipo, data, attr):
+    rc = RolControl()
+    list = rc._list()
+    if tipo == "1":
+        list = list.lineal_binary_search_models(data, attr)
+    elif tipo == "2":
+        dato = list.binary_search_models(data, attr)
+        list.clear
+        if dato != -1:     
+            list.addNode(dato)
+        
+    return make_response(
+        jsonify({"msg": "OK", "code": 200, "data": rc.to_dic_lista(list)}),
+        200
+    )
+
+
+########################################################################################################
+
+#Presentar la lista de tests
+@router.route('/administrador/gestionar_tests/<roles>/<nombreU>/<apellidoU>', methods=['GET'])
+def gestionar_tests(roles, nombreU, apellidoU):
+    tc = TestControl()
+    listaTests = tc._list()
+    listaTests.sort_models("_id",1,4)
+    return render_template('administrador/crud/listaTest.html', lista = tc.to_dic_lista(listaTests), roles = roles, nombreU=nombreU, apellidoU=apellidoU) #Los envio al html
+    
+
+#ORDENAR LOS roles
+@router.route('/tests/ordenar/<tipo>/<attr>/<metodo>') 
+def ordenar_tests(tipo, attr, metodo):
+    tc = TestControl()
+    list = tc._list()
+    list.sort_models(attr,int(tipo),int(metodo))
+    return make_response(
+        jsonify({"msg": "OK", "code": 200, "data": tc.to_dic_lista(list)}),
+        200
+    )
+    
+#BUSCAR roles
+@router.route('/tests/busqueda/<tipo>/<data>/<attr>')
+def buscar_tests(tipo, data, attr):
+    tc = TestControl()
+    list = tc._list()
+    if tipo == "1":
+        list = list.lineal_binary_search_models(data, attr)
+    elif tipo == "2":
+        dato = list.binary_search_models(data, attr)
+        list.clear
+        if dato != -1:     
+            list.addNode(dato)
+        
+    return make_response(
+        jsonify({"msg": "OK", "code": 200, "data": tc.to_dic_lista(list)}),
+        200
+    )
+
+
+
+
+
+
 @router.route('/administrador/gestionar_tecnicas', methods=['GET'])
 def gestionar_tecnicas():
     return render_template('administrador/gestionar_tecnicas.html')
@@ -286,8 +659,8 @@ def crearCursoPost():
     flash('Curso creado con exito', 'success')
     return redirect(url_for('router.administrador'))
 
-@router.route('/administrador/asignarCurso')
-def asignarCurso():
+@router.route('/administrador/asignarCurso/<roles>/<nombreU>/<apellidoU>', methods=['GET'])
+def asignarCurso(roles, nombreU, apellidoU):
     cc = CursoControl()
     cursos = cc._list()
     ec = EstudianteControl()
@@ -303,5 +676,10 @@ def asignarCurso():
         if usuario != -1:
             lista.addNode(usuario)
     
-    return render_template('administrador/asignarCurso.html', cursos = cc.to_dic_lista(cursos), estudiantes = ec.to_dic_lista(lista))
+    return render_template('administrador/asignarCurso.html', cursos = cc.to_dic_lista(cursos), estudiantes = ec.to_dic_lista(lista), roles= roles, nombreU = nombreU, apellidoU = apellidoU)
 
+#---------------------------------------------Estadisticas-----------------------------------------------------#    
+@router.route('/estadisticas', methods=['GET'])
+def estadisticas():
+    # Datos de ejemplo para las estadísticas del estudiante
+    return render_template('estadisticas/estadisticasEstudiantes.html')
