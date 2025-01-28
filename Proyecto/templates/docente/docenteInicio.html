@@ -167,41 +167,33 @@
 <body>
     <div class="main">
         <h1>Vista General de Curso</h1>
-        <div class="course-container">
-            {% if tiene == "Verdadero" %}
-                {% for curso in cursos %}
-                    {% if curso.nombre != "Sin cursos" %}
-                        <div class="course-card">
-                            <h2>{{ curso.nombre }}</h2>
-                            <div class="progress-bar">
-                                <div class="progress" style="width: 60%;"></div>
+            <div class="course-container">
+                {% if tiene == "Verdadero" %}
+                    {% for curso in cursos %}
+                        {% if curso.nombre != "Sin cursos" %}
+                            <div class="course-card">
+                                <h2>{{ curso.nombre }}</h2>
+                                <div class="progress-bar">
+                                    <div class="progress" style="width: 60%;"></div>
+                                </div>
+                                <a href="/docente/curso/ver/{{ roles }}/{{ nombreU }}/{{ apellido }}/{{ cursos }}/{{ tiene }}/{{ curso.id }}" class="btn btn-primary" role="button">Acceder</a>
                             </div>
-                            <button>Acceder</button>
-                        </div>
-                    {% endif %}
-                {% endfor %}
-            {% else %}
-                <div class="course-card">
-                    <h2>Sin cursos</h2>
-                </div>
-            {% endif %}
-        </div>
-    
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    <div class="course-card">
+                        <h2>Sin cursos</h2>
+                    </div>
+                {% endif %}
+            </div>
 
             <h2 class="text-center fw-bold">Opciones Disponibles</h2>
             <div class="task-list">
                 <!-- Opción 1 -->
                 <div class="task my-3 p-3 border rounded shadow-sm">
-                    <h3>Crear Tarea</h3>
-                    <p>Gestiona y asigna tareas para tus estudiantes de forma sencilla.</p>
-                    <a href="/docente/crearAsignacion/{{cursos}}" class="btn btn-primary">Ir a Crear Tarea</a>
-                </div>
-                
-                <!-- Opción 2 -->
-                <div class="task my-3 p-3 border rounded shadow-sm">
-                    <h3>Evaluación de Estrés</h3>
-                    <p>Realiza evaluaciones periódicas para medir el nivel de estrés académico.</p>
-                    <a href="/docente/evaluacionEstres" class="btn btn-primary">Realizar Evaluación</a>
+                    <h3>Crear Asignación</h3>
+                    <p>Gestiona y asigna tareas o tests para tus estudiantes de forma sencilla.</p>
+                    <a href="/docente/crearAsignacion/{{roles}}/{{nombreU}}/{{apellidoU}}/{{cursos}}/{{tiene}}" class="btn btn-primary">Ir a Crear Tarea</a>
                 </div>
                 
                 <!-- Opción 3 -->
