@@ -1,13 +1,12 @@
+{% extends 'estudiante/estudianteInicio.html' %}
+{% block content %}
 <!DOCTYPE html>
-<html lang="es">
-
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Docente - Gestión de Tareas</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <title>Cursos Impartidos</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-Yz5xwkjOoPeCVT9f59t2XjP2N1EkCbU7eCTu/FYwrjt9I+bb3fX9ifDNMLU9jdEk" crossorigin="anonymous">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -17,157 +16,15 @@
             color: #333;
         }
 
-        header {
-            background: #003366;
-            color: #fff;
-            padding: 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            z-index: 1000;
-        }
-
-        header h1 {
-            margin: 0;
-            font-size: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        header h1 img {
-            width: 50px;
-            height: 50px;
-        }
-
-        .perfil {
-            display: flex;
-            align-items: center;
-        }
-
-        .perfil img {
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            margin-right: 0.5rem;
-        }
-
-        .container {
-            margin-top: 5rem;
-            padding: 2rem;
-        }
-
-        .card {
-            margin-bottom: 1.5rem;
-        }
-
-        .status-badge {
-            padding: 0.5rem 1rem;
-            border-radius: 0.5rem;
-            color: #fff;
-        }
-
-        .status-respondido {
-            background-color: #28a745;
-        }
-
-        .status-pendiente {
-            background-color: #6c757d;
-        }
-
-        .status-no-respondido {
-            background-color: #dc3545;
-        }
-
-        .sidebar {
-            width: 20%;
-            background-color: #9dc9f5;
-            color: #fff;
-            padding: 1rem;
-            min-height: 100vh;
-            position: fixed;
-            top: 4rem;
-            left: 0;
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease-in-out;
-        }
-
-        .sidebar.hidden {
-            transform: translateX(-100%);
-        }
-
-        .sidebar .section {
-            background: #ffffff;
-            border-radius: 8px;
-            margin-bottom: 1rem;
-            padding: 1rem;
-            color: #003366;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .sidebar .section h2 {
-            margin-top: 0;
-            margin-bottom: 1rem;
-            font-size: 1.2rem;
+        .accordion-button {
             font-weight: bold;
-            border-bottom: 2px solid #003366;
-            padding-bottom: 0.5rem;
-        }
-
-        .sidebar .section ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .sidebar .section ul li {
-            margin-bottom: 0.5rem;
-        }
-
-        .sidebar .section ul li a {
-            color: #003366;
-            text-decoration: none;
-            font-size: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .sidebar .section ul li a:hover {
-            text-decoration: underline;
-        }
-
-        .toggle-sidebar {
-            position: absolute;
-            top: 4rem;
-            left: 20%;
-            background-color: #003366;
+            background-color: #007bff;
             color: #fff;
-            border: none;
-            border-radius: 0 8px 8px 0;
-            padding: 0.5rem;
-            cursor: pointer;
-            z-index: 1001;
-            transition: left 0.3s ease-in-out;
         }
 
-        .toggle-sidebar.hidden {
-            left: 0;
-        }
-
-        .main-content {
-            margin-left: 22%;
-            padding: 2rem;
-            transition: margin-left 0.3s ease-in-out;
-        }
-
-        .main-content.fullwidth {
-            margin-left: 2%;
+        .accordion-button:not(.collapsed) {
+            background-color: #0056b3;
+            color: #fff;
         }
 
         .assign-button {
@@ -184,7 +41,6 @@
             background-color: #0056b3;
         }
 
-        /* Estilos para el Modal */
         .modal {
             display: none;
             position: fixed;
@@ -192,245 +48,289 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.5);
             justify-content: center;
             align-items: center;
+            z-index: 1000;
         }
 
         .modal-content {
-            background-color: white;
-            padding: 2rem;
-            border-radius: 8px;
-            width: 400px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+            background-color: #fff;
+            padding: 1.5rem;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 0.3s ease-in-out;
         }
 
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        .modal-header h5 {
-            margin: 0;
+        .status-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            color: #fff;
         }
 
-        .close {
-            font-size: 1.5rem;
+        .status-respondido {
+            background-color: #28a745;
+        }
+
+        .status-pendiente {
+            background-color: #ffc107;
+        }
+
+        .status-no-respondido {
+            background-color: #dc3545;
+        }
+
+        .btn {
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            font-size: 0.9rem;
             cursor: pointer;
         }
 
-        .modal-body label {
-            display: block;
-            margin-bottom: 0.5rem;
+        .btn:hover {
+            opacity: 0.9;
         }
 
-        .modal-footer button {
-            width: 48%;
-        }
-
-        .modal-footer .btn-secondary {
-            width: 48%;
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 1rem;
+            border-top: 1px solid #ddd;
+            padding-top: 1rem;
         }
     </style>
 </head>
-
 <body>
-    <header>
-        <h1>
-            <img src="/static/img/unlLogo.png" alt="Logo Universidad Nacional de Loja">
-            Gestión Docente
-        </h1>
-        <div class="perfil">
-            <img src="/static/img/perfil.png" alt="Foto de perfil">
-            <div class="dropdown">
-                <a href="#" tabindex="0" class="dropdown-toggle text-white" id="user-menu-toggle"
-                    aria-label="Menú de usuario" data-bs-toggle="dropdown" role="button" aria-haspopup="true"
-                    aria-expanded="false">
-                    <span class="usertext">Docente: Alexander Antonio Sánchez Azuero</span>
-                </a>
-                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="user-menu-toggle">
-                    <li><a class="dropdown-item" href="#">Editar perfil</a></li>
-                    <li><a class="dropdown-item" href="#">Configuración</a></li>
-                    <li>
-                        <hr class="dropdown-divider">
-                    </li>
-                    <li><a class="dropdown-item text-danger" href="/logout">Cerrar sesión</a></li>
-                </ul>
-            </div>
-        </div>
-    </header>
-
-    <button class="toggle-sidebar" onclick="toggleSidebar()">&gt;</button>
-
-    <div class="sidebar">
-        <div class="section">
-            <h2>Menú</h2>
-            <ul>
-                <li><a href="#"><i class="fas fa-home"></i> Inicio</a></li>
-                <li><a href="#"><i class="fas fa-book"></i> Mis Cursos</a></li>
-                <li><a href="#"><i class="fas fa-clipboard-list"></i> Evaluaciones</a></li>
-                <li><a href="#"><i class="fas fa-envelope"></i> Mensajes</a></li>
-                <li><a href="#"><i class="fas fa-cog"></i> Configuración</a></li>
-            </ul>
-        </div>
-    </div>
-
-    <div class="main-content">
-        <div class="container">
-            <h2 class="mb-4">Cursos Impartidos</h2>
-                <div class="accordion" id="accordionCursos">
-                    {%for curso in cursos%}
-                        {%if curso.nombre != "Sin cursos"%}
-                            <div class="accordion-item">
-                                    <h2 class="accordion-header" id="headingOne">
-                                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                            data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                            {{ curso.nombre }} 
-                                        </button>
-                                    </h2>
-                                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
-                                    data-bs-parent="#accordionCursos">
-                                    <div class="accordion-body">
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <h3>Estudiantes</h3>
-                                            <button class="assign-button" onclick="openModal('Diseño de Software')">+ Asignar</button>
-                                        </div>
-                                        <table class="table table-striped">
-                                            <thead>
-                                                <tr>
-                                                    <th><input type="checkbox" id="selectAll" onclick="toggleSelectAll(this)"></th>
-                                                    <th>Nombre</th>
-                                                    <th>Estado Test</th>
-                                                    <th>Estado Tarea</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {%for est in estudiantes%}
-                                                    {%if est.idCurso == curso.id%}
-                                                        {%for usuario in usuarios%}
-                                                            {%if usuario.id == est.idUsuario%}
-                                                                <tr>
-                                                                    <td>
-                                                                        <input type="checkbox" name="seleccionados" value="{{ usuario.id }}" class="student-checkbox" data-usuario-id="{{ usuario.id }}">
-                                                                    </td>
-                                                                    <td>{{ usuario.nombre}} {{usuario.apellido}}</td>
-                                                                    <td><span class="status-badge status-respondido">Respondido</span></td>
-                                                                    <td><span class="status-badge status-pendiente">Pendiente</span></td>
-                                                                </tr>
-                                                            {%endif%}
-                                                        {%endfor%}
-                                                    {%endif%}
-                                                {%endfor%}
-                                            </tbody>
-                                        </table>
-                                    </div>
+    <div>
+        <h2 class="mb-4">Cursos Impartidos</h2>
+        <div class="accordion" id="accordionCursos">
+            {% for curso in cursos %}
+                {% if curso.nombre != "Sin cursos" %}
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="heading{{ loop.index }}">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ loop.index }}" aria-expanded="false" aria-controls="collapse{{ loop.index }}">
+                                {{ curso.nombre }}
+                            </button>
+                        </h2>
+                        <div id="collapse{{ loop.index }}" class="accordion-collapse collapse" aria-labelledby="heading{{ loop.index }}" data-bs-parent="#accordionCursos">
+                            <div class="accordion-body">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h3>Estudiantes</h3>
+                                    <button class="assign-button" onclick="openTaskModal()">+ Asignar Tarea</button>
+                                    <button class="assign-button" onclick="openTestModal()">+ Asignar Test</button>
                                 </div>
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th><input type="checkbox" id="selectAll" onclick="toggleSelectAll(this)"></th>
+                                            <th>Nombre</th>
+                                            <th>Estado Test</th>
+                                            <th>Estado Tarea</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for est in estudiantes %}
+                                            {% if est.idCurso == curso.id %}
+                                                {% for usuario in usuarios %}
+                                                    {% if usuario.id == est.idUsuario %}
+                                                        <tr>
+                                                            <td>
+                                                                <input type="checkbox" name="seleccionados" value="{{ usuario.id }}" class="student-checkbox">
+                                                            </td>
+                                                            <td>{{ usuario.nombre }} {{ usuario.apellido }}</td>
+                                                            <td><span class="status-badge status-respondido">Respondido</span></td>
+                                                            <td><span class="status-badge status-pendiente">Pendiente</span></td>
+                                                        </tr>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            {% endif %}
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
                             </div>
-                        {%endif%}
-                    {% endfor %}
-                </div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
         </div>
     </div>
 
-    <!-- Modal de Asignación -->
-    <div class="modal" id="assignModal">
+    <!-- Modal para Asignar Tarea -->
+    <div class="modal" id="taskModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h5>Registrar Asignación</h5>
-                <button class="close" onclick="closeModal()">&times;</button>
+                <h5>Asignar Tarea</h5>
+                <button class="btn-close" onclick="closeTaskModal()"></button>
             </div>
             <div class="modal-body">
-                <label for="fechaInicio">Fecha de Inicio:</label>
-                <input type="date" id="fechaInicio" placeholder="Fecha de Inicio">
-
-                <label for="fechaFin">Fecha de Fin:</label>
-                <input type="date" id="fechaFin" placeholder="Fecha de Fin">
-
-                <label for="estado">Estado:</label>
-                <input type="text" id="estado" value="Pendiente" disabled>
-
-                <label for="asignado">Asignado:</label>
-                <input type="text" id="asignado" value="No Asignado" disabled>
-
-                <!-- Aquí se añadirá el formulario expandible -->
-                <div id="testForm" style="display: none;">
-                    <label for="testName">Nombre del Test:</label>
-                    <input type="text" id="testName" placeholder="Nombre del Test">
-                    <label for="testDescription">Descripción del Test:</label>
-                    <textarea id="testDescription" placeholder="Descripción del Test"></textarea>
-                </div>
-
-                <div id="taskForm" style="display: none;">
+                <form id="taskForm">
                     <label for="taskTitle">Título de la Tarea:</label>
-                    <input type="text" id="taskTitle" placeholder="Título de la Tarea">
-                    <label for="taskDescription">Descripción de la Tarea:</label>
-                    <textarea id="taskDescription" placeholder="Descripción de la Tarea"></textarea>
-                </div>
+                    <input type="text" id="taskTitle" name="taskTitle" class="form-control mb-3" placeholder="Ingresa el título">
+    
+                    <label for="taskDescription">Descripción:</label>
+                    <textarea id="taskDescription" name="taskDescription" class="form-control mb-3" placeholder="Escribe una descripción"></textarea>
+    
+                    <label for="taskFile">Subir archivo (PDF):</label>
+                    <input type="file" id="taskFile" name="taskFile" class="form-control mb-3" accept=".pdf">
+                </form>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-success" onclick="assignTaskOrTest('task')">Asignar Tarea</button>
-                <button class="btn btn-warning" onclick="assignTaskOrTest('test')">Asignar Test</button>
-                <button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+                <button class="btn btn-success" onclick="assignTask()">Asignar Tarea</button>
+                <button class="btn btn-secondary" onclick="closeTaskModal()">Cancelar</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal para Asignar Test -->
+    <div class="modal" id="testModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5>Asignar Test</h5>
+                <button class="btn-close" onclick="closeTestModal()"></button>
+            </div>
+            <div class="modal-body">
+                <form id="testForm">
+                    <label for="testName">Nombre del Test:</label>
+                    <input type="text" id="testName" name="testName" class="form-control mb-3" placeholder="Ingresa el nombre del test">
+    
+                    <label for="testDescription">Descripción:</label>
+                    <textarea id="testDescription" name="testDescription" class="form-control mb-3" placeholder="Escribe una descripción"></textarea>
+    
+                    <label for="predefinedTests">Tests Predeterminados:</label>
+                    <select id="predefinedTests" name="predefinedTests" class="form-select mb-3">
+                        <option value="">Selecciona un test</option>
+                        <option value="test1">Test 1</option>
+                        <option value="test2">Test 2</option>
+                        <option value="test3">Test 3</option>
+                    </select>
+    
+                    <button type="button" class="btn btn-primary" onclick="createTest()">Crear Test</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success" onclick="assignTest()">Asignar Test</button>
+                <button class="btn btn-secondary" onclick="closeTestModal()">Cancelar</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Función para abrir el modal
-        function openModal(courseName) {
-            document.getElementById('assignModal').style.display = 'flex';
-        }
-
-        // Función para cerrar el modal
-        function closeModal() {
-            document.getElementById('assignModal').style.display = 'none';
-            document.getElementById('testForm').style.display = 'none';
-            document.getElementById('taskForm').style.display = 'none';
-        }
-
-        // Función para manejar el formulario dependiendo de la selección
-        function assignTaskOrTest(type) {
-            const selectedUsers = getSelectedUsers(); // Obtenemos los usuarios seleccionados
-
-            if (selectedUsers.length > 0) {
-                if (type === 'test') {
-                    document.getElementById('testForm').style.display = 'block';
-                    document.getElementById('taskForm').style.display = 'none';
-                } else if (type === 'task') {
-                    document.getElementById('taskForm').style.display = 'block';
-                    document.getElementById('testForm').style.display = 'none';
-                }
-                // Aquí se puede enviar la información o realizar alguna acción
-                alert(`Usuarios seleccionados: ${selectedUsers.join(", ")}`);
-            } else {
-                alert("Por favor, selecciona al menos un usuario.");
+        // Función para asignar tarea
+        function assignTask() {
+            const taskTitle = document.getElementById('taskTitle').value;
+            const taskDescription = document.getElementById('taskDescription').value;
+            const taskFile = document.getElementById('taskFile').files[0];
+            
+            // Verificar si al menos un estudiante está seleccionado
+            const selectedStudents = document.querySelectorAll('input[name="seleccionados"]:checked');
+            if (selectedStudents.length === 0) {
+                alert('Por favor, selecciona al menos un estudiante.');
+                return;
             }
+
+            if (!taskTitle || !taskFile) {
+                alert('Por favor, completa todos los campos y sube un archivo.');
+                return;
+            }
+
+            alert(`Tarea asignada: ${taskTitle}`);
+            closeTaskModal();
         }
 
-        // Función para obtener los usuarios seleccionados
-        function getSelectedUsers() {
-            const selectedCheckboxes = document.querySelectorAll('.student-checkbox:checked');
-            let selectedUsers = [];
-            selectedCheckboxes.forEach(function (checkbox) {
-                selectedUsers.push(checkbox.value);
-            });
-            return selectedUsers;
+        // Función para asignar test
+        function assignTest() {
+            const testName = document.getElementById('testName').value;
+            const testDescription = document.getElementById('testDescription').value;
+            const predefinedTest = document.getElementById('predefinedTests').value;
+
+            // Verificar si al menos un estudiante está seleccionado
+            const selectedStudents = document.querySelectorAll('input[name="seleccionados"]:checked');
+            if (selectedStudents.length === 0) {
+                alert('Por favor, selecciona al menos un estudiante.');
+                return;
+            }
+
+            if (!testName && !predefinedTest) {
+                alert('Por favor, ingresa un nombre para el test o selecciona uno predeterminado.');
+                return;
+            }
+
+            alert(`Test asignado: ${testName || predefinedTest}`);
+            closeTestModal();
         }
 
-        // Función para seleccionar/deseleccionar todos los checkboxes
+        // Funciones de apertura y cierre de los modales
+        function openTaskModal() {
+            document.getElementById('taskModal').style.display = 'flex';
+        }
+    
+        function closeTaskModal() {
+            document.getElementById('taskModal').style.display = 'none';
+        }
+    
+        function openTestModal() {
+            document.getElementById('testModal').style.display = 'flex';
+        }
+    
+        function closeTestModal() {
+            document.getElementById('testModal').style.display = 'none';
+        }
+    
+        function createTest() {
+            alert('Función para crear un nuevo test en desarrollo.');
+        }
+    
+        function assignTask() {
+            const taskTitle = document.getElementById('taskTitle').value;
+            const taskDescription = document.getElementById('taskDescription').value;
+            const taskFile = document.getElementById('taskFile').files[0];
+    
+            if (!taskTitle || !taskFile) {
+                alert('Por favor, completa todos los campos y sube un archivo.');
+                return;
+            }
+    
+            alert(`Tarea asignada: ${taskTitle}`);
+            closeTaskModal();
+        }
+    
+        function assignTest() {
+            const testName = document.getElementById('testName').value;
+            const testDescription = document.getElementById('testDescription').value;
+            const predefinedTest = document.getElementById('predefinedTests').value;
+    
+            if (!testName && !predefinedTest) {
+                alert('Por favor, ingresa un nombre para el test o selecciona uno predeterminado.');
+                return;
+            }
+    
+            alert(`Test asignado: ${testName || predefinedTest}`);
+            closeTestModal();
+        }
+
+        // Funciones de selección de estudiantes
         function toggleSelectAll(checkbox) {
             const checkboxes = document.querySelectorAll('.student-checkbox');
-            checkboxes.forEach(function (cb) {
-                cb.checked = checkbox.checked;
-            });
+            checkboxes.forEach(cb => cb.checked = checkbox.checked);
         }
     </script>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
-
 </html>
+{% endblock %}

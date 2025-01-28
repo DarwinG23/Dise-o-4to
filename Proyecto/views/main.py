@@ -71,9 +71,8 @@ cuc = CursoControl()
 # cc.save
 
 
-# CREAR DOCENTE
+# #CREAR DOCENTE
 # dc = DocenteControl()
-
-# dc._docente._titulo = "Ingeniero de software"
-# dc._docente._idUsuario = 3
+# dc._docente._titulo = "Ingeniero en sistemas"
+# dc._docente._idUsuario = 1
 # dc.save
