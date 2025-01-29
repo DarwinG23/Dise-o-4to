@@ -128,7 +128,7 @@ def presentacion():
 
 
 
-#------------ Vista Estudiante--------------------#
+#------------ Vista Estudiante--------------------------------------------------#
 @router.route('/estudiante')
 def estudiante():
     rc = RolControl()
@@ -214,9 +214,23 @@ def verListaE():
 
 @router.route('/tarea', methods=['GET'])
 def asignarTarea():
-    return render_template('/docente/asignarTarea.html')  
+    return render_template('/docente/asignarTarea.html')
 
 
+#_____________________________________________DOCENTES VISTAS - DARWIN - DRAW_____________________________________________________#
+@router.route('/docente/lista/tareas/test', methods=['GET'])
+def listaTareas():
+    return render_template('/docente/crud/listaTareasDocentes.html')
+
+@router.route('/docente/lista/tareas/presentadas', methods=['GET'])
+def tareasPresentadas():
+    return render_template('docente/crud/listaTareasPresentadas.html')
+
+@router.route('/docente/lista/test/presentadas', methods=['GET']) 
+def testPresentados():
+    return render_template('docente/crud/listaTestPresentados.html')
+
+#----------------------------------------------------------------------------------------------------------------------------------#
 @router.route('/docente/crearAsignacion/<roles>/<nombreU>/<apellidoU>/<cursos>/<tiene>', methods=['GET'])
 def crearTarea(roles, nombreU, apellidoU,cursos, tiene):
     cursos_lista = eval(cursos)

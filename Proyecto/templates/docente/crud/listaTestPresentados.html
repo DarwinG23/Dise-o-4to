@@ -1,0 +1,121 @@
+{% extends 'estudiante/estudianteInicio.html' %}
+
+{% block content %}
+<script>
+    $(document).ready(function(){
+        $("#link").click(function(){
+            create();
+        });
+
+        $("#valor").on("input", function(){
+            var valor = $(this).val();
+            if (valor === "") {
+                create();
+            } else {
+                console.log("El campo tiene texto: ", valor);
+                buscar();
+            }
+        });
+    });
+
+    function tabla(url){
+        $.ajax({
+            method: "GET",
+            url: url,
+            contentType: 'json',
+            success: function(data){
+                console.log(url);
+                if(data.code == '200'){
+                    var html = '';
+                    $.each(data.data, function(i, info){
+                        html += "<tr>";
+                        html += "<td>" + info.id + "</td>";
+                        html += "<td>" + info.nombre + "</td>";
+                        html += "<td>" + info.apellido + "</td>";
+                        html += "<td>" + info.ci + "</td>";
+                        html += "<td>" + info.correo + "</td>";
+                        html += "<td>" + info.estado + "</td>";
+                        html += "<td>" + info.nivel + "</td>";
+                        html += '<td><a href="/servidores/calificar/' + info.id + '" class="btn btn-primary btn-sm">Calificar</a></td>';
+                        html += "</tr>";
+                    });
+                    $("#tabla tbody").html(html);
+                } else {
+                    html = "<tr><td colspan='11' class='text-center'>No se encontraron datos</td></tr>";
+                    $("#tabla tbody").html(html);
+                }
+            }
+        });
+    }
+
+    function create(){
+        var aux = $("#tipo").prop("checked");
+        var select = $("#criterio").find(":selected").val();
+        if(aux){
+            tabla("http://localhost:5000/usuarios/ordenar/2/"+select+"/"+3);
+        }else{
+            tabla("http://localhost:5000/usuarios/ordenar/1/"+select+"/"+3);
+        }
+    }
+
+    function buscar(){
+        var atributo = $("#criterio").find(":selected").val();
+        var valor = $("#valor").val();
+        tabla("http://localhost:5000/usuarios/busqueda/1/"+valor+"/"+atributo);
+    }
+</script>
+
+<div class="text-black">
+    <h2 class="display-7 mb-4">Test: DASS-21 (4to-Ciclo)</h2>
+</div>
+<div class="card p-4">
+    <!-- Sección de Ordenar y Buscar -->
+    <div class="row mb-4 align-items-center">
+        <div class="col-md-3">
+            <label for="criterio" class="form-label">Criterio:</label>
+            <select id="criterio" class="form-select">
+                <option value="_nombre">Nombre</option>
+                <option value="_apellido">Apellido</option>
+                <option value="_ci">Cedula</option>
+                <option value="_id">Nro</option>
+            </select>
+        </div>
+        <div class="col-md-2 d-flex align-items-center">
+            <input type="checkbox" value="DESCENDENTE" id="tipo" class="form-check-input me-2">
+            <label for="tipo" class="form-check-label">Descendente</label>
+        </div>
+        <div class="col-md-2">
+            <button class="btn btn-info w-100" id="link">Ordenar</button>
+        </div>
+        <div class="col-md-3">
+            <input type="text" id="valor" class="form-control" placeholder="Buscar...">
+        </div>
+        <div class="col-md-2">
+            <button class="btn btn-info w-100" id="buscar">Buscar</button>
+        </div>
+    </div>
+    <!-- Botón Atrás -->
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <a href="/tarea" class="btn btn-danger w-50">Atrás</a>
+        </div>
+    </div>
+    <!-- Tabla -->
+    <table id="tabla" class="table table-hover table-bordered text-center">
+        <thead class="table-dark">
+            <tr>
+                <th>Nro</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Cédula</th>
+                <th>Correo</th>
+                <th>Estado</th>
+                <th>Nivel de Estres</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Aquí se llenará la tabla dinámicamente -->
+        </tbody>
+    </table>
+</div>
+{% endblock %}

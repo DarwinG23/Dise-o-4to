@@ -1,0 +1,55 @@
+{% extends 'estudiante/estudianteInicio.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Tarjeta principal con más ancho y menos largo -->
+    <div class="card p-3 shadow-sm w-100 mx-auto" style="max-width: 1200px;">
+        <!-- Título de la Materia -->
+        <h3 class="mb-4 fw-bold">📖 Diseño de Software</h3>
+
+        <!-- Sección de Tareas -->
+        <div class="mb-4">
+            <h5 class="fw-bold text-primary">📌 TAREAS</h5>
+            <div class="card shadow-sm p-3 mb-3">
+                <h6 class="fw-bold">1. Avances PIS</h6>
+                <p class="mb-1"><strong>Curso:</strong> Diseño de Software</p>
+                <p class="mb-1"><strong>Fecha de entrega:</strong> 25 de Octubre, 2023</p>
+                <div class="text-end">
+                    <a href="/docente/lista/tareas/presentadas" class="btn btn-primary">Editar Asignación</a>
+                </div>
+            </div>
+
+            <div class="card shadow-sm p-3 mb-3">
+                <h6 class="fw-bold">2. Diagramas</h6>
+                <p class="mb-1"><strong>Curso:</strong> Diseño de Software</p>
+                <p class="mb-1"><strong>Fecha de entrega:</strong> 30 de Octubre, 2023</p>
+                <div class="text-end">
+                    <a href="/docente/lista/tareas/presentadas" class="btn btn-primary">Editar Asignación</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección de Tests -->
+        <div>
+            <h5 class="fw-bold text-primary">📝 TESTS</h5>
+            <div class="card shadow-sm p-3 mb-3">
+                <h6 class="fw-bold">1. Test DASS</h6>
+                <p class="mb-1"><strong>Curso:</strong> Diseño de Software</p>
+                <p class="mb-1"><strong>Fecha de entrega:</strong> 28 de Octubre, 2023</p>
+                <div class="text-end">
+                    <a href="/docente/lista/test/presentadas" class="btn btn-primary">Editar Asignación</a>
+                </div>
+            </div>
+
+            <div class="card shadow-sm p-3">
+                <h6 class="fw-bold">2. Test Individual</h6>
+                <p class="mb-1"><strong>Curso:</strong> Diseño de Software</p>
+                <p class="mb-1"><strong>Fecha de entrega:</strong> 1 de Noviembre, 2023</p>
+                <div class="text-end">
+                    <a href="/docente/lista/test/presentadas" class="btn btn-primary">Editar Asignación</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
