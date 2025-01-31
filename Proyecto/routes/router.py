@@ -147,22 +147,33 @@ def estudiante():
         apellidoU=apellidoU._apellido
     )
 
-
-@router.route('/estudiante/curso/tareas')
+# Estudiante Cursos y Tareas
+@router.route('/estudiante/curso/inicio')
 def tareas():
-    control = AsignacionControl()
-    asignaciones = control.obtener_asignaciones()
-    return render_template('/estudiante/curso/tareas.html', asignaciones=asignaciones)
+    return render_template('/estudiante/curso/cursoInicio.html')
 
+@router.route('/estudiante/inicioTest')
+def testInicio():
+    return render_template('/estudiante/testsE/inicioTest.html')
 
 
 @router.route('/estudiante/subir_tarea')
 def subir_tarea():
     return render_template('/estudiante/curso/subirTarea.html')
 
-@router.route('/estudiante/inicioTest')
-def testInicio():
-    return render_template('/estudiante/testsE/inicioTest.html')
+
+# Estudiante Tests
+@router.route('/estudiante/resultado/ver')
+def ver_resultado():
+    return render_template('/estudiante/testsE/resultado.html')
+
+
+
+
+
+
+
+
 
 @router.route('/estudiante/tests/ver')
 def verTests():

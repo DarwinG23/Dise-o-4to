@@ -28,44 +28,193 @@
         background-color: #004099;
         transform: scale(1.05);
     }
+
+    .contenedor-flexible {
+        display: flex;
+        gap: 20px;
+    }
+
+    .seccion-preguntas {
+        flex: 1;
+    }
+
+    .seccion-progreso {
+        width: 250px;
+        background-color: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .seccion-progreso h5 {
+        margin-bottom: 15px;
+        color: #003366;
+    }
+
+    .lista-preguntas {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .item-pregunta {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #e9ecef;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .item-pregunta.contestada {
+        background-color: #0056b3;
+        color: white;
+    }
+
+    .item-pregunta:hover {
+        background-color: #004099;
+        color: white;
+    }
+
+    .btn-terminar {
+        width: 100%;
+        padding: 10px;
+        font-size: 1rem;
+    }
 </style>
 
 <h1 class="text-primary">Test DASS-21</h1>
 <p class="text-muted">El test DASS-21 evalúa los niveles de depresión, ansiedad y estrés. Por favor, selecciona la respuesta que mejor describa cómo te has sentido durante la última semana.</p>
 
-<div class="container mt-4">
-    <form id="dass21-form" method="POST" action="/submit-test">
-        <!-- Preguntas -->
-        <div class="card p-3 mb-3 shadow-sm">
-            <h5 class="card-title text-primary">Pregunta 1</h5>
-            <div class="question">
-                <label class="form-label">Me he sentido tenso o alterado.</label>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="question1" id="q1-0" value="0" required>
-                    <label class="form-check-label" for="q1-0">0: No me ha ocurrido</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="question1" id="q1-1" value="1">
-                    <label class="form-check-label" for="q1-1">1: Ocurrió algunas veces</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="question1" id="q1-2" value="2">
-                    <label class="form-check-label" for="q1-2">2: Ocurrió bastante seguido</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="question1" id="q1-3" value="3">
-                    <label class="form-check-label" for="q1-3">3: Ocurrió casi siempre</label>
+<div class="contenedor-flexible">
+    <!-- Sección de preguntas (izquierda) -->
+    <div class="seccion-preguntas">
+        <form id="formulario-dass21" method="POST" action="/submit-test">
+            <!-- Pregunta 1 -->
+            <div class="card p-3 mb-3 shadow-sm" id="pregunta1">
+                <h5 class="card-title text-primary">Pregunta 1</h5>
+                <div class="pregunta">
+                    <label class="form-label">Me he sentido tenso o alterado.</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="pregunta1" id="p1-0" value="0" required>
+                        <label class="form-check-label" for="p1-0">0: No me ha ocurrido</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="pregunta1" id="p1-1" value="1">
+                        <label class="form-check-label" for="p1-1">1: Ocurrió algunas veces</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="pregunta1" id="p1-2" value="2">
+                        <label class="form-check-label" for="p1-2">2: Ocurrió bastante seguido</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="pregunta1" id="p1-3" value="3">
+                        <label class="form-check-label" for="p1-3">3: Ocurrió casi siempre</label>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Agrega más preguntas aquí -->
-        <div class="text-center mt-4">
-            <button type="submit" class="btn btn-primary btn-lg shadow-sm">
-                <i class="fas fa-paper-plane"></i> Enviar Test
-            </button>
+            <!-- Pregunta 2 -->
+            <div class="card p-3 mb-3 shadow-sm" id="pregunta2">
+                <h5 class="card-title text-primary">Pregunta 2</h5>
+                <div class="pregunta">
+                    <label class="form-label">Me he sentido preocupado sin razón.</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="pregunta2" id="p2-0" value="0" required>
+                        <label class="form-check-label" for="p2-0">0: No me ha ocurrido</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="pregunta2" id="p2-1" value="1">
+                        <label class="form-check-label" for="p2-1">1: Ocurrió algunas veces</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="pregunta2" id="p2-2" value="2">
+                        <label class="form-check-label" for="p2-2">2: Ocurrió bastante seguido</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="pregunta2" id="p2-3" value="3">
+                        <label class="form-check-label" for="p2-3">3: Ocurrió casi siempre</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pregunta 3 -->
+            <div class="card p-3 mb-3 shadow-sm" id="pregunta3">
+                <h5 class="card-title text-primary">Pregunta 3</h5>
+                <div class="pregunta">
+                    <label class="form-label">He tenido dificultad para relajarme.</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="pregunta3" id="p3-0" value="0" required>
+                        <label class="form-check-label" for="p3-0">0: No me ha ocurrido</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="pregunta3" id="p3-1" value="1">
+                        <label class="form-check-label" for="p3-1">1: Ocurrió algunas veces</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="pregunta3" id="p3-2" value="2">
+                        <label class="form-check-label" for="p3-2">2: Ocurrió bastante seguido</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="pregunta3" id="p3-3" value="3">
+                        <label class="form-check-label" for="p3-3">3: Ocurrió casi siempre</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Agrega más preguntas aquí -->
+
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-primary btn-lg shadow-sm">
+                    <i class="fas fa-paper-plane"></i> Terminar Test
+                </button>
+                <!-- Solo es para pobrar que te manda al resultado -->
+                <a class="btn btn-primary btn-terminar" href="/estudiante/resultado/ver">Terminar Tests</a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Sección de progreso (derecha) -->
+    <div class="seccion-progreso">
+        <h5>Progreso del Test</h5>
+        <div class="lista-preguntas">
+            <div class="item-pregunta" data-pregunta="1">1</div>
+            <div class="item-pregunta" data-pregunta="2">2</div>
+            <div class="item-pregunta" data-pregunta="3">3</div>
+            <!-- Agrega más ítems de preguntas aquí -->
         </div>
-        
-    </form>
+        <button class="btn btn-primary btn-terminar" onclick="document.getElementById('formulario-dass21').submit()">
+            Terminar Test
+        </button>
+    </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const itemsPregunta = document.querySelectorAll('.item-pregunta');
+        const formulario = document.getElementById('formulario-dass21');
+
+        // Marcar preguntas contestadas
+        formulario.addEventListener('change', function(event) {
+            if (event.target.type === 'radio') {
+                const numeroPregunta = event.target.name.replace('pregunta', '');
+                const itemPregunta = document.querySelector(`.item-pregunta[data-pregunta="${numeroPregunta}"]`);
+                itemPregunta.classList.add('contestada');
+            }
+        });
+
+        // Navegación entre preguntas
+        itemsPregunta.forEach(item => {
+            item.addEventListener('click', function() {
+                const numeroPregunta = this.getAttribute('data-pregunta');
+                const pregunta = document.getElementById(`pregunta${numeroPregunta}`);
+                pregunta.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    });
+</script>
 {% endblock %}
