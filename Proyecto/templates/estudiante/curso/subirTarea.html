@@ -1,65 +1,119 @@
-{% extends "estudiante/estudianteInicio.html" %}
+{% extends 'estudiante/estudianteInicio.html' %}
 
 {% block content %}
-<div class="container mt-5">
-    <div class="card shadow-lg">
-        <div class="card-header bg-primary text-white d-flex align-items-center">
-            <h3 class="m-0"><i class="fas fa-upload me-2"></i> Subir Tarea</h3>
-        </div>
-        <div class="card-body">
-            <form action="/estudiante/subir_tarea" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
-                <div class="mb-4">
-                    <label for="nombre_tarea" class="form-label fw-bold">Nombre de la Tarea</label>
-                    <input 
-                        type="text" 
-                        class="form-control border-primary" 
-                        id="nombre_tarea" 
-                        name="nombre_tarea" 
-                        placeholder="Ingrese el nombre de la tarea" 
-                        required
-                    >
-                    <div class="invalid-feedback">Por favor, ingrese el nombre de la tarea.</div>
-                </div>
-                <div class="mb-4">
-                    <label for="archivo_tarea" class="form-label fw-bold">Archivo</label>
-                    <div class="input-group">
-                        <input 
-                            type="file" 
-                            class="form-control border-primary" 
-                            id="archivo_tarea" 
-                            name="archivo_tarea" 
-                            required
-                        >
-                        <button class="btn btn-outline-primary" type="button" onclick="document.getElementById('archivo_tarea').click();">
-                            <i class="fas fa-folder-open"></i> Seleccionar Archivo
-                        </button>
-                    </div>
-                    <div class="invalid-feedback">Por favor, seleccione un archivo para subir.</div>
-                </div>
-                <div class="d-grid">
-                    <button type="submit" class="btn btn-primary btn-lg">
-                        <i class="fas fa-paper-plane"></i> Subir Tarea
-                    </button>
-                </div>
-            </form>
+<style>
+    .vista-entrega {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 30px;
+        font-family: 'Arial', sans-serif;
+        background-color: #f9f9f9;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .vista-entrega h1 {
+        color: #003366;
+        font-size: 28px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        text-align: center;
+        text-transform: uppercase;
+    }
+
+    .vista-entrega h2 {
+        color: #0056b3;
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 15px;
+    }
+
+    .vista-entrega .info-tarea {
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+    }
+
+    .vista-entrega .info-tarea p {
+        font-size: 16px;
+        color: #333;
+        margin: 0 0 10px;
+    }
+
+    .vista-entrega .info-tarea .estado {
+        font-weight: bold;
+        color: #d9534f; /* Rojo para estado "Sin enviar" */
+    }
+
+    .vista-entrega .info-tarea .fecha {
+        color: #666;
+    }
+
+    .vista-entrega .subir-archivo {
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .vista-entrega .subir-archivo input[type="file"] {
+        margin-bottom: 15px;
+    }
+
+    .vista-entrega .subir-archivo .botones {
+        display: flex;
+        gap: 10px;
+    }
+
+    .vista-entrega .subir-archivo .botones button {
+        background-color: #0056b3;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+        font-size: 16px;
+    }
+
+    .vista-entrega .subir-archivo .botones button:hover {
+        background-color: #004099;
+        transform: scale(1.05);
+    }
+
+    .vista-entrega .subir-archivo .botones button:active {
+        transform: scale(0.95);
+    }
+
+    .vista-entrega .subir-archivo .botones button.borrar {
+        background-color: #d9534f; /* Rojo para el botón de borrar */
+    }
+
+    .vista-entrega .subir-archivo .botones button.borrar:hover {
+        background-color: #c9302c;
+    }
+</style>
+
+<div class="vista-entrega">
+    <h1>Diseño de Software</h1>
+    <h2>Tarea: Avance PIS</h2>
+
+    <!-- Información de la tarea -->
+    <div class="info-tarea">
+        <p><strong>Descripción:</strong> ---</p>
+        <p class="estado"><strong>Estado:</strong> Sin enviar</p>
+        <p class="fecha"><strong>Fecha Límite:</strong> 01/28/2025</p>
+    </div>
+
+    <!-- Área para subir archivos -->
+    <div class="subir-archivo">
+        <input type="file" id="archivo" name="archivo" accept=".pdf">
+        <div class="botones">
+            <button type="button">Subir</button>
+            <button type="button" class="borrar">Borrar entrega</button>
         </div>
     </div>
 </div>
-
-<script>
-    // Habilitar validación nativa del formulario
-    (function () {
-        'use strict'
-        const forms = document.querySelectorAll('.needs-validation')
-        Array.from(forms).forEach(form => {
-            form.addEventListener('submit', event => {
-                if (!form.checkValidity()) {
-                    event.preventDefault()
-                    event.stopPropagation()
-                }
-                form.classList.add('was-validated')
-            }, false)
-        })
-    })()
-</script>
 {% endblock %}

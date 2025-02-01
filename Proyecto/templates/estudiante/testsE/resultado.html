@@ -1,0 +1,106 @@
+{% extends 'estudiante/estudianteInicio.html' %}
+
+{% block content %}
+<style>
+    .resultado-test {
+        background-color: #ffffff;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        max-width: 600px;
+        margin: 0 auto;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .resultado-test h2 {
+        color: #003366;
+        font-size: 24px;
+        font-weight: bold;
+        border-bottom: 2px solid #003366;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .info-test {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 25px;
+    }
+
+    .info-test p {
+        font-size: 16px;
+        color: #333;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+    }
+
+    .info-test p strong {
+        color: #0056b3;
+        margin-right: 10px;
+        min-width: 150px;
+    }
+
+    .info-test p i {
+        margin-right: 10px;
+        color: #0056b3;
+    }
+
+    .btn-volver {
+        background-color: #0056b3;
+        color: white;
+        padding: 12px 24px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+        font-size: 16px;
+        display: block;
+        margin: 0 auto;
+        text-align: center;
+        width: 200px;
+    }
+
+    .btn-volver:hover {
+        background-color: #004099;
+        transform: scale(1.05);
+    }
+
+    .icono {
+        width: 20px;
+        height: 20px;
+        margin-right: 10px;
+    }
+</style>
+
+<div class="resultado-test">
+    <h2>Resultado del Test DASS-21</h2>
+
+    <!-- Información del test -->
+    <div class="info-test">
+        <p>
+            <i class="fas fa-clipboard-list icono"></i>
+            <strong>Nombre del Test:</strong> {{ nombre_test }}
+        </p>
+        <p>
+            <i class="fas fa-user icono"></i>
+            <strong>Nombre del Estudiante:</strong> {{ nombre_estudiante }}
+        </p>
+        <p>
+            <i class="fas fa-calendar-alt icono"></i>
+            <strong>Fecha:</strong> {{ fecha_test }}
+        </p>
+        <p>
+            <i class="fas fa-tachometer-alt icono"></i>
+            <strong>Nivel de Estrés:</strong> {{ nivel_estres }}
+        </p>
+    </div>
+
+    <!-- Botón para volver -->
+    <a href="/estudiante" class="btn-volver">
+        <i class="fas fa-arrow-left"></i> Volver
+    </a>
+</div>
+{% endblock %}
