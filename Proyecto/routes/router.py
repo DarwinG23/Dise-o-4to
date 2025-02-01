@@ -63,11 +63,12 @@ def login():
 
 @router.route('/inicio/<roles>/<nombreU>/<apellidoU>/<cursos>/<tiene>', methods=["GET"])
 def regresarInicio(roles, nombreU, apellidoU, cursos, tiene):
-    cursos_string = cursos
-    cursos_decodificados = urllib.parse.unquote(cursos_string)
-    cursos_json = cursos_decodificados.replace("'", "\"")
+    # cursos_string = cursos
+    # cursos_decodificados = urllib.parse.unquote(cursos_string)
+    # cursos_json = cursos_decodificados.replace("'", "\"")
+    cursos_dic = eval(cursos)
     try:
-        cursos_dic = json.loads(cursos_json)
+        # cursos_dic = json.loads(cursos_json)
         if roles == "Administrador":
             return render_template('administrador/administrador.html', roles = roles, nombreU = nombreU, apellidoU = apellidoU, cursos = cursos_dic, tiene = tiene)
         elif roles == "Docente":
@@ -128,7 +129,7 @@ def presentacion():
 
 
 
-#------------ Vista Estudiante--------------------#
+#------------ Vista Estudiante--------------------------------------------------#
 @router.route('/estudiante')
 def estudiante():
     rc = RolControl()
@@ -214,6 +215,7 @@ def docenteInicio():
 
 
 
+#INICIO 
 @router.route('/docenteAd', methods=['GET'])
 def docenteAd():
     return render_template('/docente/asignacion.html')
@@ -225,9 +227,23 @@ def verListaE():
 
 @router.route('/tarea', methods=['GET'])
 def asignarTarea():
-    return render_template('/docente/asignarTarea.html')  
+    return render_template('/docente/asignarTarea.html')
 
 
+#_____________________________________________DOCENTES VISTAS - DARWIN - DRAW_____________________________________________________#
+@router.route('/docente/lista/tareas/test', methods=['GET'])
+def listaTareas():
+    return render_template('/docente/crud/listaTareasDocentes.html')
+
+@router.route('/docente/lista/tareas/presentadas', methods=['GET'])
+def tareasPresentadas():
+    return render_template('docente/crud/listaTareasPresentadas.html')
+
+@router.route('/docente/lista/test/presentadas', methods=['GET']) 
+def testPresentados():
+    return render_template('docente/crud/listaTestPresentados.html')
+
+#----------------------------------------------------------------------------------------------------------------------------------#
 @router.route('/docente/crearAsignacion/<roles>/<nombreU>/<apellidoU>/<cursos>/<tiene>', methods=['GET'])
 def crearTarea(roles, nombreU, apellidoU,cursos, tiene):
     cursos_lista = eval(cursos)
@@ -262,10 +278,18 @@ def crearTarea(roles, nombreU, apellidoU,cursos, tiene):
 #     data = request.form
 #     print(data)
 #     return redirect(url_for('router.inicio'))
-@router.route('/docente/curso/ver', methods=['GET'])
-def verCursoDocente():
-    return render_template('/docente/curso.html')
 
+@router.route('/docente/curso/ver/<roles>/<nombreU>/<apellidoU>/<cursos>/<tiene>', methods=['POST'])
+def verCursoDocentePost(roles, nombreU, apellidoU, cursos, tiene):
+    data = request.form
+    id = data["idCurso"]
+    cursos = eval(cursos)
+    cc = CursoControl()
+    curso = cc._list().binary_search_models(id, "_id")
+    print("$$$$$$$$$$$$")
+    print("idCurso", id)
+    return render_template('/docente/crud/listaTareasDocentes.html', roles = roles, nombreU = nombreU, apellidoU = apellidoU, cursos = cursos, tiene = tiene, curso = curso.serializable)
+    
 
 #---------------------------------------------Administrador-----------------------------------------------------#
 @router.route('/administrador', methods=['GET'])
