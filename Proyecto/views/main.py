@@ -18,12 +18,12 @@ ec = EstudianteControl()
 cuc = CursoControl()
 
 #PIMERO CREAMOS EL USUARIO
-# uc._usuario._nombre = "Darwin"
-# uc._usuario._apellido = "Sarango"
-# uc._usuario._ci = "1105630031"
-# uc._usuario._fechaNacimiento = "20/06/2004" #IMPORTANTE EL FORMATO ES DD/MM/YYYY
-# uc._usuario._direccion = "Menfis Central" 
-# uc._usuario._telefono = "0964209134"
+# uc._usuario._nombre = "Alexander"
+# uc._usuario._apellido = "Sanchez"
+# uc._usuario._ci = "1104753890"
+# uc._usuario._fechaNacimiento = "06/06/2003" #IMPORTANTE EL FORMATO ES DD/MM/YYYY
+# uc._usuario._direccion = "Tierras coloradas" 
+# uc._usuario._telefono = "0980679607"
 # uc.save
 
 #SEGUNDO CREAMOS LA CUENTA

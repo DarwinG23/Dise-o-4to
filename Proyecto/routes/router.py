@@ -718,3 +718,49 @@ def asignarCurso(roles, nombreU, apellidoU):
 def estadisticas():
     # Datos de ejemplo para las estadísticas del estudiante
     return render_template('estadisticas/estadisticasEstudiantes.html')
+
+
+
+#_____________________________________________ADMIN VISTAS - DARWIN S- DRAW_____________________________________________________#
+
+#___________________Crear Usuario_______________________#
+
+@router.route('/administrador/crearUsuario/ver/<roles>/<nombreU>/<apellidoU>', methods=['GET'])
+def crearUsuarioVer(roles, nombreU, apellidoU):
+    return render_template('administrador/crud/crear/crearUsuario.html', roles = roles, nombreU = nombreU, apellidoU = apellidoU)
+
+
+@router.route('/crear_usuario/<roles>/<nombreU>/<apellidoU>', methods=['POST'])
+def crearUsuarioAdmin(roles, nombreU, apellidoU):
+    data = request.form
+    uc = UsuarioControl()
+
+    fecha_objeto = datetime.strptime(data["fechaNacimiento"], "%Y-%m-%d")
+    fecha_formateada = fecha_objeto.strftime("%d/%m/%Y")
+    fecha_formateada = str(fecha_formateada)
+
+    #print(fecha_formateada)
+    #fecha_formateada = str(fecha_formateada)
+    #fecha_formateada = "08/08/2004"
+    #print(type(fecha_formateada))
+    uc.crearUsuario(data["nombre"], data["apellido"], data["ci"], fecha_formateada, data["telefono"], data["direccion"])
+    return redirect(url_for('router.gestionar_usuarios', roles = roles, nombreU = nombreU, apellidoU = apellidoU))
+
+#___________________Modificar Usuario_______________________#
+
+@router.route('/administrador/modificarUsuario/ver/<roles>/<nombreU>/<apellidoU>/<pos>', methods=['GET'])
+def modificarCuentaVer(pos, roles, nombreU, apellidoU):
+    uc = UsuarioControl()
+    editarUsuario = uc._list().binary_search_models(int(pos), "_id")
+    return render_template('administrador/crud/editar/editarUsuario.html', data=editarUsuario, roles = roles, nombreU = nombreU, apellidoU = apellidoU)
+
+@router.route('/modificar_usuario/<roles>/<nombreU>/<apellidoU>', methods=['POST'])
+def modificarUsuarioAdmin(roles, nombreU, apellidoU):
+    data = request.form
+    uc = UsuarioControl()
+    fecha_objeto = datetime.strptime(data["fechaNacimiento"], "%Y-%m-%d")
+    fecha_formateada = fecha_objeto.strftime("%d/%m/%Y")
+    fecha_formateada = str(fecha_formateada)
+    uc.modificarUsuario(data["id"], data["nombre"], data["apellido"], data["ci"], fecha_formateada, data["telefono"], data["direccion"])
+    return redirect(url_for('router.gestionar_usuarios', roles = roles, nombreU = nombreU, apellidoU = apellidoU))
+

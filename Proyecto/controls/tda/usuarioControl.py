@@ -38,5 +38,15 @@ class UsuarioControl(DaoAdapter):
         self._usuario._direccion = direccion
         self._usuario._telefono = telefono
         self.save
+
+    def modificarUsuario(self, nombre, apellido, ci, fechaNacimiento, telefono, direccion):
+        self._usuario._nombre = nombre
+        self._usuario._apellido = apellido
+        self._usuario._ci = ci
+        self._usuario._fechaNacimiento = fechaNacimiento
+        self._usuario._direccion = direccion
+        self._usuario._telefono = telefono
+        self.save
+    
         
     

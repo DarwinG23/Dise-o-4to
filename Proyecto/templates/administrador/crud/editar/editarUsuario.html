@@ -1,0 +1,38 @@
+{% extends 'estudiante/estudianteInicio.html' %}
+{% block content %}
+<div class="text-center">
+    <h2 class="display-5">Modificar USUARIO</h2>
+</div>
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <form action="/crear_usuario/{{roles}}/{{nombreU}}/{{apellidoU}}" method="POST">
+            <input type="hidden" name="id" value="{{data._id}}"/>
+            <div class="mb-3">
+                <label for="nombre" class="form-label">Nombre</label>
+                <input type="text" value="{{data._nombre}}" class="form-control" id="nombre" name="nombre" required>
+            </div>
+            <div class="mb-3">
+                <label for="apellido" class="form-label">Apellido</label>
+                <input type="text" value="{{data._apellido}}" class="form-control" id="apellido" name="apellido" required>
+            </div>
+            <div class="mb-3">
+                <label for="ci" class="form-label">Cédula</label>
+                <input type="text" value="{{data._ci}}" class="form-control" id="ci" name="ci" required>
+            </div>
+            <div class="mb-3">
+                <label for="fechaNacimiento">Fecha de Nacimiento</label>
+                <input type="date" value="{{data._fechaNacimiento}}" id="fechaNacimiento" name="fechaNacimiento" required>
+            </div>
+            <div class="mb-3">
+                <label for="telefono" class="form-label">Teléfono</label>
+                <input type="text" value="{{data._telefono}}" class="form-control" id="telefono" name="telefono" required>
+            </div>
+            <div class="mb-3">
+                <label for="direccion" class="form-label">Dirección</label>
+                <input type="text" value="{{data._direccion}}" class="form-control" id="direccion" name="direccion" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Crear Usuario</button>
+        </form>
+    </div>
+</div>
+{% endblock %}  

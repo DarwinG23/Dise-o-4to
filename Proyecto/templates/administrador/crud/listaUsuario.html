@@ -37,7 +37,7 @@
                         html += "<td>" + info.nombre + "</td>";
                         html += "<td>" + info.apellido + "</td>";
                         html += "<td>" + info.ci + "</td>";
-                        html += "<td>" + '<a href="/servidores/editar/' + info.id + '" class="btn btn-info text-white">Editar</a>' + "</td>";
+                        html += "<td>" + '<a href="/administrador/modificarUsuario/ver/{{roles}}/{{nombreU}}/{{apellidoU}}' + info.id + '" class="btn btn-info text-white">Editar</a>' + "</td>";
                         html += "<td>" + '<a href="/servidores/eliminar/' + info.id + '" class="btn btn-info btn-danger">Eliminar</a>' + "</td>";
                         html += "</tr>";
 
@@ -74,7 +74,15 @@
 
 
 </script>
-
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+{% for category, message in messages %}
+<div class="alert alert-{{ category }}">
+    {{ message }}
+</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
 <div class="text-center">
     <h2 class="display-5">USUARIOS</h2>
 </div>
@@ -115,8 +123,9 @@
                     <button class="btn btn-info w-100" id="buscar">BUSCAR</button>
                 </div>
             </div>
+            
         </div>
-
+        <a href="/administrador/crearUsuario/ver/{{roles}}/{{nombreU}}/{{apellidoU}}" class="btn btn-success mb-3">Crear Usuario</a>
 
         <thead>
             <th>Nro</th>
@@ -133,7 +142,7 @@
                 <td>{{item.nombre}}</td>
                 <td>{{item.apellido}}</td>
                 <td>{{item.ci}}</td>
-                <td><a href="/servidores/editar/{{item.id}}" class="btn btn-info text-white">Editar</a></td>
+                <td><a href="/administrador/modificarUsuario/ver/{{roles}}/{{nombreU}}/{{apellidoU}}/{{item.id}}" class="btn btn-info text-white">Editar</a></td>
                 <td><a href="/servidores/eliminar/{{item.id}}" class="btn btn-danger">Eliminar</a></td>
             </tr>
             {% endfor %}
