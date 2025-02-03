@@ -86,7 +86,7 @@ class CuentaControl(DaoAdapter):
         else:
             logueado = 0
             
-        return logueado, rol, None, None, None, None, None
+        return logueado, rol, None, None, None, None
         
         
     # def modificarDatoscuenta(self, correo, contrasena, id):

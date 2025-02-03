@@ -165,6 +165,11 @@ def testInicio():
     return render_template('/estudiante/testsE/inicioTest.html')
 
 
+@router.route('/estudiante/inicioTestPost', methods=['POST'])
+def testInicioPost():
+    return render_template('/estudiante/testsE/inicioTest.html')
+
+
 @router.route('/estudiante/subirTarea', methods=['POST'])
 def subir_tarea():
     data = request.form

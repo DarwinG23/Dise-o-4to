@@ -52,27 +52,20 @@
                     <div class="card shadow-sm p-3 mb-3 clickable-card" onclick="document.getElementById('formTarea_{{tarea.id}}').submit();">
                         <h6 class="fw-bold">{{ tarea.titulo }}</h6>
                         <p class="mb-1"><strong>Curso:</strong> {{ curso.nombre }}</p>
-                        <div class="text-end">
-                            <a href="#" class="btn btn-primary">Editar Asignación</a>
-                        </div>
                     </div>
                 </form>
             {% endfor %}
-            <a href="/docente/crearTareaGet/{{roles}}/{{curso.id}}/{{usuario}}/{{nombreU}}/{{apellidoU}}/{{cursos}}/{{tiene}}" class="btn btn-primary" style="margin-top: 1%;">Agregar Tarea</a>
         </div>
 
         <!-- Sección de Tests -->
         <div>
             <h5 class="fw-bold text-primary">📝 TESTS</h5>
-            <div class="card shadow-sm p-3 mb-3 clickable-card" onclick="location.href='/docente/lista/test/presentadas';">
-                <h6 class="fw-bold">1. Test DASS</h6>
-                <p class="mb-1"><strong>Curso:</strong> Diseño de Software</p>
-                <div class="text-end">
-                    <a href="" class="btn btn-primary">Editar Asignación</a>
+            <fomr action="" method="POST">
+                <div class="card shadow-sm p-3 mb-3 clickable-card" onclick="location.href='/estudiante/inicioTest';">
+                    <h6 class="fw-bold">1. Test DASS</h6>
+                    <p class="mb-1"><strong>Curso:</strong> Diseño de Software</p>
                 </div>
-            </div>
-            <a href="/docente/crearTestGet/{{roles}}/{{nombreU}}/{{apellidoU}}/{{cursos}}/{{tiene}}" class="btn btn-primary" style="margin-top: 1%;">Agregar Test</a>
-
+            </fomr>
         </div>
     </div>
 </div>
