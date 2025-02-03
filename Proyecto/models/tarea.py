@@ -7,6 +7,16 @@ class Tarea:
         self.__descripcion = ""
         self.__estado = ""
         self.__idAsignacion = 0
+        self.__ruta_pdf = ""
+
+    @property
+    def _ruta_pdf(self):
+        return self.__ruta_pdf
+
+    @_ruta_pdf.setter
+    def _ruta_pdf(self, value):
+        self.__ruta_pdf = value
+
 
     @property
     def _id(self):
@@ -55,7 +65,8 @@ class Tarea:
             "titulo": self.__titulo,
             "descripcion": self.__descripcion,
             "estado": self.__estado,
-            "idAsignacion": self.__idAsignacion
+            "idAsignacion": self.__idAsignacion,
+            "ruta_pdf": self.__ruta_pdf
         }
     
     @classmethod
@@ -66,8 +77,10 @@ class Tarea:
         tarea._descripcion = data["descripcion"]
         tarea._estado = data["estado"]
         tarea._idAsignacion = data["idasignacion"]
+        tarea._ruta_pdf = data["ruta_pdf"]
         return tarea
 
         
-    
+    def __str__(self):
+        return "ID: " + str(self.__id) + " Titulo: " + str(self.__titulo) + " Descripcion: " + str(self.__descripcion) + " Estado: " + str(self.__estado) + " ID Asignacion: " + str(self.__idAsignacion) + " Ruta PDF: " + str(self.__ruta_pdf)
     

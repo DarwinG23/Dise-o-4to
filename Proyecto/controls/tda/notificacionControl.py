@@ -25,5 +25,14 @@ class NotificacionControl(DaoAdapter):
     
     def merge(self, pos):
         self._merge(self._notificacion, pos)
+        
+    def crearNotificacion(self, titulo, mensaje, fechaCreacion, horaEnvio, idCuenta):
+        self._notificacion._titulo = titulo
+        self._notificacion._mensaje = mensaje
+        self._notificacion._fechaCreacion = fechaCreacion
+        self._notificacion._horaEnvio = horaEnvio
+        if idCuenta is not None:
+            self._notificacion._idCuenta = idCuenta
+        self.save
 
     

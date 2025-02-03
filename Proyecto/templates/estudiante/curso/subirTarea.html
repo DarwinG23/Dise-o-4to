@@ -97,14 +97,15 @@
 </style>
 
 <div class="vista-entrega">
-    <h1>Diseño de Software</h1>
-    <h2>Tarea: Avance PIS</h2>
 
-    <!-- Información de la tarea -->
-    <div class="info-tarea">
-        <p><strong>Descripción:</strong> ---</p>
-        <p class="estado"><strong>Estado:</strong> Sin enviar</p>
-        <p class="fecha"><strong>Fecha Límite:</strong> 01/28/2025</p>
+    <div class="text-black card p-4">
+        <h2 class="display-7 mb-4">Tarea: {{tarea.titulo}}</h2>
+        <p class="mb-4">Descripción: {{tarea.descripcion}}</p>
+        <p class="mb-4">
+            <img src="{{ url_for('static', filename='img/iconoPdf.png') }}" alt="PDF" width="20" height="20" />
+             <!-- Enlace para descargar el archivo -->
+            <a href="/descargas/{{tarea.id}}">{{archivo}}</a>
+        </p>
     </div>
 
     <!-- Área para subir archivos -->

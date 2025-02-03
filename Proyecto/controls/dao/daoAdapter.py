@@ -42,14 +42,28 @@ class DaoAdapter(Generic[T]):
                 continue  # Omitir el campo 'roles'
             if len(str(value)) > 0:
                 columns += key + ","
-                if "fecha" in key:
-                    # Asegurarse de que la fecha esté en el formato correcto
-                    value = datetime.strptime(value, "%d/%m/%Y").strftime("%d-%b-%Y").upper()
-                if isinstance(value, (int, float, bool)):
-                    data_values += str(value) + ","
-                else:
-                    data_values += "'" + str(value).replace("'", "''") + "'" + ","
+    
 
+                # Si el campo contiene 'fecha'
+                if "fecha" in key:
+                    # Convertir el valor a la fecha en el formato correcto
+                    value = datetime.strptime(value, "%d/%m/%Y").strftime("%d-%b-%Y").upper()  # Formato DD-MON-YYYY
+                    data_values += f"TO_DATE('{value}', 'DD-MON-YYYY'),"
+
+                # Si el campo contiene 'hora'
+                elif "hora" in key:
+                    # Convertir el valor a la hora en el formato correcto
+                    value = datetime.strptime(value, "%H:%M:%S").strftime("%H:%M:%S")  # Formato HH24:MI:SS
+                    data_values += f"TO_DATE('{value}', 'HH24:MI:SS'),"
+
+                # Para otros tipos de datos (int, float, bool o cadenas)
+                else:
+                    if isinstance(value, (int, float, bool)):
+                        data_values += str(value) + ","
+                    elif value is None:
+                        data_values += "NULL,"
+                    else:
+                        data_values += "'" + str(value).replace("'", "''") + "'" + ","
         columns = columns.rstrip(',')
         data_values = data_values.rstrip(',')
 
