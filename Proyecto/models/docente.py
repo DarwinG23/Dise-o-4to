@@ -67,14 +67,6 @@ class Docente:
             "titulo": self.__titulo,
             "idUsuario": self.__idUsuario
         }
-    @classmethod
-    def deserializar(cls, data):
-        docente = Docente()
-        docente._id = data["id"]
-        docente._titulo = data["titulo"]
-        docente._idUsuario = data["idUsuario"]
-        return docente
-   
     
     @classmethod
     def deserializar(self, data):
@@ -92,4 +84,7 @@ class Docente:
         if not recomendaciones.isEmpty:
             recomendaciones = recomendaciones.lineal_binary_search_models(str(docente._id),"_idDocente")
         return docente
+    
+    def __str__(self):
+        return f"{self.__id} - {self.__titulo} - {self.__idUsuario}"
         

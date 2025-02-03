@@ -25,4 +25,16 @@ class TareaControl(DaoAdapter):
     
     def merge(self, pos):
         self._merge(self._tarea, pos)
+        
+    
+    def crearTarea(self, titulo, descripcion, estado, idAsignacion, ruta_pdf):
+        self._tarea._titulo = titulo
+        self._tarea._descripcion = descripcion
+        self._tarea._estado = estado
+        if idAsignacion is not None:
+            self._tarea._idAsignacion = idAsignacion
+        if ruta_pdf is not None:
+            self._tarea._ruta_pdf = ruta_pdf
+        self.save
+        
     

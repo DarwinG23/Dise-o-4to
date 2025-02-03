@@ -7,10 +7,20 @@ class Asignacion:
         self.__fechaFin = ""
         self.__asignado = ""
         self.__estado = ""
-        self.__idEstudiante = 0
-        self.__idCurso = 0
-        self.__idDocente = 0
-        self.__idNotificacion = 0
+        self.__idEstudiante = None
+        self.__idCurso = None
+        self.__idDocente = None
+        self.__idNotificacion = None
+        self.__entregas = Linked_List()
+
+    @property
+    def _entregas(self):
+        return self.__entregas
+
+    @_entregas.setter
+    def _entregas(self, value):
+        self.__entregas = value
+
 
     @property
     def _id(self):
@@ -85,7 +95,7 @@ class Asignacion:
         self.__idNotificacion = value
         
     @property
-    def serializar(self):
+    def serializable(self):
         return {
             "id": self.__id,
             "fechaInicio": self.__fechaInicio,

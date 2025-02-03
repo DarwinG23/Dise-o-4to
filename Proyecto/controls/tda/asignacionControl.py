@@ -32,3 +32,14 @@ class AsignacionControl(DaoAdapter):
         asignaciones = self._list()  
         return [asignacion.serializar for asignacion in asignaciones]
     
+    def crearAsignacion(self, fechaInicio, fechaFin, asignado ,estado, idEstudiante, idCurso, idDocente, idNotificacion):
+        self._asignacion._fechaInicio = fechaInicio
+        self._asignacion._fechaFin = fechaFin
+        self._asignacion._asignado = asignado
+        self._asignacion._estado = estado
+        if idEstudiante is not None:
+            self._asignacion._idEstudiante = idEstudiante
+        self._asignacion._idCurso = idCurso
+        self._asignacion._idDocente = idDocente
+        self._asignacion._idNotificacion = idNotificacion
+        return self.save
