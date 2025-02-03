@@ -1,5 +1,24 @@
 {% extends 'estudiante/estudianteInicio.html' %}
 
+{%block cursos%}
+    {% if tiene == "Verdadero" %}
+    {% for curso in cursos %}
+        {% if curso.nombre != "Sin cursos" %}
+                <form action="/estudiante/curso/ver/{{roles}}/{{usuario}}/{{nombreU}}/{{apellidoU}}/{{cursos}}/{{tiene}}" method="POST" id="cursoForm{{ curso.id }}">
+                    <li>
+                        <a href="#" onclick="document.getElementById('cursoForm{{ curso.id }}').submit();">
+                            <i class="fas fa-book"></i> {{ curso.nombre }}
+                        </a>
+                        <input type="hidden" name="idCurso" value="{{ curso.id }}">
+                    </li>
+                </form>
+        {% endif %}
+    {% endfor %}
+    {% else %}
+    <li><a href="#"><i class="fas fa-book"></i> Sin cursos</a></li>
+    {% endif %}
+{%endblock%}
+
 {% block content %}
 <style>
     .vista-entrega {
@@ -107,14 +126,112 @@
             <a href="/descargas/{{tarea.id}}">{{archivo}}</a>
         </p>
     </div>
-
-    <!-- Área para subir archivos -->
-    <div class="subir-archivo">
-        <input type="file" id="archivo" name="archivo" accept=".pdf">
-        <div class="botones">
-            <button type="button">Subir</button>
-            <button type="button" class="borrar">Borrar entrega</button>
+    <div class="text-black card p-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Detalles de la Entrega</h5>
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <th scope="row">Estado de la entrega:</th>
+                            <td>Calficado</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Calificación:</th>
+                            <td>8.5 / 10</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Fecha de entrega:</th>
+                            <td>01/02/2025</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Archivo enviado:</th>
+                            <td>
+                                <img src="{{ url_for('static', filename='img/iconoPdf.png') }}" alt="PDF" width="20" height="20" />
+                                <!-- Enlace para descargar el archivo -->
+                               <a href="/descargas/{{tarea.id}}">{{archivo}}</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Comentario:</th>
+                            <td>Buena presentación, pero falta más detalle.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
+
+
+   <!-- Área para subir archivos -->
+<div class="col-md-12">
+    <label for="archivo" class="form-label fw-bold">Cargar archivo:</label>
+    <div class="border border-primary rounded p-4 text-center" 
+         style="min-height: 150px; transition: background-color 0.3s, border-color 0.3s; cursor: pointer;" 
+         id="fileDropArea">
+        <p class="mb-2 fw-bold">Arrastra y suelta tu archivo aquí</p>
+        <input type="file" class="form-control d-none" id="archivo" name="archivo" accept=".pdf, .doc, .docx, .pptx" required>
+        <p class="text-muted mb-0">Puede arrastrar y soltar archivos aquí para añadirlos o hacer click sobre el recuadro - (PDF) </p>
+    </div>
+</div>
+
+<div class="card-body text-center" style="margin-top: 5%;">
+    <!-- <button class="btn btn-primary">Agregar entrega</button> -->
+    <button class="btn btn-primary">Editar entrega</button>
+</div>
+
+    <script>
+        // Función para manejar el arrastre y la caída de archivos
+        const dropArea = document.getElementById("fileDropArea");
+        const fileInput = document.getElementById("archivo");
+
+        dropArea.addEventListener("dragover", (e) => {
+            e.preventDefault(); // Evitar el comportamiento por defecto
+            dropArea.classList.add("border-success"); // Agregar borde verde cuando se está arrastrando
+            dropArea.style.backgroundColor = "#e3fcef"; // Cambiar color de fondo
+        });
+
+        dropArea.addEventListener("dragleave", () => {
+            dropArea.classList.remove("border-success"); // Eliminar borde verde cuando el archivo deja de arrastrarse
+            dropArea.style.backgroundColor = ""; // Restaurar color de fondo
+        });
+
+        dropArea.addEventListener("drop", (e) => {
+            e.preventDefault(); // Prevenir el comportamiento por defecto
+            dropArea.classList.remove("border-success");
+            dropArea.style.backgroundColor = ""; // Restaurar color de fondo
+
+            // Obtener el archivo
+            const file = e.dataTransfer.files[0];
+            if (file) {
+                fileInput.files = e.dataTransfer.files; // Asignar el archivo al input
+                dropArea.innerHTML = `<p class="mb-2">Archivo seleccionado: ${file.name}</p>`; // Mostrar el nombre del archivo
+            }
+        });
+
+        // Hacer clic en el área de arrastre para abrir el selector de archivos
+        dropArea.addEventListener("click", () => {
+            fileInput.click();
+        });
+
+        // Actualizar el área de arrastre cuando se selecciona un archivo manualmente
+        fileInput.addEventListener("change", () => {
+            const file = fileInput.files[0];
+            if (file) {
+                dropArea.innerHTML = `<p class="mb-2">Archivo seleccionado: ${file.name}</p>`; // Mostrar el nombre del archivo
+            }
+        });
+
+        // Cambiar cursor y color de fondo cuando el mouse pasa sobre el área
+        dropArea.addEventListener("mouseenter", () => {
+            dropArea.style.cursor = "pointer";
+            dropArea.style.backgroundColor = "#cce7ff"; // Azul claro
+        });
+
+        dropArea.addEventListener("mouseleave", () => {
+            dropArea.style.backgroundColor = ""; // Restaurar color de fondo
+        });
+    </script>
+
 </div>
 {% endblock %}
