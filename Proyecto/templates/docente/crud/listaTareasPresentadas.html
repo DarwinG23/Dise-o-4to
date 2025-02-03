@@ -85,8 +85,14 @@
     }
 </script>
 
-<div class="text-black">
-    <h2 class="display-7 mb-4">Tareas: Avance Pis (4to-Ciclo)</h2>
+<div class="text-black card p-4">
+    <h2 class="display-7 mb-4">Tarea: {{tarea.titulo}}</h2>
+    <p class="mb-4">Descripción: {{tarea.descripcion}}</p>
+    <p class="mb-4">
+        <img src="{{ url_for('static', filename='img/iconoPdf.png') }}" alt="PDF" width="20" height="20" />
+         <!-- Enlace para descargar el archivo -->
+        <a href="/descargas/{{tarea.id}}">{{archivo}}</a>
+    </p>
 </div>
 <div class="card p-4">
     <!-- Sección de Ordenar y Buscar -->

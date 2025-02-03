@@ -82,7 +82,7 @@ class CuentaControl(DaoAdapter):
                 tiene = "Verdadero"
                 
             
-            return logueado, rol, cursos, tiene, rol, usuario._nombre, usuario._apellido
+            return logueado, rol, cursos, tiene, rol, usuario
         else:
             logueado = 0
             

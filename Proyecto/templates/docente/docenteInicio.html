@@ -4,7 +4,7 @@
     {% if tiene == "Verdadero" %}
     {% for curso in cursos %}
         {% if curso.nombre != "Sin cursos" %}
-                <form action="/docente/curso/ver/{{roles}}/{{nombreU}}/{{apellidoU}}/{{cursos}}/{{tiene}}" method="POST" id="cursoForm{{ curso.id }}">
+                <form action="/docente/curso/ver/{{roles}}/{{usuario}}/{{nombreU}}/{{apellidoU}}/{{cursos}}/{{tiene}}" method="POST" id="cursoForm{{ curso.id }}">
                     <li>
                         <a href="#" onclick="document.getElementById('cursoForm{{ curso.id }}').submit();">
                             <i class="fas fa-book"></i> {{ curso.nombre }}
@@ -179,7 +179,7 @@
                         {% for curso in cursos %}
                             {% if curso.nombre != "Sin cursos" %}
                                 <div class="col-md-4 mb-4">
-                                    <form action="/docente/curso/ver/{{roles}}/{{nombreU}}/{{apellidoU}}/{{cursos}}/{{tiene}}" method="POST">
+                                    <form action="/docente/curso/ver/{{roles}}/{{usuario}}/{{nombreU}}/{{apellidoU}}/{{cursos}}/{{tiene}}" method="POST">
                                         <div class="card shadow-lg border-0" style="border-radius: 15px; display: flex; flex-direction: column; height: 100%;">
                                             <img src="{{ url_for('static', filename='img/complejidad.jpg')}}" class="card-img-top" alt="..." style="border-top-left-radius: 15px; border-top-right-radius: 15px; object-fit: cover; height: 200px;">
                                             <div class="card-body d-flex flex-column justify-content-between" style="flex-grow: 1;">
