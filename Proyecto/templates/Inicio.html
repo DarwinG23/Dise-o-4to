@@ -66,15 +66,18 @@ https://templatemo.com/tm-560-astro-motion
                   <h2 class="mb-4"><B>¡Bienvenido!</B></h2>
                   <div class="">
                     <!-- Mensajes Flash -->
-                      {% with messages = get_flashed_messages(category_filter='error', with_categories=true) %}
-                              {% if messages %}
-                                <div class="alert alert-danger">
-                                  {% for category, message in messages %}
-                                    <p>{{ message }}</p>
-                                  {% endfor %}
-                                </div>
-                              {% endif %}
-                      {% endwith %}
+                    {% with messages = get_flashed_messages(category_filter='error', with_categories=true) %}
+                      {% if messages %}
+                        <div class="alert alert-danger d-flex align-items-center" role="alert">
+                          <i class="bi bi-exclamation-circle-fill me-2"></i> <!-- Ícono de error -->
+                          <div>
+                            {% for category, message in messages %}
+                              <p class="mb-4">{{ message }}</p>
+                            {% endfor %}
+                          </div>
+                        </div>
+                      {% endif %}
+                    {% endwith %}
                     <form action="/login" method="POST" class="contact-form">
                       <div class="input-group tm-mb-30">
                           <input name="correo" type="text" class="form-control rounded-0 border-top-0 border-end-0 border-start-0" placeholder="Correo" required title="Por favor ingrese su correo">

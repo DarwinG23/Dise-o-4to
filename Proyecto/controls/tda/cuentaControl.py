@@ -48,18 +48,27 @@ class CuentaControl(DaoAdapter):
         elif cuenta._contrasena == contrasena:
             logueado = 1
             roles = cuenta._roles
-            admin = roles.binary_search_models("Administrador", "_nombre")
-            docente = roles.binary_search_models("Docente", "_nombre")
-            estudiante = roles.binary_search_models("Estudiante", "_nombre")
-            
+            # print(cuenta)
+            # cuenta._roles.print
+            # roles.print
+            admin = -1
+            docente = -1
+            estudiante = -1
+            if not roles.isEmpty:
+                admin = roles.binary_search_models("Administrador", "_nombre")
+                docente = roles.binary_search_models("Docente", "_nombre")
+                estudiante = roles.binary_search_models("Estudiante", "_nombre")
+                  
             if admin != -1:
                 rol = "Administrador"
             elif docente != -1:
                 rol = "Docente"
             elif estudiante != -1:
                 rol = "Estudiante"
+                
             uc = UsuarioControl()
-            usuario = uc._list().binary_search_models(cuenta._idUsuario, "_id")
+            usuario = uc._list().binary_search_models_id(cuenta._idUsuario, "_id")
+
             
             cursos = Linked_List()
             cc = CursoControl()
@@ -75,13 +84,13 @@ class CuentaControl(DaoAdapter):
                     for est in estudiantes:
                         curso = cc._list().binary_search_models(est._idCurso, "_id")
                         cursos.addNode(curso)
+                        
                     
                     
             tiene = "Falso"                    
             if cursos._length > 1:
                 tiene = "Verdadero"
                 
-            
             return logueado, rol, cursos, tiene, rol, usuario
         else:
             logueado = 0

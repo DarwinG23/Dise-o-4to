@@ -28,6 +28,8 @@ import json
 import urllib.parse
 import ast
 import re
+from flask_login import login_required
+from flask_login import login_user, logout_user, current_user
 router = Blueprint('router', __name__)
 
 UPLOAD_FOLDER = os.path.join(os.getcwd(), 'uploads') 
@@ -61,12 +63,39 @@ def login():
         flash('Contraseña incorrecta', 'error')
         return redirect(url_for('router.inicio'))
     else:
+        print("###############################")
+        print("Rol: ", rol)
+        print(cursos.print)
+        print("Tiene: ", tiene)
+        print("NombreRol: ", nombreRol)
+        print("Usuario: ", usuaario)
+        login_user(usuaario)
+        print("jejexd") 
         if rol == "Administrador":
+            print("Estamos en administrador")
             return render_template('administrador/administrador.html', cursos = cc.to_dic_lista(cursos), tiene = tiene, roles = nombreRol, nombreU = usuaario._nombre, apellidoU = usuaario._apellido)
         elif rol == "Docente":
             return render_template('docente/docenteInicio.html', cursos = cc.to_dic_lista(cursos), tiene = tiene, roles = nombreRol, nombreU = usuaario._nombre, apellidoU = usuaario._apellido, usuario = usuaario.serializable)
         elif rol == "Estudiante":
             return render_template('estudiante/inicioEstudiante.html', cursos = cc.to_dic_lista(cursos), tiene = tiene, roles = nombreRol, nombreU = usuaario._nombre, apellidoU = usuaario._apellido, usuario = usuaario.serializable)
+        else:
+            flash('Esta cuenta no tiene un rol asignado', 'error')
+            return render_template('inicio.html')
+
+
+
+
+@router.route('/confirmar-regreso', methods=["GET", "POST"])
+def confirmar_regreso():
+    if current_user.is_authenticated:  
+        return render_template('confirmar_regreso.html', nombre_usuario=current_user.name)
+    else:
+        return redirect(url_for('router.inicio')) 
+
+@router.route('/proteccion')
+@login_required  
+def admin_dashboard():
+    return render_template('admin/dashboard.html')
 
 @router.route('/inicio/<roles>/<usuario>/<nombreU>/<apellidoU>/<cursos>/<tiene>', methods=["GET"])
 def regresarInicio(roles,usuario, nombreU, apellidoU, cursos, tiene):
@@ -112,9 +141,14 @@ def registro(rol):
     fecha_formateada = str(fecha_formateada)
 
     uc.crearUsuario(data["nombre"],data["apellido"], data['ci'], fecha_formateada, data['telefono'], data['direccion'])
-    legth = uc._list()._length
-    cc.crearCuenta(data['correo'], data['contrasenia'], legth) 
-    cuenta = cc._list().getData(cc._list()._length-1)
+    usuarios = uc._list()
+    usuarios.sort_models("_id", 1, 4)
+    print(type(usuarios))
+    legth = usuarios.getData(usuarios._length-1)._id
+    cc.crearCuenta(data['correo'], data['contrasenia'], legth)
+    cuentas = cc._list()
+    cuentas.sort_models("_id", 1, 4)
+    cuenta = cuentas.getData(cuentas._length-1)
     rc.crearRol(rol, cuenta._id)
     
     if rol == "Estudiante":
@@ -124,6 +158,7 @@ def registro(rol):
         dc = DocenteControl()
         dc.agregarTitulo(data["titulo"],  legth)
     elif rol == "Administrador":
+        print("Estamos en administrador")
         ac = AdministradorControl()
         ac.agregarDatos(legth)
         
@@ -231,7 +266,9 @@ def perfil():
     return render_template('/estudiante/perfil.html')
 
 @router.route('/logout')
+@login_required
 def logout():
+    logout_user()  
     return render_template("inicio.html")
 
 @router.route('/estudiante/asignarEstudiante', methods=['POST'])
@@ -440,6 +477,7 @@ def administrador():
 #################################################################################################################
 #Presentar la lista de usuarios
 @router.route('/administrador/gestionar_usuarios/<roles>/<nombreU>/<apellidoU>', methods=['GET'])
+@login_required
 def gestionar_usuarios(roles, nombreU, apellidoU):
     uc = UsuarioControl() #Creo un objeto de la clase UsuarioControl
     listaUsuarios = uc._list() #Obtengo la lista de usuarios
