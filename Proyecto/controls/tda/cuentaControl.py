@@ -75,14 +75,15 @@ class CuentaControl(DaoAdapter):
             if rol == "Docente" or rol == "Estudiante":
                 if rol == "Docente":
                     dc = DocenteControl()
-                    docente = dc._list().binary_search_models(cuenta._idUsuario, "_idUsuario")
-                    cursos = cc._list().lineal_binary_search_models(docente._id, "_idDocente")
+                    docente = dc._list().binary_search_models_id(cuenta._idUsuario, "_idUsuario")
+                    if not cc._list().isEmpty and docente != -1:
+                        cursos = cc._list().lineal_binary_search_models_id(docente._id, "_idDocente")
                 else:
                     ec = EstudianteControl()
-                    estudiantes = ec._list().lineal_binary_search_models(str(cuenta._idUsuario), "_idUsuario")
+                    estudiantes = ec._list().lineal_binary_search_models_id(cuenta._idUsuario, "_idUsuario")
                     estudiantes = estudiantes.toArray
                     for est in estudiantes:
-                        curso = cc._list().binary_search_models(est._idCurso, "_id")
+                        curso = cc._list().binary_search_models_id(est._idCurso, "_id")
                         cursos.addNode(curso)
                         
                     

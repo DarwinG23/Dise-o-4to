@@ -22,6 +22,7 @@ from datetime import datetime
 from controls.tda.notificacionControl import NotificacionControl
 from controls.tda.cursoControl import CursoControl
 from controls.tda.tareaControl import TareaControl
+from controls.tda.entregaControl import EntregaControl
 from flask import send_from_directory, abort, current_app
 import os
 import json
@@ -215,11 +216,83 @@ def subir_tarea():
     usuario = usuario.replace("'", '"')
     usuario = json.loads(usuario)
     tc = TareaControl()
-    ec = EstudianteControl()
-    estudiantes = ec._list().lineal_binary_search_models(str(data["idCurso"]), "_idCurso")
-    tarea = tc._list().binary_search_models(data["idTarea"], "_id")
+    ee = EntregaControl()
+    ac = AsignacionControl()
+    tarea = "Sin tarea"
+    entrega = "Sin entrega"
+    entregas = ee._list()
+    idAsignacion = "Sin asignacion"
+    if not tc._list().isEmpty:
+        tarea = tc._list().binary_search_models_id(data["idTarea"], "_id")
+        if tarea == -1:
+            tarea = "Sin tarea"
+        asignaciones = ac._list()
+        if not asignaciones.isEmpty:
+            asignaciones = asignaciones.lineal_binary_search_models_id(data["idCurso"], "_idCurso")
+            if not asignaciones.isEmpty:
+                for asignacion in asignaciones.toArray:
+                    if tarea._idAsignacion == asignacion._id:
+                        idAsignacion = asignacion._id
+                        if not entregas.isEmpty:
+                            entrega = entregas.binary_search_models_id(asignacion._id, "_idAsignacion")
+                            if entrega != -1:
+                                break    
+                                           
     archivo_nombre = os.path.basename(tarea._ruta_pdf)
-    return render_template('/estudiante/curso/subirTarea.html',  roles = data["roles"], usuario = usuario, idCurso = data["idCurso"], idTarea = data["idTarea"], cursos = cursos, tiene = data["tiene"], tarea = tarea.serializable, estudiantes = ec.to_dic_lista(estudiantes), nombreU = usuario["nombre"], apellidoU = usuario["apellido"], archivo = archivo_nombre)
+    archivo_entrega = "Sin entrega"
+    if entrega != -1 and entrega != "Sin entrega":
+        archivo_entrega = os.path.basename(entrega._ruta_pdf)
+        entrega = entrega.serializable  
+    else:
+        entrega = "Sin entrega"
+    return render_template('/estudiante/curso/subirTarea.html',  roles = data["roles"], usuario = usuario, idCurso = data["idCurso"], idTarea = data["idTarea"], cursos = cursos, tiene = data["tiene"], tarea = tarea.serializable, nombreU = usuario["nombre"], apellidoU = usuario["apellido"], archivo = archivo_nombre, entrega = entrega, archivo_entrega = archivo_entrega, idAsignacion = idAsignacion)
+
+#/subirTareaPdf/{{roles}}/{{usuario}}/{{curso.id}}/{{idTarea}}/{{idAsignacion}}/{{cursos}}{{tiene}}
+@router.route('/subirTareaPdf/<roles>/<usuario>/<idCurso>/<idTarea>/<idAsignacion>/<cursos>/<tiene>', methods=['POST'])
+def subirTareaPdf(roles, usuario,idCurso,idTarea, idAsignacion, cursos, tiene):
+    cursos = eval(cursos)
+    #Pasamos el string (usuario) a un diccionario 
+    usuario = re.sub(r"datetime\.datetime\((\d+), (\d+), (\d+), (\d+), (\d+)\)", r'"\1-\2-\3 \4:\5"', usuario)
+    usuario = usuario.replace("'", '"')
+    usuario = json.loads(usuario)
+    
+    ec = EstudianteControl()
+    estudiantes = ec._list()
+    fecha = datetime.now()
+    fecha = fecha.strftime("%d/%m/%Y")
+    permiso = 1
+    comentario = "Sin comentario"
+    estado = 1
+    archivo = request.files['archivo']  
+    if not archivo.filename == '':
+        ruta = os.path.join(UPLOAD_FOLDER, archivo.filename)
+        archivo.save(os.path.join(UPLOAD_FOLDER, archivo.filename))
+    
+    bandera = False
+    entrega = "Sin entrega"
+    if not estudiantes.isEmpty:
+        estudiante = estudiantes.binary_search_models_id(usuario["id"], "_idUsuario")
+        if estudiante != -1:
+            if not archivo.filename == '':
+                ruta = os.path.join(UPLOAD_FOLDER, archivo.filename)
+                archivo.save(os.path.join(UPLOAD_FOLDER, archivo.filename))   
+                ecd = EntregaControl()
+                ecd.crearEntrega(ruta, estado, None, comentario, fecha, permiso, idAsignacion, estudiante._id)
+                bandera = True
+                entregas = ecd._list()
+                entregas.sort_models("_id", 1, 4)
+                entrega = entregas.getData(entregas._length-1)
+    if bandera:
+        flash('Entrega realizada con exito', 'success')
+        tc = TareaControl()
+        tarea = tc._list().binary_search_models_id(idTarea, "_id")
+        if tarea != -1:
+            archivo_nombre = os.path.basename(tarea._ruta_pdf)
+            tarea = tarea.serializable
+        archivo_entrega = os.path.basename(entrega._ruta_pdf)
+        entrega = entrega.serializable
+        return render_template('/estudiante/curso/subirTarea.html',  roles = roles, usuario = usuario, idCurso = idCurso, idTarea = idTarea, cursos = cursos, tiene = tiene, tarea = tarea, nombreU = usuario["nombre"], apellidoU = usuario["apellido"], archivo = archivo_nombre, entrega = entrega, archivo_entrega = archivo_entrega, idAsignacion = idAsignacion)
+
 
 
 # Estudiante Tests
@@ -330,6 +403,19 @@ def tareasPresentadas():
 
     
     return render_template('docente/crud/listaTareasPresentadas.html', roles = data["roles"], usuario = usuario, idCurso = data["idCurso"], idTarea = data["idTarea"], cursos = cursos, tiene = data["tiene"], tarea = tarea.serializable, estudiantes = ec.to_dic_lista(estudiantes), nombreU = usuario["nombre"], apellidoU = usuario["apellido"], archivo = archivo_nombre)
+
+@router.route('/descargasEntrega/<idEntrega>')
+def descargarArchivoEntrega(idEntrega):
+    ec = EntregaControl()
+    entrega = ec._list().binary_search_models_id(idEntrega, "_id")
+    filename = os.path.basename(entrega._ruta_pdf)
+    upload_folder = os.path.join(current_app.root_path, 'uploads')
+    try:
+        return send_from_directory(upload_folder, filename, as_attachment=True)
+    except FileNotFoundError:
+        abort(404)
+
+
 
 @router.route('/descargas/<idTarea>')
 def descargarArchivo(idTarea):
@@ -463,8 +549,10 @@ def verCursoDocentePost(roles, usuario,nombreU, apellidoU, cursos, tiene):
     asignaciones = ac._list().lineal_binary_search_models(id, "_idCurso")
     tareas = Linked_List()
     for asignacion in asignaciones.toArray:
-        tarea = tc._list().binary_search_models(str(asignacion._id), "_idAsignacion")
-        tareas.addNode(tarea)
+        tarea = "Sin tarea"
+        if not tc._list().isEmpty:
+            tarea = tc._list().binary_search_models(str(asignacion._id), "_idAsignacion")
+            tareas.addNode(tarea)
     
     return render_template('/docente/crud/listaTareasDocentes.html', roles = roles, nombreU = nombreU, apellidoU = apellidoU, cursos = cursos, tiene = tiene, curso = curso.serializable, usuario = usuario, tareas = tc.to_dic_lista(tareas))
     
@@ -897,3 +985,9 @@ def asignarCurso(roles, nombreU, apellidoU):
 def estadisticas():
     # Datos de ejemplo para las estadísticas del estudiante
     return render_template('estadisticas/estadisticasEstudiantes.html')
+
+
+
+@router.route('/prueba')   
+def prueba(): 
+   return render_template('perfil.html')
