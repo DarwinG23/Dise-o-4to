@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmación de Sesión</title>
+</head>
+<body>
+    <h2>¡Hola {{ nombre_usuario }}!</h2>
+    <p>Parece que estás regresando a una página protegida. ¿Te gustaría continuar con la sesión activa?</p>
+    <form action="{{ url_for('router.protegido') }}" method="get">
+        <button type="submit">Sí, continuar con la sesión</button>
+    </form>
+    <form action="{{ url_for('router.inicio') }}" method="get">
+        <button type="submit">Cancelar, ir al inicio de sesión</button>
+    </form>
+</body>
+</html>

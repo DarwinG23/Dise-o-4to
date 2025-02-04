@@ -393,6 +393,22 @@ class Linked_List(object):
                 right = mid - 1
         return -1   
     
+    #busqueda binaria
+    def binary_search_models_id(self, data, atribute):
+        self.sort_models(atribute)
+        arr = self.toArray
+        left = 0
+        right = len(arr) - 1
+        while left <= right:
+            mid = (left + right) // 2
+            if int(getattr(arr[mid], atribute)) == int(data):
+                return arr[mid] 
+            elif int(getattr(arr[mid], atribute)) < int(data):
+                left = mid + 1
+            else:
+                right = mid - 1
+        return -1   
+    
     
     #busqueda lineal-binaria
     def lineal_binary_search_models(self, data, atribute):       
@@ -415,6 +431,29 @@ class Linked_List(object):
             else:
                 right = mid - 1
         return list
+    
+     #busqueda lineal-binaria por id
+    def lineal_binary_search_models_id(self, data, atribute):       
+        self.sort_models(atribute)
+        arr = self.toArray
+        left = 0
+        right = len(arr) - 1
+        list = Linked_List()
+        
+        
+        while left <= right:
+            mid = (left + right) // 2
+            if int(getattr(arr[mid], atribute)) == int(data):  
+                for i in range(left, len(arr)):
+                    if int(getattr(arr[i], atribute)) == int(data):  
+                        list.addNode(arr[i], list._length)         
+                break                  
+            elif int(getattr(arr[mid], atribute)) < int(data):
+                left = mid + 1
+            else:
+                right = mid - 1
+        return list
+    
     #menores
     def search_lower(self, data):
         list = Linked_List()

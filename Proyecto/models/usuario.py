@@ -1,6 +1,5 @@
-
-class Usuario:
-    #no coloco el id de la cuenta por que ya esta en la tabla cuenta el id de usuario
+from flask_login import UserMixin
+class Usuario(UserMixin):
     def __init__(self):
         self.__id = 0
         self.__nombre = ""
@@ -9,6 +8,16 @@ class Usuario:
         self.__fechaNacimiento = ""
         self.__direccion = ""
         self.__telefono = ""
+        
+    def get_id(self):
+        return str(self.__id)  
+
+
+    def get_nombre(self):
+        return self.__nombre
+
+    def get_apellido(self):
+        return self.__apellido
 
     @property
     def _id(self):
