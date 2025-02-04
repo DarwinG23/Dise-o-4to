@@ -72,6 +72,7 @@ def login():
         return redirect(url_for('router.inicio'))
     else:
         flash(f'Bienvenido {usuaario._nombre} {usuaario._apellido}', 'success')
+        flash('Inicio exitoso', 'success')  # ✅ Nuevo flash
 
         if rol == "Administrador":
             return render_template('administrador/administrador.html', cursos=cc.to_dic_lista(cursos), tiene=tiene, roles=nombreRol, nombreU=usuaario._nombre, apellidoU=usuaario._apellido)
@@ -151,13 +152,19 @@ def registro(rol):
         flash('Solo se permite el acceso a correos institucionales (@unl.edu.ec)', 'error')
         return redirect(url_for('router.registrar', rol=rol))  # Redirigir al formulario según el rol
 
+    # Validación de la cédula
+    cedula = data["ci"]
+    if not Cedula.validar_cedula(cedula):
+        flash('Cédula inválida. Verifique que tenga 10 dígitos y cumpla con los requisitos.', 'error')
+        return redirect(url_for('router.registrar', rol=rol))  # Redirigir al formulario si la cédula es inválida
+
     # Convertir la cadena a un objeto datetime
     fecha_objeto = datetime.strptime(data["fechaNacimiento"], "%Y-%m-%d")
     fecha_formateada = fecha_objeto.strftime("%d/%m/%Y")
     fecha_formateada = str(fecha_formateada)
 
     # Crear el usuario
-    uc.crearUsuario(data["nombre"], data["apellido"], data['ci'], fecha_formateada, data['telefono'], data['direccion'])
+    uc.crearUsuario(data["nombre"], data["apellido"], cedula, fecha_formateada, data['telefono'], data['direccion'])
     usuarios = uc._list()
     usuarios.sort_models("_id", 1, 4)
     legth = usuarios.getData(usuarios._length-1)._id
@@ -182,6 +189,7 @@ def registro(rol):
 
     flash('Cuenta creada con éxito', 'success')
     return redirect(url_for('router.inicio'))
+
 #---------------------------------------------Presentación-----------------------------------------------#
 @router.route('/presentacion') 
 def presentacion():
