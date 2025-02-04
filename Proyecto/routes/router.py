@@ -420,11 +420,17 @@ def verCursoDocentePost(roles, usuario,nombreU, apellidoU, cursos, tiene):
     curso = cc._list().binary_search_models(id, "_id")
     asignaciones = ac._list().lineal_binary_search_models(id, "_idCurso")
     tareas = Linked_List()
-    for asignacion in asignaciones.toArray:
-        tarea = tc._list().binary_search_models(str(asignacion._id), "_idAsignacion")
-        tareas.addNode(tarea)
     
-    return render_template('/docente/crud/listaTareasDocentes.html', roles = roles, nombreU = nombreU, apellidoU = apellidoU, cursos = cursos, tiene = tiene, curso = curso.serializable, usuario = usuario, tareas = tc.to_dic_lista(tareas))
+    for asignacion in asignaciones.toArray:
+        
+        tarea = "Sin tareas"
+        if not tc._list().isEmpty:
+            tarea = tc._list().binary_search_models(str(asignacion._id), "_idAsignacion")
+            tareas.addNode(tarea)
+    if curso == -1:
+        return render_template('/docente/docenteInicio.html', roles = roles, nombreU = nombreU, apellidoU = apellidoU, cursos = cursos, tiene = tiene, usuario = usuario)
+    else: 
+        return render_template('/docente/crud/listaTareasDocentes.html', roles = roles, nombreU = nombreU, apellidoU = apellidoU, cursos = cursos, tiene = tiene, curso = curso.serializable, usuario = usuario, tareas = tc.to_dic_lista(tareas))
     
 
 #---------------------------------------------Administrador-----------------------------------------------------#
@@ -900,3 +906,10 @@ def modificarUsuarioAdmin(roles, nombreU, apellidoU):
     uc.modificarUsuario(data["id"], data["nombre"], data["apellido"], data["ci"], fecha_formateada, data["telefono"], data["direccion"])
     return redirect(url_for('router.gestionar_usuarios', roles = roles, nombreU = nombreU, apellidoU = apellidoU))
 
+
+#___________________Perfiles_______________________#
+@router.route('/perfil/ver/<roles>/<nombreU>/<apellidoU>/<pos>', methods=['GET'])
+def perfil_ver(roles, nombreU, apellidoU, pos):
+    uc = UsuarioControl()
+    perfil = uc._list().binary_search_models(int(pos), "_id")
+    return render_template('administrador/perfil.html', data = perfil, roles = roles, nombreU=nombreU, apellidoU = apellidoU)
