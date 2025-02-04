@@ -51,11 +51,12 @@ cors = CORS(router, resource={
 def inicio():
     return render_template('inicio.html')
 
-@router.route('/login',  methods=["POST"])
+@router.route('/login', methods=["POST"])
 def login():
     data = request.form
     cc = CuentaControl()
-    login, rol, cursos, tiene, nombreRol, usuaario = cc.iniciarSesion(data["correo"], data["contrasenia"]) #Aqui llamo al metodo del controlador cc
+    login, rol, cursos, tiene, nombreRol, usuaario = cc.iniciarSesion(data["correo"], data["contrasenia"]) 
+
     if login == -1:
         flash('Usuario no encontrado', 'error')
         return redirect(url_for('router.inicio'))
@@ -63,27 +64,14 @@ def login():
         flash('Contraseña incorrecta', 'error')
         return redirect(url_for('router.inicio'))
     else:
-        print("###############################")
-        print("Rol: ", rol)
-        print(cursos.print)
-        print("Tiene: ", tiene)
-        print("NombreRol: ", nombreRol)
-        print("Usuario: ", usuaario)
-        login_user(usuaario)
-        print("jejexd") 
+        flash(f'Bienvenido {usuaario._nombre} {usuaario._apellido}', 'success')
+
         if rol == "Administrador":
-            print("Estamos en administrador")
-            return render_template('administrador/administrador.html', cursos = cc.to_dic_lista(cursos), tiene = tiene, roles = nombreRol, nombreU = usuaario._nombre, apellidoU = usuaario._apellido)
+            return render_template('administrador/administrador.html', cursos=cc.to_dic_lista(cursos), tiene=tiene, roles=nombreRol, nombreU=usuaario._nombre, apellidoU=usuaario._apellido)
         elif rol == "Docente":
-            return render_template('docente/docenteInicio.html', cursos = cc.to_dic_lista(cursos), tiene = tiene, roles = nombreRol, nombreU = usuaario._nombre, apellidoU = usuaario._apellido, usuario = usuaario.serializable)
+            return render_template('docente/docenteInicio.html', cursos=cc.to_dic_lista(cursos), tiene=tiene, roles=nombreRol, nombreU=usuaario._nombre, apellidoU=usuaario._apellido, usuario=usuaario.serializable)
         elif rol == "Estudiante":
-            return render_template('estudiante/inicioEstudiante.html', cursos = cc.to_dic_lista(cursos), tiene = tiene, roles = nombreRol, nombreU = usuaario._nombre, apellidoU = usuaario._apellido, usuario = usuaario.serializable)
-        else:
-            flash('Esta cuenta no tiene un rol asignado', 'error')
-            return render_template('inicio.html')
-
-
-
+            return render_template('estudiante/inicioEstudiante.html', cursos=cc.to_dic_lista(cursos), tiene=tiene, roles=nombreRol, nombreU=usuaario._nombre, apellidoU=usuaario._apellido, usuario=usuaario.serializable)
 
 @router.route('/confirmar-regreso', methods=["GET", "POST"])
 def confirmar_regreso():
