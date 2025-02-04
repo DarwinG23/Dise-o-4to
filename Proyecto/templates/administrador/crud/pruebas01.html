@@ -1,0 +1,210 @@
+{% extends 'estudiante/estudianteInicio.html' %}
+
+{% block cursos %}
+    {% if tiene == "Verdadero" %}
+        {% for curso in cursos %}
+            {% if curso.nombre != "Sin cursos" %}
+                <form action="/docente/curso/ver/{{roles}}/{{nombreU}}/{{apellidoU}}/{{cursos}}/{{tiene}}" method="POST" id="cursoForm{{ curso.id }}">
+                    <li>
+                        <a href="#" onclick="document.getElementById('cursoForm{{ curso.id }}').submit();">
+                            <i class="fas fa-book"></i> {{ curso.nombre }}
+                        </a>
+                        <input type="hidden" name="idCurso" value="{{ curso.id }}">
+                    </li>
+                </form>
+            {% endif %}
+        {% endfor %}
+    {% else %}
+        <li><a href="#"><i class="fas fa-book"></i> Sin cursos</a></li>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<script>
+    $(document).ready(function() {
+        // Función para manejar la selección de docentes
+        $('#tablaDocentes tbody').on('change', 'input[type="checkbox"]', function() {
+            if (this.checked) {
+                // Deshabilitar otros checkboxes de docentes
+                $('#tablaDocentes tbody input[type="checkbox"]').not(this).prop('disabled', true);
+            } else {
+                // Habilitar todos los checkboxes de docentes
+                $('#tablaDocentes tbody input[type="checkbox"]').prop('disabled', false);
+            }
+        });
+
+        // Función para manejar la selección de todos los estudiantes
+        $('#seleccionarTodosEstudiantes').on('change', function() {
+            var isChecked = $(this).prop('checked'); // Verificar si el checkbox está marcado
+            $('#tablaEstudiantes tbody input[type="checkbox"]').prop('checked', isChecked); // Marcar/desmarcar todos los checkboxes de estudiantes
+        });
+
+        // Función para manejar la selección individual de estudiantes
+        $('#tablaEstudiantes tbody').on('change', 'input[type="checkbox"]', function() {
+            // Si se desmarca un checkbox individual, desmarcar el checkbox "Seleccionar todos"
+            if (!$(this).prop('checked')) {
+                $('#seleccionarTodosEstudiantes').prop('checked', false);
+            }
+        });
+
+        // Función para el botón de acción
+        $('#accionBtn').click(function() {
+            var docenteSeleccionado = $('#tablaDocentes tbody input[type="checkbox"]:checked').val();
+            var estudiantesSeleccionados = $('#tablaEstudiantes tbody input[type="checkbox"]:checked').map(function() {
+                return this.value;
+            }).get();
+
+            console.log("Docente seleccionado:", docenteSeleccionado);
+            console.log("Estudiantes seleccionados:", estudiantesSeleccionados);
+
+            // Aquí puedes agregar la lógica para realizar la acción con los elementos seleccionados
+        });
+
+        // Función para llenar la tabla con datos
+        function tabla(url, tablaId) {
+            $.ajax({
+                method: "GET",
+                url: url,
+                contentType: 'json',
+                success: function(data) {
+                    console.log(url);
+                    if (data.code == '200') {
+                        var html = '';
+                        $.each(data.data, function(i, info) {
+                            html += "<tr>";
+                            html += "<td><input type='checkbox' value='" + info.id + "'></td>";
+                            html += "<td>" + info.nombre + "</td>";
+                            html += "<td>" + info.apellido + "</td>";
+                            html += "<td>" + info.ci + "</td>";
+                            html += "<td>" + info.correo + "</td>";
+                            html += "</tr>";
+                        });
+                        $("#" + tablaId + " tbody").html(html);
+                    } else {
+                        html = "<tr><td colspan='5' class='text-center'>No se encontraron datos</td></tr>";
+                        $("#" + tablaId + " tbody").html(html);
+                    }
+                }
+            });
+        }
+
+        // Llamadas a la función tabla para llenar las tablas
+        tabla("http://localhost:5000/usuarios/ordenar/1/_nombre/3", "tablaDocentes");
+        tabla("http://localhost:5000/usuarios/ordenar/1/_nombre/3", "tablaEstudiantes");
+    });
+</script>
+
+<div class="text-black">
+    <h2 class="display-7 mb-4">Docentes</h2>
+</div>
+<div class="card p-4">
+    <!-- Sección de Ordenar y Buscar -->
+    <div class="row mb-4 align-items-center">
+        <div class="col-md-3">
+            <label for="criterio" class="form-label">Criterio:</label>
+            <select id="criterio" class="form-select">
+                <option value="_nombre">Nombre</option>
+                <option value="_apellido">Apellido</option>
+                <option value="_ci">Cedula</option>
+                <option value="_id">Nro</option>
+            </select>
+        </div>
+        <div class="col-md-2 d-flex align-items-center">
+            <input type="checkbox" value="DESCENDENTE" id="tipo" class="form-check-input me-2">
+            <label for="tipo" class="form-check-label">Descendente</label>
+        </div>
+        <div class="col-md-2">
+            <button class="btn btn-info w-100" id="link">Ordenar</button>
+        </div>
+        <div class="col-md-3">
+            <input type="text" id="valor" class="form-control" placeholder="Buscar...">
+        </div>
+        <div class="col-md-2">
+            <button class="btn btn-info w-100" id="buscar">Buscar</button>
+        </div>
+    </div>
+    <!-- Botón Atrás -->
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <a href="/tarea" class="btn btn-danger w-50">Atrás</a>
+        </div>
+    </div>
+    <!-- Tabla de Docentes -->
+    <table id="tablaDocentes" class="table table-hover table-bordered text-center">
+        <thead class="table-dark">
+            <tr>
+                <th>Seleccionar</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Cédula</th>
+                <th>Correo</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Aquí se llenará la tabla dinámicamente -->
+        </tbody>
+    </table>
+</div>
+
+<div class="text-black">
+    <h2 class="display-7 mb-4">Estudiantes</h2>
+</div>
+<div class="card p-4">
+    <!-- Sección de Ordenar y Buscar -->
+    <div class="row mb-4 align-items-center">
+        <div class="col-md-3">
+            <label for="criterio" class="form-label">Criterio:</label>
+            <select id="criterio" class="form-select">
+                <option value="_nombre">Nombre</option>
+                <option value="_apellido">Apellido</option>
+                <option value="_ci">Cedula</option>
+                <option value="_id">Nro</option>
+            </select>
+        </div>
+        <div class="col-md-2 d-flex align-items-center">
+            <input type="checkbox" value="DESCENDENTE" id="tipo" class="form-check-input me-2">
+            <label for="tipo" class="form-check-label">Descendente</label>
+        </div>
+        <div class="col-md-2">
+            <button class="btn btn-info w-100" id="link">Ordenar</button>
+        </div>
+        <div class="col-md-3">
+            <input type="text" id="valor" class="form-control" placeholder="Buscar...">
+        </div>
+        <div class="col-md-2">
+            <button class="btn btn-info w-100" id="buscar">Buscar</button>
+        </div>
+    </div>
+    <!-- Botón Atrás -->
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <a href="/tarea" class="btn btn-danger w-50">Atrás</a>
+        </div>
+    </div>
+    <!-- Tabla de Estudiantes -->
+    <table id="tablaEstudiantes" class="table table-hover table-bordered text-center">
+        <thead class="table-dark">
+            <tr>
+                <th>
+                    <input type="checkbox" id="seleccionarTodosEstudiantes"> <!-- Checkbox para seleccionar todos -->
+                </th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Cédula</th>
+                <th>Correo</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Aquí se llenará la tabla dinámicamente -->
+        </tbody>
+    </table>
+</div>
+
+<!-- Botón debajo de las dos tablas -->
+<div class="row mb-3">
+    <div class="col-md-4">
+        <button id="accionBtn" class="btn btn-success">Asignar Curso</button>
+    </div>
+</div>
+
+{% endblock %}

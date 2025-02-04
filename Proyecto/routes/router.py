@@ -304,6 +304,27 @@ def descargarArchivo(idTarea):
 def testPresentados():
     return render_template('docente/crud/listaTestPresentados.html')
 
+#_____________________________________________DOCENTES VISTAS - DARWIN - DOCENTE / REGISTRO________________________________________#
+
+@router.route('/administrador/crearDocente/ver/<roles>/<nombreU>/<apellidoU>', methods=['GET'])
+def listaRegistroD(roles, nombreU, apellidoU):
+    return render_template('administrador/crud/listaCrearRegistroDocente.html', roles = roles, nombreU = nombreU, apellidoU = apellidoU)
+
+@router.route('/crearDocente/<roles>/<nombreU>/<apellidoU>', methods=['GET'])
+def crearDocente(roles, nombreU, apellidoU):
+    data = request.form
+    dc = DocenteControl()
+    uc = UsuarioControl()
+    rc = RolControl()
+    # Convertir la cadena a un objeto datetime
+    fecha_objeto = datetime.strptime(data["fechaNacimiento"], "%Y-%m-%d")
+    fecha_formateada = fecha_objeto.strftime("%d/%m/%Y")
+    fecha_formateada = str(fecha_formateada)
+
+    uc.crearUsuario(data["nombre"],data["apellido"], data['ci'], fecha_formateada, data['telefono'], data['direccion'])
+    
+    return redirect(url_for('router.gestionar_docentes', roles = roles, nombreU = nombreU, apellidoU = apellidoU))
+
 #----------------------------------------------------------------------------------------------------------------------------------#
 @router.route('/docente/crearAsignacion/<roles>/<nombreU>/<apellidoU>/<cursos>/<tiene>', methods=['GET'])
 def crearTarea(roles, nombreU, apellidoU,cursos, tiene):
@@ -603,6 +624,7 @@ def buscar_administradores(tipo, data, attr):
 def gestionar_docentes(roles, nombreU, apellidoU):
     #Falta hacer que se presente el nombre y apellido del Docente
     dc = DocenteControl()
+    uc = UsuarioControl()
     listaDocentes = dc._list()
     listaDocentes.sort_models("_id",1,4) 
     return render_template('administrador/crud/listaDocente.html', lista = dc.to_dic_lista(listaDocentes), roles = roles, nombreU = nombreU, apellidoU = apellidoU) #Los envio al html
@@ -636,6 +658,7 @@ def buscar_docentes(tipo, data, attr):
         jsonify({"msg": "OK", "code": 200, "data": dc.to_dic_lista(list)}),
         200
     )
+
 
 
 ########################################################################################################
@@ -854,3 +877,10 @@ def asignarCurso(roles, nombreU, apellidoU):
 def estadisticas():
     # Datos de ejemplo para las estadísticas del estudiante
     return render_template('estadisticas/estadisticasEstudiantes.html')
+
+
+#--------------------------------------------Administrador/Vista/Darwin- Draw-----------------------------------------------------#
+
+@router.route('/prueba01', methods=['GET'])
+def prueba01():
+    return render_template('administrador/crud/pruebas01.html')
