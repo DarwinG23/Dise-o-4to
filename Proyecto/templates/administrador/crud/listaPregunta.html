@@ -1,5 +1,6 @@
 {% extends 'estudiante/estudianteInicio.html' %}
 {% block content %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 <script>
     $(document).ready(function(){
         $("#link").click(function(){
@@ -38,8 +39,8 @@
                             html+= "<td>"+info.estado+"</td>";
                             html+= "<td>"+info.respuesta+"</td>";
                             html+= "<td>"+info.idtest+"</td>";
-                            html+= "<td>"+'<a href="/servidores/editar/'+info.id+'" class="btn btn-info text-white">Editar</a>'+"</td>";
-                            html+= "<td>"+'<a href="/servidores/eliminar/'+info.id+'" class="btn btn-info btn-danger">Eliminar</a>'+"</td>";
+                            html+= "<td>"+'<a href="/servidores/editar/'+info.id+'" class="btn btn-info text-white"><i class="fas fa-edit"></i> Editar</a>'+"</td>";
+                            html+= "<td>"+'<a href="/servidores/eliminar/'+info.id+'" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Eliminar</a>'+"</td>";
                             html+="</tr>";
                             
                         });
@@ -97,7 +98,7 @@
                 </div>
                 <!-- Botón Ordenar -->
                 <div class="col-md-4 text-end">
-                    <button class="btn btn-info w-100" id="link">ORDENAR</button>
+                    <button class="btn btn-info w-100" id="link"><i class="fas fa-sort"></i> Ordenar</button>
                 </div>
             </div>
         
@@ -109,18 +110,20 @@
                 </div>
                 <!-- Botón Buscar -->
                 <div class="col-md-4 text-end">
-                    <button class="btn btn-info w-100" id="buscar">BUSCAR</button>
+                    <button class="btn btn-info w-100" id="buscar"><i class="fas fa-search"></i> Buscar</button>
                 </div>
             </div>
         </div>
 
-
         <thead>
-            <th>Nro</th>
-            <th>Pregunta</th>
-            <th>Estado</th>
-            <th>Respuesta</th>
-            <th>Test Asociado</th>
+            <tr>
+                <th><i class="fas fa-hashtag"></i> Nro</th>
+                <th><i class="fas fa-question-circle"></i> Pregunta</th>
+                <th><i class="fas fa-toggle-on"></i> Estado</th>
+                <th><i class="fas fa-reply"></i> Respuesta</th>
+                <th><i class="fas fa-project-diagram"></i> Test Asociado</th>
+                <th><i class="fas fa-cogs"></i> Acciones</th>
+            </tr>
         </thead>
         <tbody>
             {% for item in lista %}
@@ -130,14 +133,14 @@
                     <td>{{item.estado}}</td>
                     <td>{{item.respuesta}}</td>
                     <td>{{item.idtest}}</td>
-                    <td><a href="/administrador/modificarCuenta/editar/{{item.id}}" class="btn btn-info text-white">Editar</a></td>
-                    <td><a href="/servidores/eliminar/{{item.id}}" class="btn btn-danger">Eliminar</a></td>
+                    <td>
+                        <a href="/administrador/modificarCuenta/editar/{{item.id}}" class="btn btn-info text-white"><i class="fas fa-edit"></i> Editar</a>
+                        <a href="/servidores/eliminar/{{item.id}}" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Eliminar</a>
+                    </td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
-    <!-- <a  href="/login"  class="btn btn-danger">Volver</a> -->
-
 </div>
 <style>
     body {
@@ -207,5 +210,15 @@
     .table-striped tbody tr:nth-of-type(odd) {
         background-color: rgba(0, 0, 0, 0.05);
     }
+
+    /* Estilo para los iconos */
+    .btn i {
+        margin-right: 5px;
+    }
+
+    .table i {
+        margin-right: 8px;
+    }
+
 </style>
 {% endblock %}

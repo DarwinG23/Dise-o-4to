@@ -1,5 +1,6 @@
 {% extends 'estudiante/estudianteInicio.html' %}
 {% block content %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 <script>
     $(document).ready(function(){
         $("#link").click(function(){
@@ -38,8 +39,8 @@
                             html+= "<td>"+info.descripcion+"</td>";
                             html+= "<td>"+info.resultado+"</td>";
                             html+= "<td>"+info.idAsignacion+"</td>";
-                            html+= "<td>"+'<a href="/servidores/editar/'+info.id+'" class="btn btn-info text-white">Editar</a>'+"</td>";
-                            html+= "<td>"+'<a href="/servidores/eliminar/'+info.id+'" class="btn btn-info btn-danger">Eliminar</a>'+"</td>";
+                            html+= "<td>"+'<a href="/servidores/editar/'+info.id+'" class="btn btn-info text-white"><i class="fas fa-edit"></i> Editar</a>'+"</td>";
+                            html+= "<td>"+'<a href="/servidores/eliminar/'+info.id+'" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Eliminar</a>'+"</td>";
                             html+="</tr>";
                             
                         });
@@ -97,7 +98,7 @@
                 </div>
                 <!-- Botón Ordenar -->
                 <div class="col-md-4 text-end">
-                    <button class="btn btn-info w-100" id="link">ORDENAR</button>
+                    <button class="btn btn-info w-100" id="link"><i class="fas fa-sort"></i> ORDENAR</button>
                 </div>
             </div>
         
@@ -109,18 +110,20 @@
                 </div>
                 <!-- Botón Buscar -->
                 <div class="col-md-4 text-end">
-                    <button class="btn btn-info w-100" id="buscar">BUSCAR</button>
+                    <button class="btn btn-info w-100" id="buscar"><i class="fas fa-search"></i> BUSCAR</button>
                 </div>
             </div>
         </div>
 
-
         <thead>
-            <th>Nro</th>
-            <th>Nombre</th>
-            <th>Descripción</th>
-            <th>Resultado</th>
-            <th>Asignación</th>
+            <tr>
+                <th><i class="fas fa-hashtag"></i> Nro</th>
+                <th><i class="fas fa-list-alt"></i> Nombre</th>
+                <th><i class="fas fa-pencil-alt"></i> Descripción</th>
+                <th><i class="fas fa-check-circle"></i> Resultado</th>
+                <th><i class="fas fa-user-check"></i> Asignación</th>
+                <th><i class="fas fa-cogs"></i> Acciones</th>
+            </tr>
         </thead>
         <tbody>
             {% for item in lista %}
@@ -130,8 +133,10 @@
                     <td>{{item.descripcion}}</td>
                     <td>{{item.resultado}}</td>
                     <td>{{item.idAsignacion}}</td>
-                    <td><a href="/administrador/modificarCuenta/editar/{{item.id}}" class="btn btn-info text-white">Editar</a></td>
-                    <td><a href="/servidores/eliminar/{{item.id}}" class="btn btn-danger">Eliminar</a></td>
+                    <td>
+                        <a href="/administrador/modificarCuenta/editar/{{item.id}}" class="btn btn-info text-white"><i class="fas fa-edit"></i> Editar</a>
+                        <a href="/servidores/eliminar/{{item.id}}" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Eliminar</a>
+                    </td>
                 </tr>
             {% endfor %}
         </tbody>
@@ -207,5 +212,15 @@
     .table-striped tbody tr:nth-of-type(odd) {
         background-color: rgba(0, 0, 0, 0.05);
     }
+
+    /* Estilo para los iconos */
+    .btn i {
+        margin-right: 5px;
+    }
+
+    .table i {
+        margin-right: 8px;
+    }
+
 </style>
 {% endblock %}
