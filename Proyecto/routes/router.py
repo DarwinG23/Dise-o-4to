@@ -3,6 +3,7 @@ from flask import Blueprint, app, jsonify, abort , request, render_template, red
 from flask_cors import CORS
 import time, math, datetime
 import random
+import re
 from controls.tda.asignacionControl import AsignacionControl
 from controls.tda.cursoControl import CursoControl
 from controls.tda.permisoControl import PermisoControl
@@ -74,7 +75,7 @@ def login():
         print("jejexd") 
         if rol == "Administrador":
             print("Estamos en administrador")
-            return render_template('administrador/administrador.html', cursos = cc.to_dic_lista(cursos), tiene = tiene, roles = nombreRol, nombreU = usuaario._nombre, apellidoU = usuaario._apellido)
+            return render_template('administrador/administrador.html', cursos = cc.to_dic_lista(cursos), tiene = tiene, roles = nombreRol, nombreU = usuaario._nombre, apellidoU = usuaario._apellido, usuario = usuaario.serializable)
         elif rol == "Docente":
             return render_template('docente/docenteInicio.html', cursos = cc.to_dic_lista(cursos), tiene = tiene, roles = nombreRol, nombreU = usuaario._nombre, apellidoU = usuaario._apellido, usuario = usuaario.serializable)
         elif rol == "Estudiante":
@@ -196,9 +197,11 @@ def estudiante():
 def tareas():
     return render_template('/estudiante/curso/cursoInicio.html')
 
-@router.route('/estudiante/inicioTest')
-def testInicio():
-    return render_template('/estudiante/testsE/inicioTest.html')
+@router.route('/estudiante/inicioTest/<roles>/<usuario>/<nombreU>/<apellidoU>/<tiene>/<cursos>', methods=['POST'])
+def testInicio(roles, usuario, nombreU, apellidoU, tiene, cursos):
+    cursos = eval(cursos)
+    
+    return render_template('/estudiante/testsE/inicioTest.html', roles = roles, usuario = usuario, nombreU = nombreU, apellidoU = apellidoU, tiene = tiene, cursos = cursos)
 
 
 @router.route('/estudiante/inicioTestPost', methods=['POST'])
@@ -545,17 +548,19 @@ def verCursoDocentePost(roles, usuario,nombreU, apellidoU, cursos, tiene):
     cc = CursoControl()
     ac= AsignacionControl()
     tc = TareaControl()
-    curso = cc._list().binary_search_models(id, "_id")
-    asignaciones = ac._list().lineal_binary_search_models(id, "_idCurso")
+    print("ID: ", id)
+    curso = cc._list().binary_search_models_id(id, "_id")
+    print("Curso: ", curso)
+    curso = curso.serializable
+    asignaciones = ac._list().lineal_binary_search_models_id(id, "_idCurso")
     tareas = Linked_List()
-    
     for asignacion in asignaciones.toArray:
         tarea = "Sin tarea"
         if not tc._list().isEmpty:
-            tarea = tc._list().binary_search_models(str(asignacion._id), "_idAsignacion")
+            tarea = tc._list().binary_search_models_id(asignacion._id, "_idAsignacion")
             tareas.addNode(tarea)
     
-
+    return render_template('/docente/crud/listaTareasDocentes.html', roles = roles, nombreU = nombreU, apellidoU = apellidoU, cursos = cursos, tiene = tiene, curso = curso, usuario = usuario, tareas = tc.to_dic_lista(tareas))
 #---------------------------------------------Administrador-----------------------------------------------------#
 @router.route('/administrador', methods=['GET'])
 def administrador():
@@ -599,6 +604,22 @@ def buscar_usuarios(tipo, data, attr):
         jsonify({"msg": "OK", "code": 200, "data": uc.to_dic_lista(list)}),
         200
     )
+
+@router.route('/administrador/modificarUsuario/ver/<roles>/<nombreU>/<apellidoU>/<pos>', methods=['GET'])
+def modificarCuentaVer(pos, roles, nombreU, apellidoU):
+    uc = UsuarioControl()
+    editarUsuario = uc._list().binary_search_models(int(pos), "_id")
+    return render_template('administrador/crud/editar/editarUsuario.html', data=editarUsuario, roles = roles, nombreU = nombreU, apellidoU = apellidoU)
+
+@router.route('/modificar_usuario/<roles>/<nombreU>/<apellidoU>', methods=['POST'])
+def modificarUsuarioAdmin(roles, nombreU, apellidoU):
+    data = request.form
+    uc = UsuarioControl()
+    fecha_objeto = datetime.strptime(data["fechaNacimiento"], "%Y-%m-%d")
+    fecha_formateada = fecha_objeto.strftime("%d/%m/%Y")
+    fecha_formateada = str(fecha_formateada)
+    uc.modificarUsuario(data["id"], data["nombre"], data["apellido"], data["ci"], fecha_formateada, data["telefono"], data["direccion"])
+    return redirect(url_for('router.gestionar_usuarios', roles = roles, nombreU = nombreU, apellidoU = apellidoU))
 
 #################################################################################################################
 
@@ -985,8 +1006,29 @@ def estadisticas():
     # Datos de ejemplo para las estadísticas del estudiante
     return render_template('estadisticas/estadisticasEstudiantes.html')
 
+#_____________________________________________Perfil_____________________________________________________#
 
-
-@router.route('/prueba')   
-def prueba(): 
-   return render_template('perfil.html')
+@router.route('/perfil/ver/<tiene>/<roles>/<nombreU>/<apellidoU>/<usuario>/<cursos>', methods=['GET', 'POST'])
+def perfil_editar(tiene, roles, nombreU, apellidoU, usuario, cursos):
+    cursos = eval(cursos)
+    uc = UsuarioControl()
+    usuario = re.sub(r"datetime\.datetime\((\d+), (\d+), (\d+), (\d+), (\d+)\)", r'"\1-\2-\3 \4:\5"', usuario)
+    usuario = usuario.replace("'", '"')
+    usuario = json.loads(usuario)
+    usuario = uc.obtener_usuario(usuario["id"])
+    
+    if request.method == 'POST':
+        nombre = request.form['nombre']
+        apellido = request.form['apellido']
+        ci = request.form['ci']
+        fechaNacimiento = request.form['fechaNacimiento']
+        telefono = request.form['telefono']
+        direccion = request.form['direccion']
+        
+        if uc.actualizar_usuario(usuario._id, nombre, apellido, ci, fechaNacimiento, telefono, direccion):
+            flash('Información actualizada correctamente', 'success')
+        else:
+            flash('Error al actualizar la información', 'danger')
+        return redirect(url_for('perfil_editar', tiene=tiene, roles=roles, nombreU=nombreU, apellidoU=apellidoU, usuario=json.dumps(usuario.serializable), cursos=str(cursos)))
+    
+    return render_template('administrador/perfil.html', cursos=cursos, data=usuario, tiene=tiene, roles=roles, nombreU=nombreU, apellidoU=apellidoU, usuario=usuario.serializable)

@@ -39,14 +39,16 @@ class UsuarioControl(DaoAdapter):
         self._usuario._telefono = telefono
         self.save
 
-    def modificarUsuario(self, nombre, apellido, ci, fechaNacimiento, telefono, direccion):
-        self._usuario._nombre = nombre
-        self._usuario._apellido = apellido
-        self._usuario._ci = ci
-        self._usuario._fechaNacimiento = fechaNacimiento
-        self._usuario._direccion = direccion
-        self._usuario._telefono = telefono
+    
+    def obtener_usuario(self, usuario_id):
+        return self._list().binary_search_models_id(usuario_id, "_id")
+    
+    def actualizar_usuario(self, usuario_id, nombre, apellido, ci, fechaNacimiento, telefono, direccion):
+        usuario = self.obtener_usuario(usuario_id)
+        usuario._nombre = nombre
+        usuario._apellido = apellido
+        usuario._ci = ci
+        usuario._fechaNacimiento = fechaNacimiento
+        usuario._telefono = telefono
+        usuario._direccion = direccion
         self.save
-    
-        
-    

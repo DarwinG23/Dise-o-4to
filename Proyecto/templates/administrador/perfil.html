@@ -1,99 +1,107 @@
-    {% extends 'estudiante/estudianteInicio.html' %}
-    {% block content %}
+{% extends 'estudiante/estudianteInicio.html' %}
+{% block content %}
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <style>
-        .hover-effect {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .hover-effect:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
-        }
-        .card {
-            border-radius: 15px;
-        }
-        .card-header {
-            border-radius: 15px 15px 0 0;
-        }
-        .form-control {
-            border-radius: 10px;
-        }
-        .btn-success {
-            border-radius: 10px;
-        }
-        .form-label {
-            font-weight: bold;
-        }
-        .alert {
-            border-radius: 10px;
-        }
-    </style>
-    <div class="text-center py-4 bg-light shadow-sm hover-effect">
-        <h2 class="display-5 fw-bold text-primary">Perfil de Usuario</h2>
-        <p class="lead text-muted">Administra tu información personal aquí.</p>
-    </div>
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card shadow">
-                <div class="card-header bg-primary text-white">
-                    <h4 class="card-title mb-0">Información Personal</h4>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<style>
+    .hover-effect {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .hover-effect:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .card {
+        border-radius: 15px;
+    }
+
+    .card-header {
+        border-radius: 15px 15px 0 0;
+    }
+
+    .form-control {
+        border-radius: 10px;
+    }
+
+    .btn-success {
+        border-radius: 10px;
+    }
+
+    .form-label {
+        font-weight: bold;
+    }
+
+    .alert {
+        border-radius: 10px;
+    }
+</style>
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+{% for category, message in messages %}
+<div class="alert alert-{{ category }}">{{ message }}</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+<div class="text-center py-4 bg-light shadow-sm hover-effect">
+    <h2 class="display-5 fw-bold text-primary">Perfil de Usuario</h2>
+    <p class="lead text-muted">Administra tu información personal aquí.</p>
+</div>
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="card-title mb-0">Información Personal</h4>
+            </div>
+            <div class="card-body">
+                {% if messages %}
+                {% for message in messages %}
+                <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+                    {{ message }}
                 </div>
-                <div class="card-body">
-                    {% if messages %}
-                        {% for message in messages %}
-                            <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
-                                {{ message }}
-                            </div>
-                        {% endfor %}
-                    {% endif %}
-                    <form action="" method="POST" onsubmit="return validateForm()">
-                        <input type="hidden" name="id" value="{{data._id}}"/>
-                        <div class="mb-3">
-                            <label for="nombre" class="form-label"><i class="fas fa-user"></i> Nombre</label>
-                            <input type="text" value="{{data._nombre}}" class="form-control" id="nombre" name="nombre" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="apellido" class="form-label"><i class="fas fa-user"></i> Apellido</label>
-                            <input type="text" value="{{data._apellido}}" class="form-control" id="apellido" name="apellido" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="ci" class="form-label"><i class="fas fa-id-card"></i> Cédula</label>
-                            <input type="text" value="{{data._ci}}" class="form-control" id="ci" name="ci" required pattern="\d{10}" title="La cédula debe tener 10 dígitos">
-                        </div>
-                        <div class="mb-3">
-                            <label for="fechaNacimiento" class="form-label"><i class="fas fa-calendar-alt"></i> Fecha de Nacimiento</label>
-                            <input type="date" value="{{data._fechaNacimiento}}" class="form-control" id="fechaNacimiento" name="fechaNacimiento" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="telefono" class="form-label"><i class="fas fa-phone"></i> Teléfono</label>
-                            <input type="text" value="{{data._telefono}}" class="form-control" id="telefono" name="telefono" required pattern="\d{10}" title="El teléfono debe tener 10 dígitos">
-                        </div>
-                        <div class="mb-3">
-                            <label for="direccion" class="form-label"><i class="fas fa-home"></i> Dirección</label>
-                            <input type="text" value="{{data._direccion}}" class="form-control" id="direccion" name="direccion" required>
-                        </div>
-                        <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Guardar Cambios</button>
-                        </div>
-                    </form>
-                </div>
+                {% endfor %}
+                {% endif %}
+                <form action="" method="POST">
+                    <input type="hidden" name="id" value="{{data._id}}" />
+                    <div class="mb-3">
+                        <label for="nombre" class="form-label"><i class="fas fa-user"></i> Nombre</label>
+                        <input type="text" value="{{data._nombre}}" class="form-control" id="nombre" name="nombre"
+                            required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="apellido" class="form-label"><i class="fas fa-user"></i> Apellido</label>
+                        <input type="text" value="{{data._apellido}}" class="form-control" id="apellido" name="apellido"
+                            required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="ci" class="form-label"><i class="fas fa-id-card"></i> Cédula</label>
+                        <input type="text" value="{{data._ci}}" class="form-control" id="ci" name="ci" required
+                            pattern="\d{10}" title="La cédula debe tener 10 dígitos">
+                    </div>
+                    <div class="mb-3">
+                        <label for="fechaNacimiento" class="form-label"><i class="fas fa-calendar-alt"></i> Fecha de
+                            Nacimiento</label>
+                        <input type="date" value="{{ data._fechaNacimiento }}" class="form-control" id="fechaNacimiento"
+                            name="fechaNacimiento" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="telefono" class="form-label"><i class="fas fa-phone"></i> Teléfono</label>
+                        <input type="text" value="{{data._telefono}}" class="form-control" id="telefono" name="telefono"
+                            required pattern="\d{10}" title="El teléfono debe tener 10 dígitos">
+                    </div>
+                    <div class="mb-3">
+                        <label for="direccion" class="form-label"><i class="fas fa-home"></i> Dirección</label>
+                        <input type="text" value="{{data._direccion}}" class="form-control" id="direccion"
+                            name="direccion" required>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Guardar
+                            Cambios</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
-    <script>
-        function validateForm() {
-            const ci = document.getElementById('ci').value;
-            const telefono = document.getElementById('telefono').value;
-            if (!/^\d{10}$/.test(ci)) {
-                alert('La cédula debe tener exactamente 10 dígitos.');
-                return false;
-            }
-            if (!/^\d{10}$/.test(telefono)) {
-                alert('El teléfono debe tener exactamente 10 dígitos.');
-                return false;
-            }
-            return true;
-        }
-    </script>
-    {% endblock %}
+</div>
+
+{% endblock %}
