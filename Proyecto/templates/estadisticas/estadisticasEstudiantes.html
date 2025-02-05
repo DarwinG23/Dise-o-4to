@@ -1,136 +1,119 @@
+{% extends 'estudiante/estudianteInicio.html' %}
+
+{% block content %}
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <title>Estadísticas del Estudiante</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Estadísticas</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        /* Estilos personalizados para hacer los gráficos más grandes */
+        body {
+            background-color: #1e1e2e;
+            color: white;
+        }
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px;
+        }
         .chart-container {
-            width: 100%;
-            height: 400px;  /* Altura aumentada para los gráficos */
-            margin-bottom: 20px;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.2);
         }
-        .card {
-            margin-bottom: 20px;
+        .chart-title {
+            color: black;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 10px;
         }
-        /* Ajustar la distancia entre los gráficos */
-        .chart-row {
+        .row {
             display: flex;
-            justify-content: space-between;
-            gap: 30px; /* Mayor espacio entre los gráficos */
-            flex-wrap: wrap; /* Permite que los gráficos se acomoden mejor en pantallas más pequeñas */
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
         }
-        .chart-col {
-            flex: 1 1 calc(53% - 10px); /* Los gráficos ocupan la mitad del espacio, ajustado con el gap */
-            min-width: 250px; /* Evita que se colapsen demasiado en pantallas pequeñas */
+        .col-md-4 {
+            flex: 1 1 30%;
+            min-width: 300px;
         }
     </style>
 </head>
 <body>
-    <!-- Plantilla base que estás extendiendo -->
-    {% extends 'estudiante/estudianteInicio.html' %}
-    {% block content %}
-    <h3 class="mt-4 text-black fw-bold">Estadísticas (Estudiante) - Darwin Sarango: 4to-Ciclo</h3>
+
     <div class="container">
-        <!-- Fila 1: Gráfico de Desempeño Académico y Nivel de Estrés -->
-        <div class="chart-row">
-            <!-- Gráfico 1: Desempeño Académico -->
-            <div class="chart-col">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Desempeño Académico</h5>
-                        <div class="chart-container">
-                            <canvas id="desempenoChart"></canvas>
-                        </div>
-                    </div>
+        <h3 class="mt-4 fw-bold text-center">Dashboard de Estadísticas</h3>
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="chart-container">
+                    <h5 class="chart-title">Producción Mensual</h5>
+                    <canvas id="lineChart"></canvas>
                 </div>
             </div>
 
-            <!-- Gráfico 2: Nivel de Estrés -->
-            <div class="chart-col">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Nivel de Estrés</h5>
-                        <div class="chart-container">
-                            <canvas id="estresChart"></canvas>
-                        </div>
-                    </div>
+            <div class="col-md-4">
+                <div class="chart-container">
+                    <h5 class="chart-title">Comparación de Producción</h5>
+                    <canvas id="barChart"></canvas>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="chart-container">
+                    <h5 class="chart-title">Redes Sociales</h5>
+                    <canvas id="pieChart"></canvas>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Datos falsos para los gráficos
-        const desempenoData = [80, 90, 85, 88, 92];  // Datos de desempeño académico
-        const estresData = [2, 3, 4, 2, 3];  // Datos de nivel de estrés (1-5)
-
-        // Configuración común para los gráficos
-        const commonOptions = {
-            responsive: true,
-            maintainAspectRatio: false,  // Permite que los gráficos se ajusten al contenedor
-            scales: {
-                y: {
-                    beginAtZero: true,  // Asegura que la escala comience desde cero
-                    ticks: {
-                        stepSize: 10,  // Ajuste del paso de los valores en el eje y
-                    }
-                }
-            }
-        };
-
-        // Gráfico 1: Desempeño Académico (Gráfico de línea)
-        new Chart(document.getElementById('desempenoChart'), {
-            type: 'line',
+        // Gráfico de Línea (Producción Mensual)
+        new Chart(document.getElementById("lineChart"), {
+            type: "line",
             data: {
-                labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4', 'Semana 5'],
+                labels: ["Enero", "Febrero", "Marzo", "Abril", "Mayo"],
                 datasets: [{
-                    label: 'Desempeño',
-                    data: desempenoData,
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    label: "Producción",
+                    data: [30, 45, 28, 75, 90],
+                    borderColor: "blue",
+                    backgroundColor: "rgba(0, 0, 255, 0.2)",
                     borderWidth: 2
                 }]
-            },
-            options: {
-                ...commonOptions,
-                scales: {
-                    y: {
-                        ...commonOptions.scales.y,
-                        max: 100,  // Ajustamos el máximo para el desempeño académico (100%)
-                    }
-                }
             }
         });
 
-        // Gráfico 2: Nivel de Estrés (Gráfico de barras)
-        new Chart(document.getElementById('estresChart'), {
-            type: 'bar',
+        // Gráfico de Barras (Comparación de Producción)
+        new Chart(document.getElementById("barChart"), {
+            type: "bar",
             data: {
-                labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4', 'Semana 5'],
+                labels: ["Enero", "Febrero", "Marzo", "Abril", "Mayo"],
                 datasets: [{
-                    label: 'Nivel de Estrés',
-                    data: estresData,
-                    backgroundColor: 'rgba(255, 206, 86, 0.2)',
-                    borderColor: 'rgba(255, 206, 86, 1)',
-                    borderWidth: 1
+                    label: "Producción",
+                    data: [30, 45, 28, 75, 90],
+                    backgroundColor: "rgba(0, 0, 255, 0.6)"
                 }]
-            },
-            options: {
-                ...commonOptions,
-                scales: {
-                    y: {
-                        ...commonOptions.scales.y,
-                        max: 6,  // Aseguramos que la escala de las barras tenga un máximo de 5
-                        ticks: {
-                            stepSize: 1,  // Ajusta el paso de las barras
-                        }
-                    }
-                }
+            }
+        });
+
+        // Gráfico de Pastel (Redes Sociales)
+        new Chart(document.getElementById("pieChart"), {
+            type: "pie",
+            data: {
+                labels: ["Facebook", "Instagram", "TikTok", "YouTube", "Otros"],
+                datasets: [{
+                    data: [40, 30, 25, 15, 10],
+                    backgroundColor: ["blue", "orange", "green", "red", "purple"]
+                }]
             }
         });
     </script>
-    {% endblock %}
+
 </body>
 </html>
+{% endblock %}
