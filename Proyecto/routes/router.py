@@ -878,6 +878,11 @@ def estadisticas():
     # Datos de ejemplo para las estadísticas del estudiante
     return render_template('estadisticas/estadisticasEstudiantes.html')
 
+@router.route('/estadisticas/individual', methods=['GET'])
+def estadisticas_individual():
+    return render_template('estadisticas/estadisticasIndividual.html')
+
+
 
 #--------------------------------------------Administrador/Vista/Darwin- Draw-----------------------------------------------------#
 

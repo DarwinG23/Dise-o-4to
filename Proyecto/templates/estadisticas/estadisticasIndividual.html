@@ -1,0 +1,136 @@
+{% extends 'estudiante/estudianteInicio.html' %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Nivel de Estrés</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            color: black;
+            background-color: #f8f9fa;
+        }
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            padding: 20px;
+        }
+        .row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+        }
+        .left-panel {
+            flex: 2;
+            min-width: 500px;
+        }
+        .right-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            min-width: 350px;
+        }
+        .chart-container, .card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        #stressChart, #gaugeChart {
+            width: 100% !important;
+            height: 300px !important;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h3 class="text-center">Mi Nivel de Estrés</h3>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="left-panel">
+                <div class="chart-container">
+                    <h5 class="text-center">Progreso de Nivel de Estrés</h5>
+                    <canvas id="stressChart"></canvas>
+                </div>
+            </div>
+            <div class="right-panel">
+                <div id="stressAlert" class="card"></div>
+                <div class="card">
+                    <h5>Nivel Actual de Estrés</h5>
+                    <canvas id="gaugeChart"></canvas>
+                </div>
+                <button class="btn btn-primary">📌 Consejos para reducir el estrés</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const stressLevels = [2, 3, 3, 2, 3];
+        const lastStressLevel = stressLevels[stressLevels.length - 1];
+        const stressAlert = document.getElementById("stressAlert");
+
+        if (lastStressLevel >= 6) {
+            stressAlert.className = "card alert alert-danger";
+            stressAlert.innerHTML = "⚠️ <strong>¡Alerta!</strong> Nivel de estrés alto. ¡Relájate un poco!";
+        } else if (lastStressLevel >= 4) {
+            stressAlert.className = "card alert alert-warning";
+            stressAlert.innerHTML = "⚠️ <strong>¡Atención!</strong> Nivel de estrés moderado. Mantente alerta.";
+        } else {
+            stressAlert.className = "card alert alert-success";
+            stressAlert.innerHTML = "✅ <strong>¡Bien!</strong> Tu nivel de estrés está bajo.";
+        }
+
+        new Chart(document.getElementById("stressChart"), {
+            type: "line",
+            data: {
+                labels: ["Semana 1", "Semana 2", "Semana 3", "Semana 4", "Semana 5"],
+                datasets: [{
+                    label: "Nivel de Estrés",
+                    data: stressLevels,
+                    borderColor: "green",
+                    backgroundColor: "rgba(0, 255, 0, 0.2)",
+                    borderWidth: 2,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { beginAtZero: true, title: { display: true, text: "Nivel de Estrés" } },
+                    x: { title: { display: true, text: "Semanas" } }
+                }
+            }
+        });
+
+        new Chart(document.getElementById("gaugeChart"), {
+            type: "doughnut",
+            data: {
+                labels: ["Estrés Bajo", "Estrés Alto"],
+                datasets: [{
+                    data: [100 - lastStressLevel * 10, lastStressLevel * 10],
+                    backgroundColor: ["lightgray", "green"],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: "80%",
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
+{% endblock %}
