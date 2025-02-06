@@ -53,9 +53,16 @@ cors = CORS(router, resource={
 def inicio():
     return render_template('inicio.html')
 
-@router.route('/login',  methods=["POST"])
+@router.route('/login', methods=["POST"])
 def login():
     data = request.form
+    correo = data["correo"]
+
+    # Validar que el correo tenga el dominio correcto
+    if not correo.endswith("@unl.edu.ec"):
+        flash('Solo se permite el acceso a correos institucionales (@unl.edu.ec)', 'error')
+        return redirect(url_for('router.inicio'))
+
     cc = CuentaControl()
     login, rol, cursos, tiene, nombreRol, usuario = cc.iniciarSesion(data["correo"], data["contrasenia"]) #Aqui llamo al metodo del controlador cc
     if login == -1:
@@ -65,6 +72,9 @@ def login():
         flash('Contraseña incorrecta', 'error')
         return redirect(url_for('router.inicio'))
     else:
+        flash(f'Bienvenido {usuaario._nombre} {usuaario._apellido}', 'success')
+        flash('Inicio exitoso', 'success')  # ✅ Nuevo flash
+
         login_user(usuario) 
         if rol == "Administrador":
             return render_template('administrador/administrador.html', cursos = cc.to_dic_lista(cursos), tiene = tiene, roles = nombreRol, nombreU = usuario._nombre, apellidoU = usuario._apellido, usuario = usuario.serializable)
@@ -75,9 +85,6 @@ def login():
         else:
             flash('Esta cuenta no tiene un rol asignado', 'error')
             return render_template('inicio.html')
-
-
-
 
 @router.route('/confirmar-regreso', methods=["GET", "POST"])
 def confirmar_regreso():
@@ -107,7 +114,8 @@ def regresarInicio(roles,usuario, nombreU, apellidoU, cursos, tiene):
     except json.JSONDecodeError as e:
         print("Error al decodificar JSON:", e)
     return render_template('inicio.html')
-        
+#-------------------------------Registro---------------------------------------------------------------#
+     
 @router.route('/registrarEstudiante')
 def registrarEstudiante():
     return render_template('registro.html',usuario = "Estudiante")   
@@ -119,40 +127,71 @@ def registrarDocente():
 @router.route('/registrarAdministrador')
 def registrarAdministrador():
     return render_template('registro.html',usuario = "Administrador") 
-        
+
+@router.route('/registrar/<rol>', methods=["GET", "POST"])
+def registrar(rol):
+    # Verificar el rol para redirigir a la vista correcta
+    if rol == "Administrador":
+        return render_template('registro.html', usuario="Administrador")
+    elif rol == "Estudiante":
+        return render_template('registro.html', usuario="Estudiante")
+    elif rol == "Docente":
+        return render_template('registro.html', usuario="Docente")
+    else:
+        flash("Rol no válido", "error")
+        return redirect(url_for('router.inicio'))   
+       
 @router.route('/registro/<rol>', methods=["POST"])
 def registro(rol):
     data = request.form
     uc = UsuarioControl()
     cc = CuentaControl()
     rc = RolControl()
+
+    # Validación del correo electrónico
+    correo = data["correo"]
+    if not correo.endswith("@unl.edu.ec"):
+        flash('Solo se permite el acceso a correos institucionales (@unl.edu.ec)', 'error')
+        return redirect(url_for('router.registrar', rol=rol))  # Redirigir al formulario según el rol
+
+    # Validación de la cédula
+    cedula = data["ci"]
+    if not Cedula.validar_cedula(cedula):
+        flash('Cédula inválida. Verifique que tenga 10 dígitos y cumpla con los requisitos.', 'error')
+        return redirect(url_for('router.registrar', rol=rol))  # Redirigir al formulario si la cédula es inválida
+
     # Convertir la cadena a un objeto datetime
     fecha_objeto = datetime.strptime(data["fechaNacimiento"], "%Y-%m-%d")
     fecha_formateada = fecha_objeto.strftime("%d/%m/%Y")
     fecha_formateada = str(fecha_formateada)
 
-    uc.crearUsuario(data["nombre"],data["apellido"], data['ci'], fecha_formateada, data['telefono'], data['direccion'])
+    # Crear el usuario
+    uc.crearUsuario(data["nombre"], data["apellido"], cedula, fecha_formateada, data['telefono'], data['direccion'])
     usuarios = uc._list()
     usuarios.sort_models("_id", 1, 4)
     legth = usuarios.getData(usuarios._length-1)._id
     cc.crearCuenta(data['correo'], data['contrasenia'], legth)
+    
+    # Crear la cuenta
     cuentas = cc._list()
     cuentas.sort_models("_id", 1, 4)
     cuenta = cuentas.getData(cuentas._length-1)
     rc.crearRol(rol, cuenta._id)
     
+    # Registrar según el rol
     if rol == "Estudiante":
         ec = EstudianteControl()
         ec.agregarDatos(data["matricula"], data["contacto"], legth)
     elif rol == "Docente":
         dc = DocenteControl()
-        dc.agregarTitulo(data["titulo"],  legth)
+        dc.agregarTitulo(data["titulo"], legth)
     elif rol == "Administrador":
         ac = AdministradorControl()
         ac.agregarDatos(legth)
-        
-    flash('Cuenta creada con exito', 'success')
+
+    flash('Cuenta creada con éxito', 'success')
     return redirect(url_for('router.inicio'))
+
 #---------------------------------------------Presentación-----------------------------------------------#
 @router.route('/presentacion') 
 def presentacion():
