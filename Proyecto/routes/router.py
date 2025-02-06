@@ -88,6 +88,33 @@ def login():
             flash('Esta cuenta no tiene un rol asignado', 'error')
             return render_template('inicio.html')
 
+#____________________Recuperar Contraseña_______________________#
+@router.route('/recuperarCuenta', methods=['GET'])
+def recuperarCuentaVer():
+    return render_template('presentacion/recuperarCuenta.html')
+
+@router.route('/recuperarContrasena', methods=['GET', 'POST'])
+def recuperarCuenta():
+    contrasena = None
+
+    if request.method == 'POST':
+        correo = request.form.get("correo")
+
+        if not correo:
+            return render_template('recuperarCuenta.html', error="Por favor, ingresa un correo válido.")
+
+        cc = CuentaControl()
+        cuenta = cc._list().binary_search_models(correo, "_correo")
+
+        if cuenta == -1:
+            return render_template('recuperarCuenta.html', error="El correo ingresado no está registrado.")
+
+        contrasena = cuenta._contrasena  # Obtener la contraseña
+
+    return render_template('presentacion/recuperarCuenta.html', contrasena=contrasena)
+
+
+
 @router.route('/confirmar-regreso', methods=["GET", "POST"])
 def confirmar_regreso():
     if current_user.is_authenticated:  
