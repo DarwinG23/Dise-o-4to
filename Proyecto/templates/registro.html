@@ -172,15 +172,21 @@
         </div>
     </div>
     <script>
-        $(document).ready(function() {
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    {% for category, message in messages %}
-                        toastr.{{ category }}("{{ message }}");
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
+        document.addEventListener('DOMContentLoaded', function() {
+            toastr.options = {
+                "closeButton": true,
+                "progressBar": true,
+                "timeOut": "3000",
+                "positionClass": "toast-bottom-right"
+            };
+
+            // eslint-disable-next-line
+            var messages = JSON.parse('{{ get_flashed_messages(with_categories=true) | tojson | safe }}');
+
+            messages.forEach(function([category, message]) {
+                toastr[category](message);
+            });
         });
-      </script>
+    </script>
 </body>
 </html>

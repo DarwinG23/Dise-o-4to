@@ -17,6 +17,10 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
      <!-- Jquery -->
      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -302,6 +306,23 @@
     <!-- <footer>
         <p>&copy; 2025 Universidad Nacional de Loja</p>
     </footer> -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            toastr.options = {
+                "closeButton": true,
+                "progressBar": true,
+                "timeOut": "3000",
+                "positionClass": "toast-bottom-right"
+            };
+
+            // eslint-disable-next-line
+            var messages = JSON.parse('{{ get_flashed_messages(with_categories=true) | tojson | safe }}');
+
+            messages.forEach(function([category, message]) {
+                toastr[category](message);
+            });
+        });
+    </script>
 </body>
 
 </html>
