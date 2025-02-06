@@ -17,7 +17,7 @@
         }
 
         .container {
-            max-width: 800px;
+            max-width: 5000px;
             margin: auto;
             padding: 20px;
         }
@@ -30,8 +30,8 @@
         }
 
         .left-panel {
-            flex: 2;
-            min-width: 800px;
+            flex: 3;
+            min-width: 950px;
         }
 
         .right-panel {
@@ -42,195 +42,227 @@
             min-width: 350px;
         }
 
+        .left-chart {
+            flex: 2;
+            min-width: 500px;
+        }
+
+        .right-chart {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        @media (max-width: 768px) {
+            .charts-container {
+                flex-direction: column;
+            }
+
+            .left-chart,
+            .right-chart {
+                width: 100%;
+                min-width: auto;
+            }
+        }
+
         .chart-container,
         .card {
             background: white;
-            border-radius: 10px;
-            padding: 30px 50px;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 13px;
+            padding: 17px;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
             text-align: center;
+            flex: 0.8;
+          
 
+
+        }
+
+        .charts-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
         }
 
         #stressChart,
         #gaugeChart {
-            width: 105% !important;
-            height: 450px !important;
+            width: 102% !important;
+            height: 420px !important;
         }
     </style>
 </head>
 
 <body>
     <div>
-        <h2 class="text-center">Mi Nivel de Estrés</h>
+        <h2 class="text-center">Mi Nivel de Estrés - Estadisticas - (Darwin Sarango)</h>
     </div>
     <div class="container">
-        <div class="row">
+        <div class="row charts-container">
             <div class="left-panel">
-                <div class="chart-container">
+                <div class="chart-container left-chart">
                     <h5 class="text-center">Progreso de Nivel de Estrés</h5>
                     <canvas id="stressChart"></canvas>
                 </div>
-            </div>
-            <div class="right-panel">
-                <div id="stressAlert" class="card"></div>
-                <div class="card">
-                    <h5>Nivel Actual de Estrés</h5>
-                    <canvas id="gaugeChart"></canvas>
+                <div class="chart-container right-chart">
+                    <div id="stressAlert" class="card"></div>
+                    <div class="card">
+                        <h5>Nivel Actual de Estrés</h5>
+                        <canvas id="gaugeChart"></canvas>
+                    </div>
+                    <button class="btn btn-primary">📌 Consejos Detellados</button>
                 </div>
-                <button class="btn btn-primary">📌 Consejos Detellados</button>
             </div>
         </div>
-    </div>
 
-    <script>
-        // Datos que se cambian para generar las graficas (escala 1-10)
-        let stressLevels = [5, 6, 7, 8, 7, 6, 5, 4, 3, 2, 1]; 
-        const lastStressLevel = stressLevels[stressLevels.length - 1];
-        const stressAlert = document.getElementById("stressAlert");
+        <script>
+            // Datos que se cambian para generar las graficas (escala 1-10)
+            let stressLevels = [1,2,5,6,1,3,5,6,1,2,3,1,2,6];
+            const lastStressLevel = stressLevels[stressLevels.length - 1];
+            const stressAlert = document.getElementById("stressAlert");
 
-        // Función para obtener el color según el nivel de estrés
-        function getStressColor(level) {
-            if (level >= 8) return "red";
-            if (level >= 4) return "orange";
-            return "green";
-        }
-
-        // Función para obtener el color con transparencia
-        function getStressColorWithOpacity(level) {
-            if (level >= 8) return "rgba(255, 0, 0, 0.2)";  // rojo con transparencia
-            if (level >= 4) return "rgba(255, 165, 0, 0.2)"; // naranja con transparencia
-            return "rgba(0, 255, 0, 0.2)"; // verde con transparencia
-        }
-        function addStressLevel(newLevel) {
-            if (newLevel < 1 || newLevel > 10) {
-                alert("El nivel de estrés debe estar entre 1 y 10");
-                return;
+            // Función para obtener el color según el nivel de estrés
+            function getStressColor(level) {
+                if (level >= 8) return "red";
+                if (level >= 4) return "orange";
+                return "green";
             }
 
-            stressLevels.push(newLevel); // Agrega el nuevo nivel al arreglo
-            updateChart(); // Llama a la función para actualizar la gráfica
-        }
-         // Función para actualizar la gráfica
-        function updateChart() {
-            const ctx = document.getElementById("stressChart").getContext("2d");
+            // Función para obtener el color con transparencia
+            function getStressColorWithOpacity(level) {
+                if (level >= 8) return "rgba(255, 0, 0, 0.2)";  // rojo con transparencia
+                if (level >= 4) return "rgba(255, 165, 0, 0.2)"; // naranja con transparencia
+                return "rgba(0, 255, 0, 0.2)"; // verde con transparencia
+            }
+            function addStressLevel(newLevel) {
+                if (newLevel < 1 || newLevel > 10) {
+                    alert("El nivel de estrés debe estar entre 1 y 10");
+                    return;
+                }
 
-            // Si la gráfica ya existe, la destruimos para evitar errores
-            if (window.stressChartInstance) {
-                window.stressChartInstance.destroy();
+                stressLevels.push(newLevel); // Agrega el nuevo nivel al arreglo
+                updateChart(); // Llama a la función para actualizar la gráfica
+            }
+            // Función para actualizar la gráfica
+            function updateChart() {
+                const ctx = document.getElementById("stressChart").getContext("2d");
+
+                // Si la gráfica ya existe, la destruimos para evitar errores
+                if (window.stressChartInstance) {
+                    window.stressChartInstance.destroy();
+                }
+
+                // Crear la nueva gráfica con los valores actuales
+                window.stressChartInstance = new Chart(ctx, {
+                    type: "line",
+                    data: {
+                        labels: stressLevels.map((_, i) => `Test ${i + 1}`), // Genera etiquetas dinámicamente
+                        datasets: [{
+                            label: "Nivel de Estrés",
+                            data: stressLevels,
+                            borderColor: getStressColor(stressLevels[stressLevels.length - 1] || 1),
+                            backgroundColor: getStressColorWithOpacity(stressLevels[stressLevels.length - 1] || 1),
+                            borderWidth: 2,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 10,
+                                title: { display: true, text: "Nivel de Estrés (1-10)" },
+                                ticks: {
+                                    stepSize: 1,
+                                    callback: value => `${value}/10`
+                                }
+                            },
+                            x: { title: { display: true, text: "Número de Tests" } }
+                        }
+                    }
+                });
             }
 
-            // Crear la nueva gráfica con los valores actuales
-            window.stressChartInstance = new Chart(ctx, {
-                type: "line",
+            // Inicializar la gráfica
+            updateChart();
+
+            // Configuración de las alertas con colores correspondientes
+            if (lastStressLevel >= 8) {
+                stressAlert.className = "card alert alert-danger";
+                stressAlert.innerHTML = "⚠️ <strong>¡Alerta!</strong> Nivel de estrés alto. ¡Relájate un poco!";
+            } else if (lastStressLevel >= 4) {
+                stressAlert.className = "card alert alert-warning";
+                stressAlert.innerHTML = "⚠️ <strong>¡Atención!</strong> Nivel de estrés moderado. Mantente alerta.";
+            } else {
+                stressAlert.className = "card alert alert-success";
+                stressAlert.innerHTML = "✅ <strong>¡Bien!</strong> Tu nivel de estrés está bajo.";
+            }
+            function updateChart() {
+                const ctx = document.getElementById("stressChart").getContext("2d");
+
+                // Si la gráfica ya existe, la destruimos para evitar errores
+                if (window.stressChartInstance) {
+                    window.stressChartInstance.destroy();
+                }
+
+                // Crear la nueva gráfica con los valores actuales
+                window.stressChartInstance = new Chart(ctx, {
+                    type: "line",
+                    data: {
+                        labels: stressLevels.map((_, i) => `Test ${i + 1}`), // Genera etiquetas dinámicamente
+                        datasets: [{
+                            label: "Nivel de Estrés",
+                            data: stressLevels,
+                            borderColor: getStressColor(stressLevels[stressLevels.length - 1] || 1),
+                            backgroundColor: getStressColorWithOpacity(stressLevels[stressLevels.length - 1] || 1),
+                            borderWidth: 2,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 10,
+                                title: { display: true, text: "Nivel de Estrés (1-10)" },
+                                ticks: {
+                                    stepSize: 1,
+                                    callback: value => `${value}/10`
+                                }
+                            },
+                            x: { title: { display: true, text: "Número de Tests" } }
+                        }
+                    }
+                });
+            }
+
+
+            // Gráfica de medidor (gauge) con colores dinámicos
+            new Chart(document.getElementById("gaugeChart"), {
+                type: "doughnut",
                 data: {
-                    labels: stressLevels.map((_, i) => `Test ${i + 1}`), // Genera etiquetas dinámicamente
+                    labels: ["Estrés Bajo", "Estrés Alto"],
                     datasets: [{
-                        label: "Nivel de Estrés",
-                        data: stressLevels,
-                        borderColor: getStressColor(stressLevels[stressLevels.length - 1] || 1),
-                        backgroundColor: getStressColorWithOpacity(stressLevels[stressLevels.length - 1] || 1),
-                        borderWidth: 2,
-                        fill: true
+                        data: [100 - lastStressLevel * 10, lastStressLevel * 10],
+                        backgroundColor: ["lightgray", getStressColor(lastStressLevel)],
+                        borderWidth: 0
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            max: 10,
-                            title: { display: true, text: "Nivel de Estrés (1-10)" },
-                            ticks: {
-                                stepSize: 1,
-                                callback: value => `${value}/10`
-                            }
-                        },
-                        x: { title: { display: true, text: "Número de Tests" } }
+                    cutout: "80%",
+                    plugins: {
+                        legend: { display: false }
                     }
                 }
             });
-        }
 
-        // Inicializar la gráfica
-        updateChart();
-
-        // Configuración de las alertas con colores correspondientes
-        if (lastStressLevel >= 8) {
-            stressAlert.className = "card alert alert-danger";
-            stressAlert.innerHTML = "⚠️ <strong>¡Alerta!</strong> Nivel de estrés alto. ¡Relájate un poco!";
-        } else if (lastStressLevel >= 4) {
-            stressAlert.className = "card alert alert-warning";
-            stressAlert.innerHTML = "⚠️ <strong>¡Atención!</strong> Nivel de estrés moderado. Mantente alerta.";
-        } else {
-            stressAlert.className = "card alert alert-success";
-            stressAlert.innerHTML = "✅ <strong>¡Bien!</strong> Tu nivel de estrés está bajo.";
-        }
-        function updateChart() {
-            const ctx = document.getElementById("stressChart").getContext("2d");
-
-            // Si la gráfica ya existe, la destruimos para evitar errores
-            if (window.stressChartInstance) {
-                window.stressChartInstance.destroy();
-            }
-
-            // Crear la nueva gráfica con los valores actuales
-            window.stressChartInstance = new Chart(ctx, {
-                type: "line",
-                data: {
-                    labels: stressLevels.map((_, i) => `Test ${i + 1}`), // Genera etiquetas dinámicamente
-                    datasets: [{
-                        label: "Nivel de Estrés",
-                        data: stressLevels,
-                        borderColor: getStressColor(stressLevels[stressLevels.length - 1] || 1),
-                        backgroundColor: getStressColorWithOpacity(stressLevels[stressLevels.length - 1] || 1),
-                        borderWidth: 2,
-                        fill: true
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            max: 10,
-                            title: { display: true, text: "Nivel de Estrés (1-10)" },
-                            ticks: {
-                                stepSize: 1,
-                                callback: value => `${value}/10`
-                            }
-                        },
-                        x: { title: { display: true, text: "Número de Tests" } }
-                    }
-                }
-            });
-        }
-
-
-         // Gráfica de medidor (gauge) con colores dinámicos
-         new Chart(document.getElementById("gaugeChart"), {
-            type: "doughnut",
-            data: {
-                labels: ["Estrés Bajo", "Estrés Alto"],
-                datasets: [{
-                    data: [100 - lastStressLevel * 10, lastStressLevel * 10],
-                    backgroundColor: ["lightgray", getStressColor(lastStressLevel)],
-                    borderWidth: 0
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                cutout: "80%",
-                plugins: {
-                    legend: { display: false }
-                }
-            }
-        });
-
-    </script>
+        </script>
 </body>
 <div class="modal fade" id="recommendationsModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
