@@ -1,22 +1,19 @@
 {% extends 'estudiante/estudianteInicio.html' %}
+
 {% block content %}
 <script src="https://kit.fontawesome.com/a076d05399.js"></script>
 <script>
     $(document).ready(function(){
-        $("#link").click(function(){
+        $("#ordenar").click(function(){
             create();
         });
 
         $("#valor").on("input", function(){
-            // Obtener el valor del campo de texto
             var valor = $(this).val();
-
-            // Si el campo está vacío
             if (valor === "") {
                 create();
             } else {
-                console.log("El campo tiene texto: ", valor);
-                buscar();  // Llamar a la función de búsqueda si el campo tiene texto
+                buscar();
             }
         });
     });
@@ -27,37 +24,27 @@
             url: url,
             contentType: 'json',
             success: function(data){
-                console.log(url);
+                var html = '';
                 if(data.code == '200'){
-                    var html = '';
                     $.each(data.data, function(i, info){
-                        html+="<tr>";
-                        html+= "<td>"+info.id+"</td>";
-                        html+= "<td>"+info.nombre+"</td>";
-                        html+= "<td>"+info.apellido+"</td>";
-                        html+= "<td>"+info.titulo+"</td>";
-                        html+= "<td>"+'<a href="/servidores/editar/'+info.id+'" class="btn btn-info text-white"><i class="fas fa-edit"></i> Editar</a>'+"</td>";
-                        html+= "<td>"+'<a href="/servidores/eliminar/'+info.id+'" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Eliminar</a>'+"</td>";
-                        html+="</tr>";
+                        html += "<tr>";
+                        html += "<td>"+info.id+"</td>";
+                        html += "<td>"+info.nombre+"</td>";
+                        html += "<td>"+info.apellido+"</td>";
+                        html += "<td>"+info.titulo+"</td>";
+                        html += "</tr>";
                     });
-                    $("#tabla tbody").html(html);
-                }else{
-                    html += "<tr><td colspan='7'>No se encontraron datos</td></tr>";
-                    $("#tabla tbody").html(html);
+                } else {
+                    html = "<tr><td colspan='4' class='text-center'>No se encontraron datos</td></tr>";
                 }
+                $("#tabla tbody").html(html);
             }
         });
     }
 
     function create(){
-        var aux = $("#tipo").prop("checked");
         var select = $("#criterio").find(":selected").val();
-        var metodo = $("#metodo").find(":selected").val();
-        if(aux){
-            tabla("http://localhost:5000/docentes/ordenar/2/"+select+"/"+3);
-        }else{
-            tabla("http://localhost:5000/docentes/ordenar/1/"+select+"/"+3);
-        }
+        tabla("http://localhost:5000/docentes/ordenar/1/"+select+"/3");
     }
 
     function buscar(){
@@ -66,6 +53,7 @@
         tabla("http://localhost:5000/docentes/busqueda/1/"+valor+"/"+atributo);
     }
 </script>
+
 <div class="text-center">
     <h2 class="display-5 text-white p-4" style="background-color: #343a40; border-radius: 8px;">Gestionar Cuentas</h2>
 </div>
@@ -89,6 +77,14 @@
                 <button class="btn btn-info w-100" id="link"><i class="fas fa-sort"></i> Ordenar</button>
             </div>
         </div>
+        <div class="col-md-4 text-end">
+            <button class="btn btn-info w-100" id="ordenar">ORDENAR</button>
+        </div>
+        <div class="col-md-4 d-flex">
+            <input type="text" id="valor" class="form-control me-2" placeholder="Buscar...">
+            <button class="btn btn-info" id="buscar">BUSCAR</button>
+        </div>
+    </div>
 
         <!-- Sección de Buscar -->
         <div class="row mb-4 align-items-center">
@@ -132,12 +128,6 @@
     body {
         font-family: Arial, sans-serif;
         background-color: #f8f9fa;
-        margin: 0;
-        padding: 0;
-    }
-
-    .text-center {
-        margin-top: 20px;
     }
 
     .display-5 {
@@ -152,40 +142,33 @@
 
     .card {
         background-color: #ffffff;
-        border: 1px solid #dee2e6;
         border-radius: 0.25rem;
         box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
     }
 
-    .form-select,
-    .form-control {
-        margin-bottom: 10px;
+    .btn-warning {
+        background-color: #ffc107;
+        border-color: #ffc107;
+        color: black;
+    }
+    .btn-warning:hover {
+        background-color: #e0a800;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+        border-color: #28a745;
+    }
+    .btn-success:hover {
+        background-color: #218838;
     }
 
     .btn-info {
         background-color: #17a2b8;
         border-color: #17a2b8;
     }
-
     .btn-info:hover {
         background-color: #138496;
-        border-color: #117a8b;
-    }
-
-    .btn-danger {
-        background-color: #dc3545;
-        border-color: #dc3545;
-    }
-
-    .btn-danger:hover {
-        background-color: #c82333;
-        border-color: #bd2130;
-    }
-
-    .table th,
-    .table td {
-        vertical-align: middle;
-        text-align: center;
     }
 
     .table th {

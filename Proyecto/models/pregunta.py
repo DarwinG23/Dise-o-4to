@@ -78,7 +78,7 @@ class Pregunta:
         pregunta._idTest = data['idtest']
         oc = OpcionControl()
         opciones = oc._list()
-        if not opciones.isEmpy:
+        if not opciones.isEmpty:
             opciones = opciones.lineal_binary_search_models(str(pregunta._id),"_idPregunta")
         pregunta._opciones = opciones
         return pregunta

@@ -401,9 +401,13 @@ class Linked_List(object):
         right = len(arr) - 1
         while left <= right:
             mid = (left + right) // 2
-            if int(getattr(arr[mid], atribute)) == int(data):
+            attribute_value = getattr(arr[mid], atribute)
+            if attribute_value is None:
+                attribute_value = 0
+                
+            if int(attribute_value) == int(data):
                 return arr[mid] 
-            elif int(getattr(arr[mid], atribute)) < int(data):
+            elif int(attribute_value) < int(data):
                 left = mid + 1
             else:
                 right = mid - 1

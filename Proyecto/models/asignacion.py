@@ -110,9 +110,7 @@ class Asignacion:
     
     @classmethod
     def deserializar(self, data):
-        print("2e323232323232323")
         asignacion = Asignacion()
-        print(data)
         asignacion._id = data["id"]
         asignacion._fechaInicio = data["fechainicio"]
         asignacion._fechaFin = data["fechafin"]
@@ -122,4 +120,6 @@ class Asignacion:
         asignacion._idCurso = data["idcurso"]
         asignacion._idDocente = data["iddocente"]
         asignacion._idNotificacion = data["idnotificacion"]
+        
+        
         return asignacion

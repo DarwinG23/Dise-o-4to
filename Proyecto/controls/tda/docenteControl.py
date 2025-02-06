@@ -1,6 +1,7 @@
 from controls.dao.daoAdapter import DaoAdapter
 from models.docente import Docente
 
+
 class DocenteControl(DaoAdapter):
     def __init__(self):
         super().__init__(Docente)
@@ -29,6 +30,8 @@ class DocenteControl(DaoAdapter):
     def agregarTitulo(self, titulo, idUsuario):
         self._docente._titulo = titulo
         self._docente._idUsuario = idUsuario
+    
         self.save
+
         
     

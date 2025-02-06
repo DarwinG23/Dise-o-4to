@@ -85,6 +85,13 @@ class CuentaControl(DaoAdapter):
                     for est in estudiantes:
                         curso = cc._list().binary_search_models_id(est._idCurso, "_id")
                         cursos.addNode(curso)
+            else:
+                cursosBd= cc._list()
+                if not cursosBd.isEmpty:
+                    for curso in cursosBd.toArray:
+                        if curso._nombre != "Sin cursos":
+                            cursos.addNode(curso)
+                              
                         
                     
                     

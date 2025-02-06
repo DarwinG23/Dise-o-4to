@@ -64,15 +64,26 @@
         <!-- Sección de Tests -->
         <div>
             <h5 class="fw-bold text-primary">📝 TESTS</h5>
-            <div class="card sh adow-sm p-3 mb-3 clickable-card" onclick="location.href='/docente/lista/test/presentadas';">
-                <h6 class="fw-bold">1. Test DASS</h6>
-                <p class="mb-1"><strong>Curso:</strong> Diseño de Software</p>
-                <div class="text-end">
-                    <a href="" class="btn btn-primary">Editar Asignación</a>
-                </div>
-            </div>
-            <a href="/docente/crearTestGet/{{roles}}/{{nombreU}}/{{apellidoU}}/{{cursos}}/{{tiene}}" class="btn btn-primary" style="margin-top: 1%;">Agregar Test</a>
+            {% for test in test %}
+                <form action="/docente/lista/test/presentadas" method="POST" id="formTest_{{test.id}}">
+                    <!-- Campos ocultos para enviar los valores -->
+                    <input type="hidden" name="roles" value="{{ roles }}">
+                    <input type="hidden" name="usuario" value="{{ usuario }}">
+                    <input type="hidden" name="idCurso" value="{{ idCurso }}">
+                    <input type="hidden" name="idTarea" value="{{ tarea.id }}">
+                    <input type="hidden" name="cursos" value="{{ cursos }}">
+                    <input type="hidden" name="tiene" value="{{ tiene }}">
 
+                    <div class="card shadow-sm p-3 mb-3 clickable-card" onclick="document.getElementById('formTest_{{test.id}}').submit();">
+                        <h6 class="fw-bold">{{ test.nombre }}</h6>
+                        <p class="mb-1"><strong>Curso:</strong> {{ curso.nombre }}</p>
+                        <div class="text-end">
+                            <a href="#" class="btn btn-primary">Editar Asignación</a>
+                        </div>
+                    </div>
+                </form>
+            {% endfor %}
+            <a href="/agregarTest/{{roles}}/{{curso}}/{{usuario}}/{{cursos}}/{{tiene}}" class="btn btn-primary" style="margin-top: 1%;">Agregar Test</a>
         </div>
     </div>
 </div>

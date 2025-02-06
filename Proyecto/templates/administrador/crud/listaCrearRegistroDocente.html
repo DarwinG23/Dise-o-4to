@@ -1,0 +1,56 @@
+{% extends 'estudiante/estudianteInicio.html' %}
+
+{% block content %}
+<div class="card p-4">
+  <h5 class="card-title text-center mb-4 fw-bold">Registrar Docente</h5>
+
+  <form class="row g-3" method="POST" action="/docentes/crear" enctype="multipart/form-data">
+    <!-- Nombre del docente -->
+    <div class="col-md-6">
+      <label for="nombre" class="form-label fw-bold">Nombre:</label>
+      <input type="text" class="form-control" id="nombre" name="nombre" required>
+    </div>
+
+    <!-- Apellido del docente -->
+    <div class="col-md-6">
+      <label for="apellido" class="form-label fw-bold">Apellido:</label>
+      <input type="text" class="form-control" id="apellido" name="apellido" required>
+    </div>
+
+    <!-- Fecha de nacimiento -->
+    <div class="col-md-6">
+      <label for="fechaNacimiento" class="form-label fw-bold">Fecha de Nacimiento:</label>
+      <input type="date" class="form-control" id="fechaNacimiento" name="fechaNacimiento" required>
+    </div>
+
+    <!-- Dirección -->
+    <div class="col-md-6">
+      <label for="direccion" class="form-label fw-bold">Dirección:</label>
+      <input type="text" class="form-control" id="direccion" name="direccion" required>
+    </div>
+
+    <!-- Correo Electrónico -->
+    <div class="col-md-6">
+      <label for="correo" class="form-label fw-bold">Correo Electrónico:</label>
+      <input type="email" class="form-control" id="correo" name="correo" required>
+    </div>
+
+    <!-- Contraseña -->
+    <div class="col-md-6">
+      <label for="password" class="form-label fw-bold">Contraseña:</label>
+      <input type="password" class="form-control" id="password" name="password" required>
+    </div>
+
+    <!-- Título -->
+    <div class="col-md-12">
+      <label for="titulo" class="form-label fw-bold">Título:</label>
+      <input type="text" class="form-control" id="titulo" name="titulo" required>
+    </div>
+    <!-- Botón de registro -->
+    <div class="col-12 mt-3">
+      <button class="btn btn-success w-100" type="submit">Registrar Docente</button>
+    </div>
+  </form>
+</div>
+
+{% endblock %}
