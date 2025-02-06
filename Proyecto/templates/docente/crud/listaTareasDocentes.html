@@ -34,7 +34,15 @@
     <div class="card p-3 shadow-sm w-100 mx-auto" style="max-width: 1200px;">
         <!-- Título de la Materia -->
         <h3 class="mb-4 fw-bold">📖 {{ curso.nombre }}</h3>
-        <button class="btn btn-primary" style="margin-top: 1%;">Ver estudiantes</button>
+        <form action="/docente/verEstudiantes" method="POST">
+            <input type="hidden" name="roles" value="{{ roles }}">
+            <input type="hidden" name="usuario" value="{{ usuario }}">
+            <input type="hidden" name="idCurso" value="{{ curso.id }}">
+            <input type="hidden" name="cursos" value="{{ cursos }}">
+            <input type="hidden" name="tiene" value="{{ tiene }}">
+
+            <button class="btn btn-primary"  type="submit"  style="margin-top: 1%;">Ver estudiantes</button>
+        </form>
 
         <!-- Sección de Tareas -->
         <div class="mb-4" >

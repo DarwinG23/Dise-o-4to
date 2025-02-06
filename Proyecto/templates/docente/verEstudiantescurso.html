@@ -1,0 +1,228 @@
+{% extends 'estudiante/estudianteInicio.html' %}
+
+{% block cursos %}
+    {% if tiene == "Verdadero" %}
+    {% for curso in cursos %}
+        {% if curso.nombre != "Sin cursos" %}
+                <form action="/docente/curso/ver/{{roles}}/{{usuario}}/{{nombreU}}/{{apellidoU}}/{{cursos}}/{{tiene}}" method="POST" id="cursoForm{{ curso.id }}">
+                    <li>
+                        <a href="#" onclick="document.getElementById('cursoForm{{ curso.id }}').submit();">
+                            <i class="fas fa-book"></i> {{ curso.nombre }}
+                        </a>
+                        <input type="hidden" name="idCurso" value="{{ curso.id }}">
+                    </li>
+                </form>
+        {% endif %}
+    {% endfor %}
+    {% else %}
+    <li><a href="#"><i class="fas fa-book"></i> Sin cursos</a></li>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+<script>
+    $(document).ready(function () {
+        $("#link").click(function () {
+            create();
+        });
+
+        $("#valor").on("input", function () {
+            var valor = $(this).val();
+            if (valor === "") {
+                create();
+            } else {
+                console.log("El campo tiene texto: ", valor);
+                buscar();
+            }
+        });
+    });
+
+    function tabla(url) {
+        $.ajax({
+            method: "GET",
+            url: url,
+            contentType: 'json',
+            success: function (data) {
+                console.log(url);
+                if (data.code == '200') {
+                    var html = '';
+                    $.each(data.data, function (i, info) {
+                        html += "<tr>";
+                        html += "<td>" + info.id + "</td>";
+                        html += "<td>" + info.nombre + "</td>";
+                        html += "<td>" + info.apellido + "</td>";
+                        html += "<td>" + info.ci + "</td>";
+                        html += "</tr>";
+                    });
+                    $("#tabla tbody").html(html);
+                } else {
+                    html += "<tr><td colspan='7'>No se encontraron datos</td></tr>";
+                    $("#tabla tbody").html(html);
+                }
+            }
+        });
+    }
+
+    function create() {
+        var aux = $("#tipo").prop("checked");
+        var select = $("#criterio").find(":selected").val();
+        var metodo = $("#metodo").find(":selected").val();
+        if (aux) {
+            tabla("http://localhost:5000/usuarios/ordenar/2/" + select + "/" + 3 + "/" + '{{usuarios}}');
+        } else {
+            tabla("http://localhost:5000/usuarios/ordenar/1/" + select + "/" + 3+ "/" + '{{usuarios}}');
+        }
+    }
+
+    function buscar() {
+        var atributo = $("#criterio").find(":selected").val();
+        var valor = $("#valor").val();
+        tabla("http://localhost:5000/usuarios/busqueda/1/" + valor + "/" + atributo + "/" + '{{usuarios}}' );
+    }
+</script>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+{% for category, message in messages %}
+<div class="alert alert-{{ category }}">
+    {{ message }}
+</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+
+<div class="text-center my-4">
+    <h2 class="display-5 text-white p-2 rounded-3" style="background-color: #343a40;">Estudiantes</h2>
+</div>
+
+
+<!-- Tabla de Usuarios -->
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+            <!-- Campo oculto para enviar el valor de cursos -->
+            <input type="hidden" name="cursos" value="{{cursos}}">
+            <input type="hidden" name="usuario" value="{{usuario}}">
+            <table id="tabla" class="table table-striped table-hover table-bordered">
+                <thead class="thead-dark">
+                    <tr>
+                        <th><i class="fas fa-hashtag"></i> Nro</th>
+                        <th><i class="fas fa-user"></i> Nombre</th>
+                        <th><i class="fas fa-user-tag"></i> Apellido</th>
+                        <th><i class="fas fa-id-card"></i> Cédula</th>
+                        <th><i class="fas fa-cogs"></i> Seleccionar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in usuarios %}
+                    <tr>
+                        <td>{{ item.id }}</td>
+                        <td>{{ item.nombre }}</td>
+                        <td>{{ item.apellido }}</td>
+                        <td>{{ item.ci }}</td>
+                        <td>
+                            <form action="/estadisticas">
+                                <input type="hidden" name="idEstudiante" value="{{ item.id }}">
+                                <input type="hidden" name="idCurso" value="{{ idCurso }}">
+                                <input type="hidden" name="roles" value="{{ roles }}">
+                                <input type="hidden" name="usuario" value="{{ usuario }}">
+                                <input type="hidden" name="nombreU" value="{{ nombreU }}">
+                                <input type="hidden" name="apellidoU" value="{{ apellidoU }}">
+                                <input type="hidden" name="cursos" value="{{ cursos }}">
+                                <input type="hidden" name="tiene" value="{{ tiene }}">
+                                <input type="hidden" name="idCurso" value="{{ idCurso }}">
+                                <button class="btn btn-info" type="submit">
+                                    Ver Estadisticas
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+    </div>
+</div>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f8f9fa;
+        margin: 0;
+        padding: 0;
+    }
+
+    .text-center {
+        margin-top: 20px;
+    }
+
+    .display-5 {
+        font-size: 2.5rem;
+        font-weight: 300;
+    }
+
+    .card {
+        border-radius: 0.5rem;
+        box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.1);
+    }
+
+    .form-select,
+    .form-control {
+        margin-bottom: 10px;
+    }
+
+    .btn-info {
+        background-color: #17a2b8;
+        border-color: #17a2b8;
+    }
+
+    .btn-info:hover {
+        background-color: #138496;
+        border-color: #117a8b;
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+        border-color: #dc3545;
+    }
+
+    .btn-danger:hover {
+        background-color: #c82333;
+        border-color: #bd2130;
+    }
+
+    .table th,
+    .table td {
+        vertical-align: middle;
+        text-align: center;
+    }
+
+    .table th {
+        background-color: #343a40;
+        color: #ffffff;
+    }
+
+    .table-striped tbody tr:nth-of-type(odd) {
+        background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    .btn-success {
+        background-color: #28a745;
+        border-color: #28a745;
+    }
+
+    .btn-success:hover {
+        background-color: #218838;
+        border-color: #1e7e34;
+    }
+
+    .fa-edit,
+    .fa-trash-alt,
+    .fa-sort,
+    .fa-search,
+    .fa-plus {
+        margin-right: 5px;
+    }
+</style>
+
+{% endblock %}
