@@ -245,7 +245,7 @@
                 </div>
             </div>
             <div class="perfil">
-                <h1 class="fs-6 text text-white" >Conectado: {{ roles }} </h1>
+                <h1 class="fs-6 text text-white">Conectado: {{ roles }} </h1>
                 <img src="/static/img/perfil.png" alt="Foto de perfil">
                 <div class="dropdown">
                     <a href="#" tabindex="0" class="d-inline-block dropdown-toggle icon-no-margin" id="user-menu-toggle"
@@ -257,8 +257,9 @@
                         <b class="caret"></b>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="user-menu-toggle">
-                        <li><a class="dropdown-item" href="#">Editar perfil</a></li>
-                        <li><a class="dropdown-item" href="#">Configuración</a></li>
+                        <li><a class="dropdown-item"
+                                href="/perfil/ver/{{tiene}}/{{ roles }}/{{ nombreU }}/{{ apellidoU }}/{{ usuario }}/{{cursos}}">Editar
+                                perfil</a></li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
@@ -275,7 +276,8 @@
             <div class="section">
                 <h2>Área Personal</h2>
                 <ul>
-                    <li><a href="/inicio/{{roles}}/{{usuario}}/{{nombreU}}/{{apellidoU}}/{{cursos}}/{{tiene}}"><i class="fas fa-home"></i> Inicio</a></li>
+                    <li><a href="/inicio/{{roles}}/{{usuario}}/{{nombreU}}/{{apellidoU}}/{{cursos}}/{{tiene}}"><i
+                                class="fas fa-home"></i> Inicio</a></li>
                 </ul>
             </div>
 
@@ -283,16 +285,18 @@
                 <h3>Mis Cursos</h3>
                 <ul>
                     {%block cursos%}
-                     
+
                     {%endblock%}
                 </ul>
                 <h3>Mis Tests</h3>
                 <ul>
-                    <li><a href="/estudiante/inicioTest"><i class="fas fa-clipboard-list"></i> Test 1</a></li>
-                <h3>Mis tareas</h3>
-                <ul>
-                    <li><a href="/estudiante/curso/tareas"><i class="fas fa-tasks"></i> Ver </a></li>
-                </ul>
+                    <li><a
+                            href="/estudiante/inicioTest/{{roles}}/{{usuario}}/{{nombreU}}/{{apellidoU}}/{{tiene}}/{{cursos}}"><i
+                                class="fas fa-clipboard-list"></i> Test 1</a></li>
+                    <h3>Mis tareas</h3>
+                    <ul>
+                        <li><a href="/estudiante/curso/tareas"><i class="fas fa-tasks"></i> Ver </a></li>
+                    </ul>
             </div>
         </aside>
     </div>
@@ -300,7 +304,7 @@
         <!-- Archivo: templates/estudiante/curso/tareas.html -->
         <section class="main-content">
             {% block content %}
-           
+
             {% endblock %}
         </section>
 

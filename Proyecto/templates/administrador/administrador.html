@@ -7,117 +7,197 @@
 {%endblock%}
 
 {% block content %}
-<div class="container mt-5">
-    <div class="card shadow-lg">
-
-    
-        <div class="card-header bg-primary text-white text-center">
-            <h2 class="fw-bold">Panel Administrativo</h2>
-        </div>
-        <div class="card-body">
-            <!-- Section: Gestionar -->
-            <div class="section">
-                <h4 class="text-primary section-title">
-                    <i class="bi bi-tools me-2"></i>Gestionar
-                </h4>
-                <div class="row">
-                    <div class="col-md-4 mb-3">
-                        <a href="/administrador/gestionar_usuarios/{{roles}}/{{nombreU}}/{{apellidoU}}" class="btn btn-lg btn-outline-primary w-100 custom-btn">👤 Gestionar Usuarios</a>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <a href="/administrador/gestionar_cuentas/{{roles}}/{{nombreU}}/{{apellidoU}}" class="btn btn-lg btn-outline-primary w-100 custom-btn">💳 Gestionar Cuentas</a>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <a href="/administrador/gestionar_estudiantes/{{roles}}/{{nombreU}}/{{apellidoU}}" class="btn btn-lg btn-outline-primary w-100 custom-btn">🎓 Gestionar Estudiantes</a>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <a href="/administrador/gestionar_administradores/{{roles}}/{{nombreU}}/{{apellidoU}}" class="btn btn-lg btn-outline-primary w-100 custom-btn">🛠️ Gestionar Administradores</a>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <a href="/administrador/gestionar_docentes/{{roles}}/{{nombreU}}/{{apellidoU}}" class="btn btn-lg btn-outline-primary w-100 custom-btn">📘 Gestionar Docentes</a>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <a href="/administrador/gestionar_permisos/{{roles}}/{{nombreU}}/{{apellidoU}}" class="btn btn-lg btn-outline-primary w-100 custom-btn">🔐 Gestionar Permisos</a>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <a href="/crearTestAdminGet/{{roles}}/{{usuario}}/{{cursos}}/{{tiene}}" class="btn btn-lg btn-outline-primary w-100 custom-btn">🔐 Gestionar Test</a>
-                    </div>
-                </div>
+<!-- Título del Panel Administrativo -->
+<div class="text-center mb-5 animate__animated animate__fadeInDown">
+    <h1 class="display-4 fw-bold text-gradient">Panel Administrativo</h1>
+    <p class="lead text-muted">Bienvenido al centro de control de la plataforma.</p>
+</div>
+<!-- Card: Gestionar -->
+<div class="card shadow-lg mb-5 animate__animated animate__fadeIn">
+    <div class="card-header bg-primary text-white">
+        <h3 class="fw-bold mb-0">
+            <i class="bi bi-tools me-2"></i>Gestionar
+        </h3>
+        <p class="mb-0">Administra usuarios, cuentas, estudiantes, docentes y más.</p>
+    </div>
+    <div class="card-body">
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            <div class="col">
+                <a href="/administrador/gestionar_usuarios/{{roles}}/{{nombreU}}/{{apellidoU}}"
+                    class="btn btn-lg btn-outline-primary w-100 custom-btn">
+                    <i class="bi bi-people-fill me-2"></i>👤 Usuarios
+                </a>
             </div>
-
-            <!-- Section: Crear -->
-            <div class="section mt-5">
-                <h4 class="text-primary section-title">
-                    <i class="bi bi-plus-circle me-2"></i>Crear
-                </h4>
-                <div class="row">
-                    <div class="col-md-4 mb-3">
-                        <a href="/administrador/crearCurso" class="btn btn-lg btn-outline-success w-100 custom-btn">📚 Crear Cursos</a>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <a href="/administrador/asignarCurso//{{roles}}/{{nombreU}}/{{apellidoU}}" class="btn btn-lg btn-outline-success w-100 custom-btn">📌 Asignar Cursos</a>
-                    </div>
-                </div>
+            <div class="col">
+                <a href="/administrador/gestionar_cuentas/{{roles}}/{{nombreU}}/{{apellidoU}}"
+                    class="btn btn-lg btn-outline-primary w-100 custom-btn">
+                    <i class="bi bi-credit-card-fill me-2"></i>💳 Cuentas
+                </a>
             </div>
-
-            <!-- Section: Otros -->
-            <div class="section mt-5">
-                <h4 class="text-primary section-title">
-                    <i class="bi bi-three-dots me-2"></i>Otros
-                </h4>
-                <div class="row">
-                    <div class="col-md-4 mb-3">
-                        <a href="/administrador/gestionar_preguntas" class="btn btn-lg btn-outline-warning w-100 custom-btn">❓ Gestionar Preguntas</a>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <a href="/administrador/gestionar_roles" class="btn btn-lg btn-outline-warning w-100 custom-btn">🎭 Gestionar Roles</a>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <a href="/administrador/gestionar_tests" class="btn btn-lg btn-outline-warning w-100 custom-btn">📝 Gestionar Tests</a>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <a href="/administrador/gestionar_tecnicas" class="btn btn-lg btn-outline-warning w-100 custom-btn">🛠️ Gestionar Técnicas</a>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <a href="/administrador/configurar_alertas" class="btn btn-lg btn-outline-danger w-100 custom-btn">🚨 Configurar Alertas</a>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <a href="/administrador/visualizar_datos" class="btn btn-lg btn-outline-info w-100 custom-btn">📊 Visualizar Datos</a>
-                    </div>
-                </div>
+            <div class="col">
+                <a href="/administrador/gestionar_estudiantes/{{roles}}/{{nombreU}}/{{apellidoU}}"
+                    class="btn btn-lg btn-outline-primary w-100 custom-btn">
+                    <i class="bi bi-mortarboard-fill me-2"></i>🎓 Estudiantes
+                </a>
             </div>
-        </div>
-        <div class="card-footer text-center text-muted">
-            <p>© 2025 Panel de Administración | <a href="/soporte" class="text-primary">Soporte</a></p>
+            <div class="col">
+                <a href="/administrador/gestionar_administradores/{{roles}}/{{nombreU}}/{{apellidoU}}"
+                    class="btn btn-lg btn-outline-primary w-100 custom-btn">
+                    <i class="bi bi-gear-fill me-2"></i>🛠️ Administradores
+                </a>
+            </div>
+            <div class="col">
+                <a href="/administrador/gestionar_docentes/{{roles}}/{{nombreU}}/{{apellidoU}}"
+                    class="btn btn-lg btn-outline-primary w-100 custom-btn">
+                    <i class="bi bi-person-badge-fill me-2"></i>📘 Docentes
+                </a>
+            </div>
+            <div class="col">
+                <a href="/administrador/gestionar_permisos/{{roles}}/{{nombreU}}/{{apellidoU}}"
+                    class="btn btn-lg btn-outline-primary w-100 custom-btn">
+                    <i class="bi bi-shield-lock-fill me-2"></i>🔐 Permisos
+                </a>
+            </div>
         </div>
     </div>
 </div>
 
+<!-- Card: Crear -->
+<div class="card shadow-lg mb-5 animate__animated animate__fadeIn">
+    <div class="card-header bg-success text-white">
+        <h3 class="fw-bold mb-0">
+            <i class="bi bi-plus-circle me-2"></i>Crear
+        </h3>
+        <p class="mb-0">Crea nuevos cursos y asígnalos a los usuarios.</p>
+    </div>
+    <div class="card-body">
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+            <div class="col">
+                <a href="/administrador/crearCurso" class="btn btn-lg btn-outline-success w-100 custom-btn">
+                    <i class="bi bi-journal-plus me-2"></i>📚 Cursos
+                </a>
+            </div>
+            <div class="col">
+                <a href="/administrador/asignarCurso/{{roles}}/{{nombreU}}/{{apellidoU}}"
+                    class="btn btn-lg btn-outline-success w-100 custom-btn">
+                    <i class="bi bi-link-45deg me-2"></i>📌 Asignar Cursos
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Card: Otros -->
+<div class="card shadow-lg mb-5 animate__animated animate__fadeIn">
+    <div class="card-header bg-warning text-white">
+        <h3 class="fw-bold mb-0">
+            <i class="bi bi-three-dots me-2"></i>Otros
+        </h3>
+        <p class="mb-0">Configura preguntas, roles, tests, técnicas y más.</p>
+    </div>
+    <div class="card-body">
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            <div class="col">
+                <a href="/administrador/gestionar_preguntas/{{roles}}/{{nombreU}}/{{apellidoU}}"
+                    class="btn btn-lg btn-outline-warning w-100 custom-btn">
+                    <i class="bi bi-question-circle-fill me-2"></i>❓ Preguntas
+                </a>
+            </div>
+            <div class="col">
+                <a href="/administrador/gestionar_roles/{{roles}}/{{nombreU}}/{{apellidoU}}"
+                    class="btn btn-lg btn-outline-warning w-100 custom-btn">
+                    <i class="bi bi-person-rolodex me-2"></i>🎭 Roles
+                </a>
+            </div>
+            <div class="col">
+                <a href="/administrador/gestionar_tests/{{roles}}/{{nombreU}}/{{apellidoU}}"
+                    class="btn btn-lg btn-outline-warning w-100 custom-btn">
+                    <i class="bi bi-clipboard-data-fill me-2"></i>📝 Tests
+                </a>
+            </div>
+            <div class="col">
+                <a href="/administrador/gestionar_tecnicas/{{roles}}/{{nombreU}}/{{apellidoU}}"
+                    class="btn btn-lg btn-outline-warning w-100 custom-btn">
+                    <i class="bi bi-tools me-2"></i>🛠️ Técnicas
+                </a>
+            </div>
+            <div class="col">
+                <a href="/administrador/configurar_alertas/{{roles}}/{{nombreU}}/{{apellidoU}}"
+                    class="btn btn-lg btn-outline-danger w-100 custom-btn">
+                    <i class="bi bi-bell-fill me-2"></i>🚨 Alertas
+                </a>
+            </div>
+            <div class="col">
+                <a href="/administrador/visualizar_datos/{{roles}}/{{nombreU}}/{{apellidoU}}"
+                    class="btn btn-lg btn-outline-info w-100 custom-btn">
+                    <i class="bi bi-bar-chart-line-fill me-2"></i>📊 Datos
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <style>
+    /* Estilos para el título */
+    .text-gradient {
+        background: linear-gradient(135deg, #0078d7, #84c5f4);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        color: transparent;
+        display: inline-block;
+    }
+
     .card {
-        border-radius: 20px;
+        border-radius: 15px;
         overflow: hidden;
         border: none;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        
+        background: white;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
     }
 
     .card-header {
+        padding: 1.5rem;
         background: linear-gradient(135deg, #84c5f4, #0078d7);
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         color: white;
     }
 
-    .section-title {
-        font-size: 1.5rem;
+    .card-header.bg-success {
+        background: linear-gradient(135deg, #28a745, #218838);
+    }
+
+    .card-header.bg-warning {
+        background: linear-gradient(135deg, #ffc107, #e0a800);
+    }
+
+    .card-header h3 {
+        font-size: 1.75rem;
         display: flex;
         align-items: center;
+    }
+
+    .card-header p {
+        font-size: 1rem;
+        opacity: 0.9;
     }
 
     .custom-btn {
         transition: all 0.3s ease;
         font-size: 1rem;
         font-weight: 500;
+        border-radius: 10px;
+        padding: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .custom-btn:hover {
@@ -154,8 +234,26 @@
         background-color: #17a2b8;
         color: white;
     }
+
+    .animate__animated {
+        animation-duration: 1s;
+    }
+
+    .animate__fadeIn {
+        animation-name: fadeIn;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
 </style>
 
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 
 {% endblock %}
