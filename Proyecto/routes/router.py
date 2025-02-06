@@ -1336,6 +1336,8 @@ def modificarRolVer(pos, roles, nombreU, apellidoU):
     editarRol = rc._list().binary_search_models(int(pos), "_id")
     return render_template('administrador/crud/editar/editarRol.html', data=editarRol, roles = roles, nombreU = nombreU, apellidoU = apellidoU)
 
+
+
 #--------------------------------------------Administrador/Vista/Darwin- Draw-----------------------------------------------------#
 
 @router.route('/prueba01', methods=['GET'])
