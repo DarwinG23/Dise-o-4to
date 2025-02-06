@@ -59,12 +59,22 @@
         <!-- Sección de Tests -->
         <div>
             <h5 class="fw-bold text-primary">📝 TESTS</h5>
-            <fomr action="" method="POST">
-                <div class="card shadow-sm p-3 mb-3 clickable-card" onclick="location.href='/estudiante/inicioTest';">
-                    <h6 class="fw-bold">1. Test DASS</h6>
-                    <p class="mb-1"><strong>Curso:</strong> Diseño de Software</p>
-                </div>
-            </fomr>
+            {% for test in tests %}
+                <form action="/estudiante/responderTest" method="POST" id="formTest_{{test.id}}">
+                    <!-- Campos ocultos para enviar los valores -->
+                    <input type="hidden" name="roles" value="{{ roles }}">
+                    <input type="hidden" name="usuario" value="{{ usuario }}">
+                    <input type="hidden" name="idCurso" value="{{ idCurso }}">
+                    <input type="hidden" name="idTest" value="{{ test.id }}">
+                    <input type="hidden" name="cursos" value="{{ cursos }}">
+                    <input type="hidden" name="tiene" value="{{ tiene }}">
+
+                    <div class="card shadow-sm p-3 mb-3 clickable-card" onclick="document.getElementById('formTest_{{test.id}}').submit();">
+                        <h6 class="fw-bold">{{ test.nombre }}</h6>
+                        <p class="mb-1"><strong>Curso:</strong> {{ curso.nombre }}</p>
+                    </div>
+                </form>
+            {% endfor %}
         </div>
     </div>
 </div>

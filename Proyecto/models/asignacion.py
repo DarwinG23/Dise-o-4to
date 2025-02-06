@@ -123,3 +123,11 @@ class Asignacion:
         
         
         return asignacion
+    
+    def __str__(self):
+        return f"""
+        id: {self.__id}
+        idCurso: {self.__idCurso}
+        idDocente: {self.__idDocente}
+        idNotificacion: {self.__idNotificacion}
+        """
