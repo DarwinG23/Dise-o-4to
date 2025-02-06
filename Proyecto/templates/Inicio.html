@@ -78,7 +78,7 @@ https://templatemo.com/tm-560-astro-motion
                         </div>
                       {% endif %}
                     {% endwith %}
-                    <form action="/login" method="POST" class="contact-form">
+                    <form action="/login" method="POST" class="contact-form" onsubmit="showLoading()">
                       <div class="input-group tm-mb-30">
                           <input name="correo" type="text" class="form-control rounded-0 border-top-0 border-end-0 border-start-0" placeholder="Correo" required title="Por favor ingrese su correo">
                       </div>
@@ -229,6 +229,11 @@ https://templatemo.com/tm-560-astro-motion
       </footer>
     </div>
   </div>
+  
+ 
+  
+  </script>
+  
   <!-- Preloader, https://ihatetomatoes.net/create-custom-preloading-screen/ -->
   <div id="loader-wrapper">            
     <div id="loader"></div>

@@ -25,4 +25,14 @@ class TestControl(DaoAdapter):
     
     def merge(self, pos):
         self._merge(self._test, pos)
+        
+    
+    def crearTest(self, nombre, descripcion, resultado, idAsignacion, idAdministrador):
+        
+        self._test._nombre = nombre
+        self._test._descripcion = descripcion
+        self._test._resultado = resultado
+        self._test._idAsignacion = idAsignacion
+        self._test._idAdministrador = idAdministrador
+        self.save
     

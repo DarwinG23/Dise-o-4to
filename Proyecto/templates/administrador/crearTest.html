@@ -1,23 +1,10 @@
 {% extends 'estudiante/estudianteInicio.html' %}
 
-{% block cursos %}
-    {% if tiene == "Verdadero" %}
-    {% for curso in cursos %}
-        {% if curso.nombre != "Sin cursos" %}
-            <form action="/docente/curso/ver/{{roles}}/{{usuario}}/{{nombreU}}/{{apellidoU}}/{{cursos}}/{{tiene}}" method="POST" id="cursoForm{{ curso.id }}">
-                <li>
-                    <a href="#" onclick="document.getElementById('cursoForm{{ curso.id }}').submit();">
-                        <i class="fas fa-book"></i> {{ curso.nombre }}
-                    </a>
-                    <input type="hidden" name="idCurso" value="{{ curso.id }}">
-                </li>
-            </form>
-        {% endif %}
-    {% endfor %}
-    {% else %}
-    <li><a href="#"><i class="fas fa-book"></i> Sin cursos</a></li>
-    {% endif %}
-{% endblock %}
+{%block cursos%}
+<li>
+    <a href="#"><i class="fas fa-cog"></i> Gestionar tests </a>
+</li>
+{%endblock%}
 
 {% block content %}
 <head>
@@ -35,15 +22,7 @@
 <body>
     <div>
         <h2 class="text-center text-primary">Registro de test</h2>
-        <form method="POST" action="/crearTestPost/{{roles}}/{{usuario}}/{{cursos}}/{{tiene}}" onsubmit="return validarFormulario()">
-            <div class="mb-3">
-                <label for="fechaInicio" class="form-label">Fecha de Inicio</label>
-                <input type="date" name="fechaInicio" class="form-control" id="fechaInicio" required>
-            </div>
-            <div class="mb-3">
-                <label for="fechaFin" class="form-label">Fecha de Fin</label>
-                <input type="date" name="fechaFin" class="form-control" id="fechaFin" required>
-            </div>
+        <form method="POST" action="/crearTestAdminPost/{{roles}}/{{usuario}}/{{cursos}}/{{tiene}}" onsubmit="if(validarFormulario()) { mostrarCarga(); } else { return false; }">
             <div class="mb-3">
                 <label for="titulo" class="form-label">Nombre</label>
                 <input type="text" class="form-control" name="titulo" id="titulo" placeholder="Ingrese el título" required>
@@ -63,8 +42,28 @@
         </form>
     </div>
 
+    <!-- Modal de carga -->
+    <div class="modal fade" id="loadingModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content text-center p-4">
+                <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;"></div>
+                <h5 class="mt-3">Creando el test, por favor espere...</h5>
+            </div>
+        </div>
+    </div>
+
     <script>
         let contadorPreguntas = 0;
+
+        function mostrarCarga() {
+            // Evita que el usuario envíe múltiples veces
+            let botonEnviar = document.querySelector('button[type="submit"]');
+            botonEnviar.disabled = true;
+
+            // Mostrar el modal de carga
+            let modalCarga = new bootstrap.Modal(document.getElementById('loadingModal'));
+            modalCarga.show();
+        }
 
 function agregarPregunta() {
     contadorPreguntas++;

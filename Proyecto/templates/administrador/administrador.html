@@ -1,8 +1,16 @@
-{% extends 'estudiante/estudianteInicio.html' %}
+{% extends 'administrador/plantilla.html' %}
+
+{%block cursos%}
+    <li>
+        <a href="#"><i class="fas fa-cog"></i> Gestionar tests </a>
+    </li>
+{%endblock%}
 
 {% block content %}
 <div class="container mt-5">
     <div class="card shadow-lg">
+
+    
         <div class="card-header bg-primary text-white text-center">
             <h2 class="fw-bold">Panel Administrativo</h2>
         </div>
@@ -30,6 +38,9 @@
                     </div>
                     <div class="col-md-4 mb-3">
                         <a href="/administrador/gestionar_permisos/{{roles}}/{{nombreU}}/{{apellidoU}}" class="btn btn-lg btn-outline-primary w-100 custom-btn">🔐 Gestionar Permisos</a>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <a href="/crearTestAdminGet/{{roles}}/{{usuario}}/{{cursos}}/{{tiene}}" class="btn btn-lg btn-outline-primary w-100 custom-btn">🔐 Gestionar Test</a>
                     </div>
                 </div>
             </div>
