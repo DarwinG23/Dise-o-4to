@@ -22,7 +22,6 @@ class DaoAdapter(Generic[T]):
         lista = Linked_List()
         cur = self.conn._db.cursor()
         cur.execute(f"SELECT * FROM {tabla}")
-        # Obtener los nombres de las columnas
         columns = [col[0].lower() for col in cur.description]
         rows = cur.fetchall()
         dict_rows = [dict(zip(columns, row)) for row in rows]
@@ -43,14 +42,28 @@ class DaoAdapter(Generic[T]):
                 continue  # Omitir el campo 'roles'
             if len(str(value)) > 0:
                 columns += key + ","
-                if "fecha" in key:
-                    # Asegurarse de que la fecha esté en el formato correcto
-                    value = datetime.strptime(value, "%d/%m/%Y").strftime("%d-%b-%Y").upper()
-                if isinstance(value, (int, float, bool)):
-                    data_values += str(value) + ","
-                else:
-                    data_values += "'" + str(value).replace("'", "''") + "'" + ","
+    
 
+                # Si el campo contiene 'fecha' y no es None
+                if "fecha" in key and value != None:
+                    # Convertir el valor a la fecha en el formato correcto
+                    value = datetime.strptime(value, "%d/%m/%Y").strftime("%d-%b-%Y").upper()  # Formato DD-MON-YYYY
+                    data_values += f"TO_DATE('{value}', 'DD-MON-YYYY'),"
+
+                # Si el campo contiene 'hora'
+                elif "hora" in key:
+                    # Convertir el valor a la hora en el formato correcto
+                    value = datetime.strptime(value, "%H:%M:%S").strftime("%H:%M:%S")  # Formato HH24:MI:SS
+                    data_values += f"TO_DATE('{value}', 'HH24:MI:SS'),"
+
+                # Para otros tipos de datos (int, float, bool o cadenas)
+                else:
+                    if isinstance(value, (int, float, bool)):
+                        data_values += str(value) + ","
+                    elif value is None:
+                        data_values += "NULL,"
+                    else:
+                        data_values += "'" + str(value).replace("'", "''") + "'" + ","
         columns = columns.rstrip(',')
         data_values = data_values.rstrip(',')
 
@@ -85,9 +98,7 @@ class DaoAdapter(Generic[T]):
             if len(str(value)) > 0:
                 if "fecha" in key:
                     # Asegurarse de que la fecha esté en el formato correcto
-                    print(aux["fechaNacimiento"])
                     value = datetime.strptime(value, "%d/%m/%Y").strftime("%d-%b-%Y").upper()
-                    print(value)
                 if isinstance(value, (int, float, bool)):
                     update_pairs.append(f"{key} = {value}")
                 else:
@@ -104,9 +115,6 @@ class DaoAdapter(Generic[T]):
     
     
     def dic_to_list(self, data, clase):
-        print("dic to list")
-        print(type(data))
-        print(type(clase))
         for i in range(0, len(data)):
             self.lista.addNode(clase.deserializar(data[i]), self.lista._length)
         return self.lista

@@ -1,0 +1,301 @@
+{% extends 'estudiante/estudianteInicio.html' %}
+
+{%block cursos%}
+    {% if tiene == "Verdadero" %}
+    {% for curso in cursos %}
+        {% if curso.nombre != "Sin cursos" %}
+                <form action="/estudiante/curso/ver/{{roles}}/{{usuario}}/{{nombreU}}/{{apellidoU}}/{{cursos}}/{{tiene}}" method="POST" id="cursoForm{{ curso.id }}">
+                    <li>
+                        <a href="#" onclick="document.getElementById('cursoForm{{ curso.id }}').submit();">
+                            <i class="fas fa-book"></i> {{ curso.nombre }}
+                        </a>
+                        <input type="hidden" name="idCurso" value="{{ curso.id }}">
+                    </li>
+                </form>
+        {% endif %}
+    {% endfor %}
+    {% else %}
+    <li><a href="#"><i class="fas fa-book"></i> Sin cursos</a></li>
+    {% endif %}
+{%endblock%}
+
+{% block content %}
+<style>
+    .vista-entrega {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 30px;
+        font-family: 'Arial', sans-serif;
+        background-color: #f9f9f9;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .vista-entrega h1 {
+        color: #003366;
+        font-size: 28px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        text-align: center;
+        text-transform: uppercase;
+    }
+
+    .vista-entrega h2 {
+        color: #0056b3;
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 15px;
+    }
+
+    .vista-entrega .info-tarea {
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+    }
+
+    .vista-entrega .info-tarea p {
+        font-size: 16px;
+        color: #333;
+        margin: 0 0 10px;
+    }
+
+    .vista-entrega .info-tarea .estado {
+        font-weight: bold;
+        color: #d9534f; /* Rojo para estado "Sin enviar" */
+    }
+
+    .vista-entrega .info-tarea .fecha {
+        color: #666;
+    }
+
+    .vista-entrega .subir-archivo {
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .vista-entrega .subir-archivo input[type="file"] {
+        margin-bottom: 15px;
+    }
+
+    .vista-entrega .subir-archivo .botones {
+        display: flex;
+        gap: 10px;
+    }
+
+    .vista-entrega .subir-archivo .botones button {
+        background-color: #0056b3;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+        font-size: 16px;
+    }
+
+    .vista-entrega .subir-archivo .botones button:hover {
+        background-color: #004099;
+        transform: scale(1.05);
+    }
+
+    .vista-entrega .subir-archivo .botones button:active {
+        transform: scale(0.95);
+    }
+
+    .vista-entrega .subir-archivo .botones button.borrar {
+        background-color: #d9534f; /* Rojo para el botón de borrar */
+    }
+
+    .vista-entrega .subir-archivo .botones button.borrar:hover {
+        background-color: #c9302c;
+    }
+</style>
+
+<div class="vista-entrega">
+
+    <div class="text-black card p-4">
+        <h2 class="display-7 mb-4">Tarea: {{tarea.titulo}}</h2>
+        <p class="mb-4">Descripción: {{tarea.descripcion}}</p>
+        <p class="mb-4">
+            <img src="{{ url_for('static', filename='img/iconoPdf.png') }}" alt="PDF" width="20" height="20" />
+             <!-- Enlace para descargar el archivo -->
+            <a href="/descargas/{{tarea.id}}">{{archivo}}</a>
+        </p>
+    </div>
+    <div class="text-black card p-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Detalles de la Entrega</h5>
+                {% if archivo_entrega != "Sin entrega"%}
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <th scope="row">Estado de la entrega:</th>
+                                <td>{% if entrega.estado == 1 %}
+                                    Enviado para calificar
+                                {% else %}
+                                    Calificado
+                                {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Calificación:</th>
+                                <td>{% if entrega.calificacion is none %}
+                                    "Sin calificación"
+                                {% else %}
+                                    {{ entrega.calificacion }}
+                                {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Fecha de entrega:</th>
+                                <td>{{ entrega.fecha.strftime('%Y-%m-%d') }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Archivo enviado:</th>
+                                <td>
+                                    <img src="{{ url_for('static', filename='img/iconoPdf.png') }}" alt="PDF" width="20" height="20" />
+                                    <!-- Enlace para descargar el archivo -->
+                                <a href="/descargasEntrega/{{entrega.id}}">{{archivo_entrega}}</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Comentario:</th>
+                                <td>{{entrega.comentario}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                {% else %}
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <th scope="row">Estado de la entrega:</th>
+                                <td>Sin enviar</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Calificación:</th>
+                                <td> </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Fecha de entrega:</th>
+                                <td> </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Archivo enviado:</th>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Comentario:</th>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+{% if archivo_entrega == "Sin entrega"%}
+   <!-- Área para subir archivos -->
+    <form action="/subirTareaPdf/{{roles}}/{{usuario}}/{{idCurso}}/{{idTarea}}/{{idAsignacion}}/{{cursos}}/{{tiene}}" method="POST" id="formPdf" enctype="multipart/form-data" class="subir-archivo">
+        <div class="col-md-12">
+            <label for="archivo" class="form-label fw-bold">Cargar archivo:</label>
+            <div class="border border-primary rounded p-4 text-center" 
+                style="min-height: 150px; transition: background-color 0.3s, border-color 0.3s; cursor: pointer;" 
+                id="fileDropArea">
+                <p class="mb-2 fw-bold">Arrastra y suelta tu archivo aquí</p>
+                <input type="file" class="form-control" id="archivo" name="archivo" accept=".pdf" required hidden>
+                <p id="file-name" class="text-muted mb-0">Puede arrastrar y soltar archivos aquí o hacer click para seleccionarlo (PDF)</p>
+            </div>
+        </div>
+    </form>
+{% endif %}
+
+<div class="card-body text-center" style="margin-top: 5%;">
+    <!-- <button class="btn btn-primary">Agregar entrega</button> -->
+    {% if archivo_entrega == "Sin entrega"%}
+        <button id="btnEnviar"class="btn btn-primary">Enviar</button>
+    {% else %}
+        {% if entrega.estado == 1 %}
+            <button class="btn btn-primary">Editar entrega</button>
+        {% endif %}
+    {%endif%}
+</div>
+
+    <script>
+        document.getElementById("btnEnviar").addEventListener("click", function() {
+            document.getElementById("formPdf").submit();
+        });
+
+        // Función para manejar el arrastre y la caída de archivos
+        const dropArea = document.getElementById("fileDropArea");
+        const fileInput = document.getElementById("archivo");
+        const fileNameText = document.getElementById("file-name");
+
+        dropArea.addEventListener("dragover", (e) => {
+            e.preventDefault();
+            dropArea.classList.add("border-success");
+            dropArea.style.backgroundColor = "#e3fcef";
+        });
+
+        dropArea.addEventListener("dragleave", () => {
+            dropArea.classList.remove("border-success");
+            dropArea.style.backgroundColor = "";
+        });
+
+        dropArea.addEventListener("drop", (e) => {
+            e.preventDefault();
+            dropArea.classList.remove("border-success");
+            dropArea.style.backgroundColor = "";
+
+            const file = e.dataTransfer.files[0];
+            if (file && file.type === "application/pdf") {
+                fileInput.files = e.dataTransfer.files; // Asignar archivo al input
+                //fileNameText.textContent = `Archivo seleccionado: ${file.name}`;
+                fileNameText.innerHTML = `
+                                            Archivo seleccionado: 
+                                            <img src="{{ url_for('static', filename='img/iconoPdf.png') }}" alt="PDF" width="20" height="20" class="me-2"/>
+                                            ${file.name}
+                                        `;
+            
+            } else {
+                alert("Solo se permiten archivos PDF.");
+            }
+        });
+
+        // Hacer clic en el área de arrastre para abrir el selector de archivos
+        dropArea.addEventListener("click", () => {
+            fileInput.click();
+        });
+
+        // Actualizar el área de arrastre cuando se selecciona un archivo manualmente
+        fileInput.addEventListener("change", () => {
+            const file = fileInput.files[0];
+            if (file) {
+                //fileNameText.textContent = `Archivo seleccionado: ${file.name}`;
+                fileNameText.innerHTML = `
+                                            Archivo seleccionado: 
+                                            <img src="{{ url_for('static', filename='img/iconoPdf.png') }}" alt="PDF" width="20" height="20" class="me-2"/>
+                                            ${file.name}
+                                        `;
+            }
+        });
+
+
+        // Cambiar cursor y color de fondo cuando el mouse pasa sobre el área
+        dropArea.addEventListener("mouseenter", () => {
+            dropArea.style.cursor = "pointer";
+            dropArea.style.backgroundColor = "#cce7ff"; // Azul claro
+        });
+
+        dropArea.addEventListener("mouseleave", () => {
+            dropArea.style.backgroundColor = ""; // Restaurar color de fondo
+        });
+    </script>
+
+</div>
+{% endblock %}

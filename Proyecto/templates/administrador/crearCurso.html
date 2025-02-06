@@ -1,0 +1,97 @@
+{% extends 'administrador/plantilla.html' %}
+{% block content %}
+
+<!-- Agregamos Bootstrap y Font Awesome para mejorar la estructura -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+<style>
+    .container {
+        max-width: 600px;
+        margin: 40px auto;
+        padding: 20px;
+        background: white;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+    }
+
+    h2 {
+        color: #333;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .volver {
+        text-align: center;
+        margin-top: 20px;
+    }
+</style>
+
+<h2><i class="fas fa-plus-circle"></i> Añadir Curso</h2>
+<div class="container">
+    <form action="/administrador/crearCursoPost" method="post">
+        <div class="mb-3">
+            <label for="nombre" class="form-label"><i class="fas fa-book"></i> Nombre:</label>
+            <input type="text" class="form-control" id="nombre" name="nombre" required>
+        </div>
+        
+        <div class="mb-3">
+            <label for="paralelo" class="form-label"><i class="fas fa-layer-group"></i> Paralelo:</label>
+            <input type="text" class="form-control" id="paralelo" name="paralelo" required>
+        </div>
+        
+        <div class="mb-3">
+            <label for="idDocente" class="form-label"><i class="fas fa-chalkboard-teacher"></i> ID del Docente:</label>
+            <input type="text" class="form-control" id="idDocente" name="idDocente" required>
+        </div>
+        
+        <button type="submit" class="btn btn-primary w-100"><i class="fas fa-save"></i> Añadir</button>
+    </form>
+</div>
+
+<h2><i class="fas fa-edit"></i> Actualizar Curso</h2>
+<div class="container">
+    <form action="/actualizar_curso" method="post">
+        <div class="mb-3">
+            <label for="id" class="form-label"><i class="fas fa-id-badge"></i> ID del Curso:</label>
+            <input type="text" class="form-control" id="id" name="id" required>
+        </div>
+        
+        <div class="mb-3">
+            <label for="nuevo_nombre" class="form-label"><i class="fas fa-book"></i> Nuevo Nombre:</label>
+            <input type="text" class="form-control" id="nuevo_nombre" name="nuevo_nombre">
+        </div>
+        
+        <div class="mb-3">
+            <label for="nuevo_paralelo" class="form-label"><i class="fas fa-layer-group"></i> Nuevo Paralelo:</label>
+            <input type="text" class="form-control" id="nuevo_paralelo" name="nuevo_paralelo">
+        </div>
+        
+        <div class="mb-3">
+            <label for="nuevo_idDocente" class="form-label"><i class="fas fa-chalkboard-teacher"></i> Nuevo ID del Docente:</label>
+            <input type="text" class="form-control" id="nuevo_idDocente" name="nuevo_idDocente">
+        </div>
+        
+        <button type="submit" class="btn btn-warning w-100"><i class="fas fa-sync-alt"></i> Actualizar</button>
+    </form>
+</div>
+
+<h2><i class="fas fa-trash-alt"></i> Eliminar Curso</h2>
+<div class="container">
+    <form action="/eliminar_curso" method="post">
+        <div class="mb-3">
+            <label for="id_eliminar" class="form-label"><i class="fas fa-id-badge"></i> ID del Curso:</label>
+            <input type="text" class="form-control" id="id_eliminar" name="id" required>
+        </div>
+        
+        <button type="submit" class="btn btn-danger w-100"><i class="fas fa-trash"></i> Eliminar</button>
+    </form>
+</div>
+
+<div class="volver">
+    <a href="/administrador">
+        <button class="btn btn-success"><i class="fas fa-arrow-left"></i> Volver al Administrador</button>
+    </a>
+</div>
+
+{% endblock %}

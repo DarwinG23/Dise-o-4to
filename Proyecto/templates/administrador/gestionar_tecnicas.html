@@ -1,0 +1,85 @@
+{% extends 'administrador/plantilla.html' %}
+{% block content %}
+
+<!-- Agregamos Bootstrap y Font Awesome para mejorar la estructura -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+<style>
+    .container {
+        max-width: 600px;
+        margin: 40px auto;
+        padding: 20px;
+        background: white;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+    }
+
+    h2 {
+        color: #333;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .volver {
+        text-align: center;
+        margin-top: 20px;
+    }
+</style>
+
+<h2><i class="fas fa-plus-circle"></i> Añadir Técnica</h2>
+<div class="container">
+    <form action="/añadir_tecnica" method="post">
+        <div class="mb-3">
+            <label for="nombre" class="form-label"><i class="fas fa-tools"></i> Nombre:</label>
+            <input type="text" class="form-control" id="nombre" name="nombre" required>
+        </div>
+        <div class="mb-3">
+            <label for="descripcion" class="form-label"><i class="fas fa-file-alt"></i> Descripción:</label>
+            <input type="text" class="form-control" id="descripcion" name="descripcion" required>
+        </div>
+        <div class="mb-3">
+            <label for="categoria" class="form-label"><i class="fas fa-tag"></i> Categoría:</label>
+            <input type="text" class="form-control" id="categoria" name="categoria">
+        </div>
+        <button type="submit" class="btn btn-primary w-100"><i class="fas fa-save"></i> Añadir</button>
+    </form>
+</div>
+
+<h2><i class="fas fa-edit"></i> Actualizar Técnica</h2>
+<div class="container">
+    <form action="/actualizar_tecnica" method="post">
+        <div class="mb-3">
+            <label for="tecnica_id" class="form-label"><i class="fas fa-id-badge"></i> ID de la Técnica:</label>
+            <input type="text" class="form-control" id="tecnica_id" name="tecnica_id" required>
+        </div>
+        <div class="mb-3">
+            <label for="nueva_descripcion" class="form-label"><i class="fas fa-file-alt"></i> Nueva Descripción:</label>
+            <input type="text" class="form-control" id="nueva_descripcion" name="nueva_descripcion">
+        </div>
+        <div class="mb-3">
+            <label for="nueva_categoria" class="form-label"><i class="fas fa-tag"></i> Nueva Categoría:</label>
+            <input type="text" class="form-control" id="nueva_categoria" name="nueva_categoria">
+        </div>
+        <button type="submit" class="btn btn-warning w-100"><i class="fas fa-sync-alt"></i> Actualizar</button>
+    </form>
+</div>
+
+<h2><i class="fas fa-trash-alt"></i> Eliminar Técnica</h2>
+<div class="container">
+    <form action="/eliminar_tecnica" method="post">
+        <div class="mb-3">
+            <label for="tecnica_id_eliminar" class="form-label"><i class="fas fa-id-badge"></i> ID de la Técnica:</label>
+            <input type="text" class="form-control" id="tecnica_id_eliminar" name="tecnica_id" required>
+        </div>
+        <button type="submit" class="btn btn-danger w-100"><i class="fas fa-trash"></i> Eliminar</button>
+    </form>
+</div>
+
+<div class="volver">
+    <a href="/administrador">
+        <button class="btn btn-success"><i class="fas fa-arrow-left"></i> Volver al Administrador</button>
+    </a>
+</div>
+
+{% endblock %}

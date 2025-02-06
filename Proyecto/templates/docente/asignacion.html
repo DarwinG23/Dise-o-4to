@@ -1,0 +1,43 @@
+{% extends 'estudiante/estudianteInicio.html' %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <!-- Primera tarjeta: Complejidad Computacional -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-lg border-0" style="border-radius: 15px; display: flex; flex-direction: column; height: 100%;">
+                <img src="static/img/complejidad.jpg" class="card-img-top" alt="..." style="border-top-left-radius: 15px; border-top-right-radius: 15px; object-fit: cover; height: 200px;">
+                <div class="card-body d-flex flex-column justify-content-between" style="flex-grow: 1;">
+                    <h5 class="card-title fw-bold">Complejidad Computacional</h5>
+                    <p class="card-text text-muted">Explora los fundamentos de la teoría de la complejidad computacional y sus aplicaciones.</p>
+                    <a href="/listaEstudiantes" class="btn btn-primary px-4 py-2" style="border-radius: 25px;">Ver</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Segunda tarjeta: Diseño de Software con descripción más pequeña -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-lg border-0" style="border-radius: 15px; display: flex; flex-direction: column; height: 100%;">
+                <img src="static/img/diseño.jpg" class="card-img-top" alt="..." style="border-top-left-radius: 15px; border-top-right-radius: 15px; object-fit: cover; height: 200px;">
+                <div class="card-body d-flex flex-column justify-content-between" style="flex-grow: 1;">
+                    <h5 class="card-title fw-bold">Diseño de Software</h5>
+                    <p class="card-text text-muted">Proceso para convertir requisitos de software en pasos para desarrollar un sistema.</p>
+                    <a href="/listaEstudiantes" class="btn btn-primary px-4 py-2" style="border-radius: 25px;">Ver</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tercera tarjeta: Sistemas Operativos -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-lg border-0" style="border-radius: 15px; display: flex; flex-direction: column; height: 100%;">
+                <img src="static/img/sistemas.jpg" class="card-img-top" alt="..." style="border-top-left-radius: 15px; border-top-right-radius: 15px; object-fit: cover; height: 200px;">
+                <div class="card-body d-flex flex-column justify-content-between" style="flex-grow: 1;">
+                    <h5 class="card-title fw-bold">Sistemas Operativos</h5>
+                    <p class="card-text text-muted">Conoce los principios y componentes esenciales que gestionan los recursos del sistema.</p>
+                    <a href="/listaEstudiantes" class="btn btn-primary px-4 py-2" style="border-radius: 25px;">Ver</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,332 @@
+[
+    {
+        "id": 1,
+        "nombre": "Abel",
+        "apellido": "Mora",
+        "cedula": "123456789",
+        "atenciones": [
+            {
+                "id": 0,
+                "dia": "05/17/2024",
+                "tiempo": "2:30",
+                "calificacion": "Bueno",
+                "motivo": "Consulta"
+            },
+            {
+                "id": 0,
+                "dia": "05/17/2024",
+                "tiempo": "1:15",
+                "calificacion": "Normal",
+                "motivo": "Tratamiento"
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "nombre": "Darwin",
+        "apellido": "Granda",
+        "cedula": "1106006123",
+        "atenciones": [
+            {
+                "id": 0,
+                "dia": "05/17/2024",
+                "tiempo": "2:30",
+                "calificacion": "Bueno",
+                "motivo": "Consulta"
+            },
+            {
+                "id": 0,
+                "dia": "05/17/2024",
+                "tiempo": "1:15",
+                "calificacion": "Normal",
+                "motivo": "Tratamiento"
+            }
+        ]
+    },
+    {
+        "id": 3,
+        "nombre": "Alexander",
+        "apellido": "Sanchez",
+        "cedula": "1106002456",
+        "atenciones": [
+            {
+                "id": 0,
+                "dia": "05/17/2024",
+                "tiempo": "2:30",
+                "calificacion": "Bueno",
+                "motivo": "Consulta"
+            },
+            {
+                "id": 0,
+                "dia": "05/17/2024",
+                "tiempo": "1:15",
+                "calificacion": "Normal",
+                "motivo": "Tratamiento"
+            }
+        ]
+    },
+    {
+        "id": 4,
+        "nombre": "Darwin",
+        "apellido": "Sarango",
+        "cedula": "1106006254",
+        "atenciones": [
+            {
+                "id": 0,
+                "dia": "05/17/2024",
+                "tiempo": "2:30",
+                "calificacion": "Bueno",
+                "motivo": "Consulta"
+            },
+            {
+                "id": 0,
+                "dia": "05/17/2024",
+                "tiempo": "1:15",
+                "calificacion": "Normal",
+                "motivo": "Tratamiento"
+            }
+        ]
+    },
+    {
+        "id": 5,
+        "nombre": "Angel",
+        "apellido": "Orellana",
+        "cedula": "1106007246",
+        "atenciones": [
+            {
+                "id": 0,
+                "dia": "05/17/2024",
+                "tiempo": "2:30",
+                "calificacion": "Bueno",
+                "motivo": "Consulta"
+            },
+            {
+                "id": 0,
+                "dia": "05/17/2024",
+                "tiempo": "1:15",
+                "calificacion": "Normal",
+                "motivo": "Tratamiento"
+            }
+        ]
+    },
+    {
+        "id": 6,
+        "nombre": "Angel",
+        "apellido": "Orellana",
+        "cedula": "1106007246",
+        "atenciones": [
+            {
+                "id": 0,
+                "dia": "05/17/2024",
+                "tiempo": "2:30",
+                "calificacion": "Bueno",
+                "motivo": "Consulta"
+            },
+            {
+                "id": 0,
+                "dia": "05/17/2024",
+                "tiempo": "1:15",
+                "calificacion": "Normal",
+                "motivo": "Tratamiento"
+            }
+        ]
+    },
+    {
+        "id": 7,
+        "nombre": "Fernando",
+        "apellido": "Orellana",
+        "cedula": "1106007246",
+        "atenciones": [
+            {
+                "id": 0,
+                "dia": "05/17/2024",
+                "tiempo": "2:30",
+                "calificacion": "Bueno",
+                "motivo": "Consulta"
+            },
+            {
+                "id": 0,
+                "dia": "05/17/2024",
+                "tiempo": "1:15",
+                "calificacion": "Normal",
+                "motivo": "Tratamiento"
+            }
+        ]
+    },
+    {
+        "id": 8,
+        "nombre": "Darwin",
+        "apellido": "Orellana",
+        "cedula": "1106007246",
+        "atenciones": [
+            {
+                "id": 0,
+                "dia": "05/17/2024",
+                "tiempo": "2:30",
+                "calificacion": "Bueno",
+                "motivo": "Consulta"
+            },
+            {
+                "id": 0,
+                "dia": "05/17/2024",
+                "tiempo": "1:15",
+                "calificacion": "Normal",
+                "motivo": "Tratamiento"
+            }
+        ]
+    },
+    {
+        "id": 9,
+        "nombre": "Mario",
+        "apellido": "Zambrano",
+        "cedula": "1106007246",
+        "atenciones": [
+            {
+                "id": 0,
+                "dia": "05/17/2024",
+                "tiempo": "2:30",
+                "calificacion": "Bueno",
+                "motivo": "Consulta"
+            },
+            {
+                "id": 0,
+                "dia": "05/17/2024",
+                "tiempo": "1:15",
+                "calificacion": "Normal",
+                "motivo": "Tratamiento"
+            }
+        ]
+    },
+    {
+        "id": 10,
+        "nombre": "Juan",
+        "apellido": "Sanchez",
+        "cedula": "1106007246",
+        "atenciones": [
+            {
+                "id": 0,
+                "dia": "05/17/2024",
+                "tiempo": "2:30",
+                "calificacion": "Bueno",
+                "motivo": "Consulta"
+            },
+            {
+                "id": 0,
+                "dia": "05/17/2024",
+                "tiempo": "1:15",
+                "calificacion": "Normal",
+                "motivo": "Tratamiento"
+            }
+        ]
+    },
+    {
+        "id": 11,
+        "nombre": "Hernan",
+        "apellido": "Sanchez",
+        "cedula": "1106007246",
+        "atenciones": [
+            {
+                "id": 0,
+                "dia": "05/17/2024",
+                "tiempo": "2:30",
+                "calificacion": "Bueno",
+                "motivo": "Consulta"
+            },
+            {
+                "id": 0,
+                "dia": "05/17/2024",
+                "tiempo": "1:15",
+                "calificacion": "Normal",
+                "motivo": "Tratamiento"
+            }
+        ]
+    },
+    {
+        "id": 12,
+        "nombre": "Juan",
+        "apellido": "Sanchez",
+        "cedula": "110324532",
+        "atenciones": [
+            {
+                "id": 0,
+                "dia": "05/17/2024",
+                "tiempo": "2:30",
+                "calificacion": "Bueno",
+                "motivo": "Consulta"
+            },
+            {
+                "id": 0,
+                "dia": "05/17/2024",
+                "tiempo": "1:15",
+                "calificacion": "Normal",
+                "motivo": "Tratamiento"
+            }
+        ]
+    },
+    {
+        "id": 13,
+        "nombre": "Isabel",
+        "apellido": "Gonzalez",
+        "cedula": "110521566",
+        "atenciones": [
+            {
+                "id": 0,
+                "dia": "05/17/2024",
+                "tiempo": "2:30",
+                "calificacion": "Bueno",
+                "motivo": "Consulta"
+            },
+            {
+                "id": 0,
+                "dia": "05/17/2024",
+                "tiempo": "1:15",
+                "calificacion": "Normal",
+                "motivo": "Tratamiento"
+            }
+        ]
+    },
+    {
+        "id": 14,
+        "nombre": "Fernando",
+        "apellido": "Gonzalez",
+        "cedula": "110213555",
+        "atenciones": [
+            {
+                "id": 0,
+                "dia": "05/17/2024",
+                "tiempo": "2:30",
+                "calificacion": "Bueno",
+                "motivo": "Consulta"
+            },
+            {
+                "id": 0,
+                "dia": "05/17/2024",
+                "tiempo": "1:15",
+                "calificacion": "Normal",
+                "motivo": "Tratamiento"
+            }
+        ]
+    },
+    {
+        "id": 15,
+        "nombre": "Maria",
+        "apellido": "Torres",
+        "cedula": "110551144",
+        "atenciones": [
+            {
+                "id": 0,
+                "dia": "05/17/2024",
+                "tiempo": "2:30",
+                "calificacion": "Bueno",
+                "motivo": "Consulta"
+            },
+            {
+                "id": 0,
+                "dia": "05/17/2024",
+                "tiempo": "1:15",
+                "calificacion": "Normal",
+                "motivo": "Tratamiento"
+            }
+        ]
+    }
+]

@@ -4,7 +4,6 @@ from controls.exception.arrayPositionException import ArrayPositionException
 #from controls.tdaArray import TDAArray
 from numbers import Number
 from controls.tda.linked.insercion import Insercion
-from controls.tda.linked.burbuja import Burbuja
 from controls.tda.linked.quicksort import QuickSort
 from controls.tda.linked.mergesort import MergeSort
 from controls.tda.linked.shellsort import ShellSort
@@ -45,7 +44,7 @@ class Linked_List(object):
         else:
             return "List is Empty"
     
-    def _getLast_(self, poss):
+    def _getLast_(self):
         if not self.isEmpty:
             return self.__last
         else:
@@ -133,7 +132,6 @@ class Linked_List(object):
         else:
             node = self.getNode(poss)
             node._data = data
-            node._data._reportes.print
 
 
     @property
@@ -312,7 +310,6 @@ class Linked_List(object):
                         order = QuickSort()
                         array = order.quicksort_models_descent(array, 0, len(array) - 1, atribute)
                     elif method == 4:
-                        print("entro en merge descent")
                         order = MergeSort()
                         array = order.mergeSort_models_descent(array, atribute)
                     elif method == 5:
@@ -395,6 +392,26 @@ class Linked_List(object):
                 right = mid - 1
         return -1   
     
+    #busqueda binaria
+    def binary_search_models_id(self, data, atribute):
+        self.sort_models(atribute)
+        arr = self.toArray
+        left = 0
+        right = len(arr) - 1
+        while left <= right:
+            mid = (left + right) // 2
+            attribute_value = getattr(arr[mid], atribute)
+            if attribute_value is None:
+                attribute_value = 0
+                
+            if int(attribute_value) == int(data):
+                return arr[mid] 
+            elif int(attribute_value) < int(data):
+                left = mid + 1
+            else:
+                right = mid - 1
+        return -1   
+    
     
     #busqueda lineal-binaria
     def lineal_binary_search_models(self, data, atribute):       
@@ -417,6 +434,29 @@ class Linked_List(object):
             else:
                 right = mid - 1
         return list
+    
+     #busqueda lineal-binaria por id
+    def lineal_binary_search_models_id(self, data, atribute):       
+        self.sort_models(atribute)
+        arr = self.toArray
+        left = 0
+        right = len(arr) - 1
+        list = Linked_List()
+        
+        
+        while left <= right:
+            mid = (left + right) // 2
+            if int(getattr(arr[mid], atribute)) == int(data):  
+                for i in range(left, len(arr)):
+                    if int(getattr(arr[i], atribute)) == int(data):  
+                        list.addNode(arr[i], list._length)         
+                break                  
+            elif int(getattr(arr[mid], atribute)) < int(data):
+                left = mid + 1
+            else:
+                right = mid - 1
+        return list
+    
     #menores
     def search_lower(self, data):
         list = Linked_List()

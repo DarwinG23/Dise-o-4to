@@ -1,0 +1,92 @@
+{% extends 'estudiante/estudianteInicio.html' %}
+
+{%block cursos%}
+    {% if tiene == "Verdadero" %}
+    {% for curso in cursos %}
+        {% if curso.nombre != "Sin cursos" %}
+                <form action="/docente/curso/ver/{{roles}}/{{usuario}}/{{nombreU}}/{{apellidoU}}/{{cursos}}/{{tiene}}" method="POST" id="cursoForm{{ curso.id }}">
+                    <li>
+                        <a href="#" onclick="document.getElementById('cursoForm{{ curso.id }}').submit();">
+                            <i class="fas fa-book"></i> {{ curso.nombre }}
+                        </a>
+                        <input type="hidden" name="idCurso" value="{{ curso.id }}">
+                    </li>
+                </form>
+        {% endif %}
+    {% endfor %}
+    {% else %}
+    <li><a href="#"><i class="fas fa-book"></i> Sin cursos</a></li>
+    {% endif %}
+{%endblock%}
+
+{% block content %}
+<style>
+    .clickable-card {
+        cursor: pointer;
+    }
+
+    .clickable-card:hover {
+        background-color: #a2aeba; /* Cambio de color al pasar el mouse */
+    }
+</style>
+<div class="container mt-4">
+    <!-- Tarjeta principal con más ancho y menos largo -->
+    <div class="card p-3 shadow-sm w-100 mx-auto" style="max-width: 1200px;">
+        <!-- Título de la Materia -->
+        <h3 class="mb-4 fw-bold">📖 {{ curso.nombre }}</h3>
+        <button class="btn btn-primary" style="margin-top: 1%;">Ver estudiantes</button>
+
+        <!-- Sección de Tareas -->
+        <div class="mb-4" >
+            <h5 class="fw-bold text-primary">📌 TAREAS</h5>
+            {% for tarea in tareas %}
+                <form action="/docente/lista/tareas/presentadas" method="POST" id="formTarea_{{tarea.id}}">
+                    <!-- Campos ocultos para enviar los valores -->
+                    <input type="hidden" name="roles" value="{{ roles }}">
+                    <input type="hidden" name="usuario" value="{{ usuario }}">
+                    <input type="hidden" name="idCurso" value="{{ idCurso }}">
+                    <input type="hidden" name="idTarea" value="{{ tarea.id }}">
+                    <input type="hidden" name="cursos" value="{{ cursos }}">
+                    <input type="hidden" name="tiene" value="{{ tiene }}">
+
+                    <div class="card shadow-sm p-3 mb-3 clickable-card" onclick="document.getElementById('formTarea_{{tarea.id}}').submit();">
+                        <h6 class="fw-bold">{{ tarea.titulo }}</h6>
+                        <p class="mb-1"><strong>Curso:</strong> {{ curso.nombre }}</p>
+                        <div class="text-end">
+                            <a href="#" class="btn btn-primary">Editar Asignación</a>
+                        </div>
+                    </div>
+                </form>
+            {% endfor %}
+            <a href="/docente/crearTareaGet/{{roles}}/{{curso.id}}/{{usuario}}/{{nombreU}}/{{apellidoU}}/{{cursos}}/{{tiene}}" class="btn btn-primary" style="margin-top: 1%;">Agregar Tarea</a>
+        </div>
+
+        <!-- Sección de Tests -->
+        <div>
+            <h5 class="fw-bold text-primary">📝 TESTS</h5>
+            {% for test in tests %}
+                <form action="/docente/lista/test/presentadas" method="POST" id="formTest_{{test.id}}">
+                    <!-- Campos ocultos para enviar los valores -->
+                    <input type="hidden" name="roles" value="{{ roles }}">
+                    <input type="hidden" name="usuario" value="{{ usuario }}">
+                    <input type="hidden" name="idCurso" value="{{ idCurso }}">
+                    <input type="hidden" name="idTarea" value="{{ test.id }}">
+                    <input type="hidden" name="cursos" value="{{ cursos }}">
+                    <input type="hidden" name="tiene" value="{{ tiene }}">
+
+                    <div class="card shadow-sm p-3 mb-3 clickable-card" onclick="document.getElementById('formTest_{{test.id}}').submit();">
+                        <h6 class="fw-bold">{{ test.nombre }}</h6>
+                        <p class="mb-1"><strong>Curso:</strong> {{ curso.nombre }}</p>
+                        <div class="text-end">
+                            <a href="#" class="btn btn-primary">Editar Asignación</a>
+                        </div>
+                    </div>
+                </form>
+            {% endfor %}
+            <!-- /docente/seleccionar/estudiante/<roles>/<usuario>/<cursos>/<tiene>/<idCurso> -->
+                <!-- /agregarTest/{{roles}}/{{curso.id}}/{{usuario}}/{{cursos}}/{{tiene}} -->
+            <a href="/docente/seleccionar/estudiante/{{roles}}/{{usuario}}/{{cursos}}/{{tiene}}/{{curso.id}}" class="btn btn-primary" style="margin-top: 1%;">Agregar Test</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,176 @@
+{% extends 'administrador/plantilla.html' %}
+
+{%block cursos%}
+<li>
+    <a href="#"><i class="fas fa-cog"></i> Gestionar tests </a>
+</li>
+{%endblock%}
+
+{% block content %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Registro</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #e3f2fd; }
+        .btn-primary { background-color: #0d6efd; border: none; }
+        .btn-primary:hover { background-color: #0b5ed7; }
+        .question-card { border: 1px solid #ddd; padding: 10px; margin-bottom: 10px; border-radius: 5px; background-color: #f8f9fa; }
+    </style>
+</head>
+<body>
+    <div>
+        <h2 class="text-center text-primary">Registro de test</h2>
+        <form method="POST" action="/crearTestAdminPost/{{roles}}/{{usuario}}/{{cursos}}/{{tiene}}" onsubmit="if(validarFormulario()) { mostrarCarga(); } else { return false; }">
+            <div class="mb-3">
+                <label for="titulo" class="form-label">Nombre</label>
+                <input type="text" class="form-control" name="titulo" id="titulo" placeholder="Ingrese el título" required>
+            </div>
+            <div class="mb-3">
+                <label for="descripcion" class="form-label">Descripción</label>
+                <textarea class="form-control" name="descripcion" id="descripcion" rows="3" placeholder="Ingrese la descripción" required></textarea>
+            </div>
+
+            <h3 class="text-primary mt-4">Preguntas</h3>
+            <div id="preguntas-container"></div>
+            
+            <button type="button" class="btn btn-success w-100" onclick="agregarPregunta()">Agregar Pregunta</button>
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-primary w-100">Enviar</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Modal de carga -->
+    <div class="modal fade" id="loadingModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content text-center p-4">
+                <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;"></div>
+                <h5 class="mt-3">Creando el test, por favor espere...</h5>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let contadorPreguntas = 0;
+
+        function mostrarCarga() {
+            // Evita que el usuario envíe múltiples veces
+            let botonEnviar = document.querySelector('button[type="submit"]');
+            botonEnviar.disabled = true;
+
+            // Mostrar el modal de carga
+            let modalCarga = new bootstrap.Modal(document.getElementById('loadingModal'));
+            modalCarga.show();
+        }
+
+function agregarPregunta() {
+    contadorPreguntas++;
+    let preguntasContainer = document.getElementById('preguntas-container');
+    let preguntaDiv = document.createElement('div');
+    preguntaDiv.classList.add('question-card');
+    preguntaDiv.setAttribute('id', 'pregunta-' + contadorPreguntas);
+
+    preguntaDiv.innerHTML = `
+        <label>Pregunta ${contadorPreguntas}:</label>
+        <input type="text" class="form-control mb-2" name="pregunta-${contadorPreguntas}" placeholder="Ingrese la pregunta" required>
+        <div id="respuestas-${contadorPreguntas}">
+            <div class="d-flex" style="gap: 285px;">
+                <label>Respuestas:</label>
+                <label>Valor:</label>
+            </div>
+            <div class="d-flex mb-2">
+                <input type="text" class="form-control me-2" name="respuesta-${contadorPreguntas}-1" placeholder="Ingrese una respuesta" required>
+                <select class="form-select" name="valor-${contadorPreguntas}-1"></select>
+            </div>
+        </div>
+        <button type="button" class="btn btn-secondary btn-sm" onclick="agregarRespuesta(${contadorPreguntas})">Agregar Respuesta</button>
+        <button type="button" class="btn btn-warning btn-sm" onclick="eliminarUltimaRespuesta(${contadorPreguntas})">Eliminar Respuesta</button>
+        <button type="button" class="btn btn-danger btn-sm" onclick="eliminarPregunta(${contadorPreguntas})">Eliminar Pregunta</button>
+    `;
+
+    preguntasContainer.appendChild(preguntaDiv);
+    actualizarOpciones();
+}
+
+function agregarRespuesta(idPregunta) {
+    let respuestasContainer = document.getElementById('respuestas-' + idPregunta);
+    let numRespuestas = respuestasContainer.querySelectorAll('.d-flex').length + 1;
+
+    let nuevaRespuestaDiv = document.createElement('div');
+    nuevaRespuestaDiv.classList.add('d-flex', 'mb-2');
+
+    nuevaRespuestaDiv.innerHTML = `
+        <input type="text" class="form-control me-2" name="respuesta-${idPregunta}-${numRespuestas}" placeholder="Ingrese otra respuesta" required>
+        <select class="form-select" name="valor-${idPregunta}-${numRespuestas}"></select>
+    `;
+
+    respuestasContainer.appendChild(nuevaRespuestaDiv);
+    actualizarOpciones();
+}
+
+function actualizarOpciones() {
+    document.querySelectorAll('select').forEach(select => {
+        let valorSeleccionado = select.value; // Guarda el valor actual
+
+        select.innerHTML = ""; // Limpia opciones anteriores
+
+        for (let i = 0; i <= 5; i++) { // Valores de 0 a 5
+            let option = document.createElement('option');
+            option.value = i;
+            option.textContent = i;
+
+            if (i == valorSeleccionado) {
+                option.selected = true; // Restaura la selección
+            }
+
+            select.appendChild(option);
+        }
+    });
+}
+
+
+function eliminarUltimaRespuesta(idPregunta) {
+    let respuestasContainer = document.getElementById('respuestas-' + idPregunta);
+    let respuestas = respuestasContainer.querySelectorAll('.d-flex');
+
+    if (respuestas.length > 1) {
+        respuestas[respuestas.length - 1].remove();
+        actualizarOpciones();
+    } else {
+        alert("Cada pregunta debe tener al menos una respuesta.");
+    }
+}
+
+function eliminarPregunta(idPregunta) {
+    let preguntaDiv = document.getElementById('pregunta-' + idPregunta);
+    if (preguntaDiv) {
+        preguntaDiv.remove();
+        contadorPreguntas--;
+        actualizarOpciones();
+    }
+}
+
+function validarFormulario() {
+    let preguntas = document.querySelectorAll('.question-card');
+    if (preguntas.length === 0) {
+        alert("Debe agregar al menos una pregunta.");
+        return false;
+    }
+
+    for (let pregunta of preguntas) {
+        let respuestas = pregunta.querySelectorAll('.d-flex');
+        if (respuestas.length < 2) {
+            alert("Cada pregunta debe tener al menos dos respuestas.");
+            return false;
+        }
+    }
+
+    return true;
+}
+
+    </script>
+</body>
+</html>
+{% endblock %}

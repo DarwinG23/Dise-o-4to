@@ -1,0 +1,162 @@
+{% extends 'estudiante/estudianteInicio.html' %}
+
+{% block content %}
+<style>
+    .card-title {
+        font-weight: bold;
+        border-bottom: 2px solid #003366;
+        padding-bottom: 5px;
+    }
+
+    .form-check-label {
+        font-size: 1rem;
+        color: #333;
+    }
+
+    .form-check-input:checked + .form-check-label {
+        font-weight: bold;
+        color: #003366;
+    }
+
+    .btn-primary {
+        background-color: #0056b3;
+        border: none;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .btn-primary:hover {
+        background-color: #004099;
+        transform: scale(1.05);
+    }
+
+    .contenedor-flexible {
+        display: flex;
+        gap: 20px;
+    }
+
+    .seccion-preguntas {
+        flex: 1;
+    }
+
+    .seccion-progreso {
+        width: 250px;
+        background-color: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .seccion-progreso h5 {
+        margin-bottom: 15px;
+        color: #003366;
+    }
+
+    .lista-preguntas {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .item-pregunta {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #e9ecef;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .item-pregunta.contestada {
+        background-color: #0056b3;
+        color: white;
+    }
+
+    .item-pregunta:hover {
+        background-color: #004099;
+        color: white;
+    }
+
+    .btn-terminar {
+        width: 100%;
+        padding: 10px;
+        font-size: 1rem;
+    }
+</style>
+
+<h1 class="text-primary">Test DASS-21</h1>
+<p class="text-muted">El test DASS-21 evalúa los niveles de depresión, ansiedad y estrés. Por favor, selecciona la respuesta que mejor describa cómo te has sentido durante la última semana.</p>
+
+<div class="contenedor-flexible">
+    <!-- Sección de preguntas (izquierda) -->
+    <div class="seccion-preguntas">
+        <form id="formulario-dass21" method="POST" action="/submit-test">
+             <!-- Pregunta 1 -->
+            {% for pregunta in preguntas %}
+                <div class="card p-3 mb-3 shadow-sm" id="pregunta{{ loop.index }}">
+                    <h5 class="card-title text-primary">{{ loop.index }}. {{ pregunta.pregunta }}</h5>
+                    <div class="pregunta">
+                        {% for opcion in opciones %}
+                            {% if opcion.idPregunta == pregunta.id %}
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="pregunta{{ pregunta.id }}" id="p{{ pregunta.id }}-{{ loop.index }}" value="{{ opcion.id }}" required>
+                                    <label class="form-check-label" for="p{{ pregunta.id }}-{{ loop.index }}">{{ opcion.opcion }}</label>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-primary btn-lg shadow-sm">
+                    <i class="fas fa-paper-plane"></i> Terminar Test
+                </button>
+                <!-- Solo es para pobrar que te manda al resultado -->
+                <a class="btn btn-primary btn-terminar" href="/estudiante/resultado/ver">Terminar Tests</a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Sección de progreso (derecha) -->
+    <div class="seccion-progreso">
+        <h5>Progreso del Test</h5>
+        <div class="lista-preguntas">
+            <div class="item-pregunta" data-pregunta="1">1</div>
+            <div class="item-pregunta" data-pregunta="2">2</div>
+            <div class="item-pregunta" data-pregunta="3">3</div>
+            <!-- Agrega más ítems de preguntas aquí -->
+        </div>
+        <button class="btn btn-primary btn-terminar" onclick="document.getElementById('formulario-dass21').submit()">
+            Terminar Test
+        </button>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const itemsPregunta = document.querySelectorAll('.item-pregunta');
+        const formulario = document.getElementById('formulario-dass21');
+
+        // Marcar preguntas contestadas
+        formulario.addEventListener('change', function(event) {
+            if (event.target.type === 'radio') {
+                const numeroPregunta = event.target.name.replace('pregunta', '');
+                const itemPregunta = document.querySelector(`.item-pregunta[data-pregunta="${numeroPregunta}"]`);
+                itemPregunta.classList.add('contestada');
+            }
+        });
+
+        // Navegación entre preguntas
+        itemsPregunta.forEach(item => {
+            item.addEventListener('click', function() {
+                const numeroPregunta = this.getAttribute('data-pregunta');
+                const pregunta = document.getElementById(`pregunta${numeroPregunta}`);
+                pregunta.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    });
+</script>
+{% endblock %}

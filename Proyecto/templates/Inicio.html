@@ -6,19 +6,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UNL</title>
     <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css')}}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/slick.css')}}" type="text/css" /> 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/templatemo-style.css')}}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/texto.css')}}">
-<!--
-    
-TemplateMo 560 Astro Motion
-
-https://templatemo.com/tm-560-astro-motion
-
--->
 </head>
 <body>
+  <style>
+    /* Agrega o modifica estas clases en tu archivo CSS */
+    .tm-bg-dark {
+      background-color: rgba(0, 0, 0, 0.8);
+      /* Aumenta la opacidad para un fondo más oscuro */
+      padding: 20px;
+      border-radius: 10px;
+    }
+
+    .intro-left {
+      background-color: rgba(0, 0, 0, 0.8);
+      /* Asegúrate de que el fondo sea oscuro */
+      padding: 20px;
+      border-radius: 10px;
+    }
+
+    .alert-danger {
+      background-color: rgba(255, 0, 0, 0.8);
+      /* Fondo rojo oscuro para mensajes de error */
+      color: white;
+      border-radius: 5px;
+      padding: 10px;
+    }
+  </style>
     <video autoplay muted loop id="bg-video">
       <source src="{{ url_for('static', filename='video/UNL.mp4') }}" type="video/mp4">
     </video>
@@ -43,11 +60,7 @@ https://templatemo.com/tm-560-astro-motion
                       <div class="circle"></div>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link" href="#0" data-no="3">Recuperar Cuenta</a>
-                      <div class="circle"></div>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link" href="#0" data-no="4">Contact</a>
+                      <a class="nav-link" href="/recuperarCuenta" data-no="3">Recuperar Cuenta</a>
                       <div class="circle"></div>
                     </li>
                   </ul>
@@ -65,12 +78,25 @@ https://templatemo.com/tm-560-astro-motion
                 <div class="intro-left tm-bg-dark">
                   <h2 class="mb-4"><B>¡Bienvenido!</B></h2>
                   <div class="">
-                    <form action="#" method="POST" class="contact-form">
+                    <!-- Mensajes Flash -->
+                    {% with messages = get_flashed_messages(category_filter='error', with_categories=true) %}
+                      {% if messages %}
+                        <div class="alert alert-danger d-flex align-items-center" role="alert">
+                          <i class="bi bi-exclamation-circle-fill me-2"></i> <!-- Ícono de error -->
+                          <div>
+                            {% for category, message in messages %}
+                              <p class="mb-4">{{ message }}</p>
+                            {% endfor %}
+                          </div>
+                        </div>
+                      {% endif %}
+                    {% endwith %}
+                    <form action="/login" method="POST" class="contact-form" onsubmit="showLoading()">
                       <div class="input-group tm-mb-30">
-                          <input name="name" type="text" class="form-control rounded-0 border-top-0 border-end-0 border-start-0" placeholder="Correo">
+                          <input name="correo" type="text" class="form-control rounded-0 border-top-0 border-end-0 border-start-0" placeholder="Correo" required title="Por favor ingrese su correo">
                       </div>
                       <div class="input-group tm-mb-30">
-                          <input name="email" type="text" class="form-control rounded-0 border-top-0 border-end-0 border-start-0" placeholder="Contraseña">
+                          <input name="contrasenia" type="password" class="form-control rounded-0 border-top-0 border-end-0 border-start-0" placeholder="Contraseña" required title="Por favor ingrese su contraseña">
                       </div>
                       <div class="input-group justify-content-end">
                           <input type="submit" class="btn btn-primary tm-btn-pad-2" value="Iniciar Sesión">
@@ -79,8 +105,8 @@ https://templatemo.com/tm-560-astro-motion
                   </div>
                 </div>
                 <div class="intro-right">
-                  <img src="{{ url_for('static', filename='img/home-img-1.jpg')}}" alt="Image" class="img-fluid intro-img-1">
-                  <img src="{{ url_for('static', filename='img/home-img-2.jpg')}}" alt="Image" class="img-fluid intro-img-2">
+                  <!-- <img src="{{ url_for('static', filename='img/home-img-1.jpg')}}" alt="Image" class="img-fluid intro-img-1">
+                  <img src="{{ url_for('static', filename='img/home-img-2.jpg')}}" alt="Image" class="img-fluid intro-img-2"> -->
                 </div>
                 <div class="circle intro-circle-1"></div>
                 <div class="circle intro-circle-2"></div>
@@ -88,9 +114,9 @@ https://templatemo.com/tm-560-astro-motion
                 <div class="circle intro-circle-4"></div>
               </div>
               <div class="text-center">
-                <a href="#0" data-page-no="2" class="btn btn-primary tm-intro-btn tm-page-link">
+                <!-- <a href="#0" data-page-no="2" class="btn btn-primary tm-intro-btn tm-page-link">
                   View Gallery
-                </a>
+                </a> -->
               </div>            
             </div>            
           </li>
@@ -104,31 +130,34 @@ https://templatemo.com/tm-560-astro-motion
               <div class="circle intro-circle-2"></div>
               <div class="mx-auto tm-border-top gallery-slider">
                 <figure class="effect-julia item">
+                  <a href="/registrarEstudiante">
                     <img src="{{ url_for('static', filename='img/estudiante.png')}}" alt="Image">
                     <figcaption>
                         <div>       
                             <p>ESTUDIANTE</p>
                         </div>
-                        <a href="#">View more</a>
                     </figcaption>
+                  </a>
                 </figure>
                 <figure class="effect-julia item">
+                  <a href="/registrarDocente">
                     <img src="{{ url_for('static', filename='img/docente.png')}}" alt="Image">
                     <figcaption>
                         <div>
-                            <p>DOCENTE</p>
+                          <p>DOCENTE</p>
                         </div>
-                        <a href="#">View more</a>
                     </figcaption>
+                  </a>
                 </figure>
                 <figure class="effect-julia item">
+                  <a href="/registrarAdministrador"> <!-- Mueve el enlace aquí -->
                     <img src="{{ url_for('static', filename='img/administrador.jpg')}}" alt="Image">
                     <figcaption>
                         <div>
                             <p>ADMINISTRADOR</p>
                         </div>
-                        <a href="#">View more</a>
                     </figcaption>
+                  </a>
                 </figure>
               </div>
             </div>
@@ -213,15 +242,17 @@ https://templatemo.com/tm-560-astro-motion
       </footer>
     </div>
   </div>
+  
   <!-- Preloader, https://ihatetomatoes.net/create-custom-preloading-screen/ -->
   <div id="loader-wrapper">            
     <div id="loader"></div>
     <div class="loader-section section-left"></div>
     <div class="loader-section section-right"></div>
   </div>  
-  <script src="{{ url_for('static', filename='js/jquery-3.5.1.min.js')}}"></script>
-  <script src="{{ url_for('static', filename='js/bootstrap.min.js')}}"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="{{ url_for('static', filename='js/slick.js')}}"></script>
   <script src="{{ url_for('static', filename='js/templatemo-script.js')}}"></script>
+  
 </body>
 </html>

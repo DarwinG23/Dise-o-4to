@@ -58,7 +58,10 @@ class QuickSort:
         i = low - 1
         pivot = array[high]
         for j in range(low, high):
-            if getattr(array[j], atribute) <= getattr(pivot, atribute):
+            if getattr(array[j], atribute) is None or getattr(pivot, atribute) is None:
+                # Maneja el caso donde ambos son None, por ejemplo, mantenlos en su lugar
+                continue
+            elif getattr(array[j], atribute) <= getattr(pivot, atribute):
                 i += 1
                 aux = array[i]
                 array[i] = array[j]
