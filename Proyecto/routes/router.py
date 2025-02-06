@@ -306,7 +306,7 @@ def subir_tarea():
     cursos = eval(data["cursos"])
     usuario = data["usuario"]
     #Pasamos el string (usuario) a un diccionario 
-    usuario = re.sub(r"datetime\.datetime\((\d+), (\d+), (\d+), (\d+), (\d+)\)", r'"\1-\2-\3 \4:\5"', usuario)
+    usuario = re.sub(r"datetime\.datetime\((\d+), (\d+), (\d+), (\d+), (\d+)\)", r'"\1-\2-\3 F\4:\5"', usuario)
     usuario = usuario.replace("'", '"')
     usuario = json.loads(usuario)
     tc = TareaControl()
@@ -1080,6 +1080,29 @@ def verCursoDocentePost(roles, usuario,nombreU, apellidoU, cursos, tiene):
     
     return render_template('/docente/crud/listaTareasDocentes.html', roles = roles, nombreU = nombreU, apellidoU = apellidoU, cursos = cursos, tiene = tiene, curso = curso, usuario = usuario, tareas = tc.to_dic_lista(tareas), tests = testc.to_dic_lista(examenes))
 
+#/docente/verEstudiantes/curso
+@router.route('/docente/verEstudiantes', methods=['POST'])
+def verEstudiantesCurso():
+    data = request.form
+    cursos = eval(data["cursos"])
+    usuario = data["usuario"]
+    usuario = re.sub(r"datetime\.datetime\((\d+), (\d+), (\d+), (\d+), (\d+)\)", r'"\1-\2-\3 \4:\5"', usuario)
+    usuario = usuario.replace("'", '"')
+    usuario = json.loads(usuario)
+    ec = EstudianteControl()
+    uc = UsuarioControl()
+    print("#################Data######################")
+    print(data)
+    estudiantes = ec._list().lineal_binary_search_models_id(data["idCurso"], "_idCurso")
+    usuarios = uc._list()
+    if estudiantes == -1:
+        estudiantes = Linked_List()
+    if usuarios == -1:
+        usuarios = Linked_List()
+        
+    return render_template('/docente/verEstudiantesCurso.html', cursos = cursos, usuario = usuario, estudiantes = ec.to_dic_lista(estudiantes), idCurso = data["idCurso"],usuarios = uc.to_dic_lista(usuarios), nombreU = usuario["nombre"], apellidoU = usuario["apellido"])
+    
+    
 @router.route('/agregarTest/<roles>/<idCurso>/<usuario>/<tiene>', methods=['POST'])
 def agregarTest(roles, idCurso,usuario, tiene):
     cc = CursoControl()
@@ -1598,6 +1621,32 @@ def asignarCurso(roles, nombreU, apellidoU):
 def estadisticas():
     # Datos de ejemplo para las estadísticas del estudiante
     return render_template('estadisticas/estadisticasEstudiantes.html')
+
+router.route('/pruebaEst', methods=['POST'])
+def estadisticasPost():
+    data = request.form
+    cursos = eval(data["cursos"])
+    usuario = data["usuario"]
+    usuario = re.sub(r"datetime\.datetime\((\d+), (\d+), (\d+), (\d+), (\d+)\)", r'"\1-\2-\3 \4:\5"', usuario)
+    usuario = usuario.replace("'", '"')
+    usuario = json.loads(usuario)
+    
+    cursos = eval(data["cursos"])
+    usuario = data["usuario"]
+    tiene = data["tiene"]
+    roles = data["roles"]
+    nombreU = data["nombreU"]
+    apellidoU = data["apellidoU"]
+    idCurso = data["idCurso"]
+    idEstudiante = data["idEstudiante"]
+    
+    
+    cursos = eval(data["cursos"])
+    usuario = data["usuario"]
+    usuario = re.sub(r"datetime\.datetime\((\d+), (\d+), (\d+), (\d+), (\d+)\)", r'"\1-\2-\3 \4:\5"', usuario)
+    usuario = usuario.replace("'", '"')
+    usuario = json.loads(usuario)
+    return render_template('estadisticas/estadisticasEstudiantes.html', cursos = cursos, usuario = usuario, tiene = tiene, roles = roles, nombreU = nombreU, apellidoU = apellidoU, idCurso = idCurso, idEstudiante = idEstudiante)
 
 @router.route('/estadisticas/individual', methods=['GET'])
 def estadisticas_individual():
