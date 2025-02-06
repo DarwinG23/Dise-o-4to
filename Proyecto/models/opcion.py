@@ -5,6 +5,16 @@ class Opcion:
         self.__estado = ""
         self.__valor = 0
         self.__idPregunta = 0
+        self.__id = 0
+
+    @property
+    def _id(self):
+        return self.__id
+
+    @_id.setter
+    def _id(self, value):
+        self.__id = value
+
 
     @property
     def _opcion(self):
@@ -41,6 +51,7 @@ class Opcion:
     @property
     def serializable(self):
         return {
+            "id": self.__id,
             "opcion": self.__opcion,
             "estado": self.__estado,
             "valor": self.__valor,
@@ -49,8 +60,13 @@ class Opcion:
     @classmethod
     def deserializar(self, data):
         opcion = Opcion()
+        opcion._opcion = data["id"]
         opcion._opcion = data["opcion"]
         opcion._estado = data["estado"]
         opcion._valor = data["valor"]
         opcion._idPregunta = data["idpregunta"]
         return opcion
+    
+    
+    def __str__(self):
+        return str(self._opcion) + " " + str(self._idPregunta)

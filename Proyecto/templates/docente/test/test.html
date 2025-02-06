@@ -1,5 +1,24 @@
 {% extends 'estudiante/estudianteInicio.html' %}
 
+{%block cursos%}
+    {% if tiene == "Verdadero" %}
+    {% for curso in cursos %}
+        {% if curso.nombre != "Sin cursos" %}
+                <form action="/docente/curso/ver/{{roles}}/{{usuario}}/{{nombreU}}/{{apellidoU}}/{{cursos}}/{{tiene}}" method="POST" id="cursoForm{{ curso.id }}">
+                    <li>
+                        <a href="#" onclick="document.getElementById('cursoForm{{ curso.id }}').submit();">
+                            <i class="fas fa-book"></i> {{ curso.nombre }}
+                        </a>
+                        <input type="hidden" name="idCurso" value="{{ curso.id }}">
+                    </li>
+                </form>
+        {% endif %}
+    {% endfor %}
+    {% else %}
+    <li><a href="#"><i class="fas fa-book"></i> Sin cursos</a></li>
+    {% endif %}
+{%endblock%}
+
 {% block content %}
 <style>
     .card-title {
@@ -44,6 +63,9 @@
         padding: 15px;
         border-radius: 8px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        position: fixed;
+        top: 100px; /* Ajusta este valor para bajar más el div */
+        right: 20px;
     }
 
     .seccion-progreso h5 {
@@ -75,6 +97,10 @@
         color: white;
     }
 
+    .item-pregunta.seleccionada {
+        border: 2px solid #0056b3;
+    }
+
     .item-pregunta:hover {
         background-color: #004099;
         color: white;
@@ -87,14 +113,17 @@
     }
 </style>
 
-<h1 class="text-primary">Test DASS-21</h1>
-<p class="text-muted">El test DASS-21 evalúa los niveles de depresión, ansiedad y estrés. Por favor, selecciona la respuesta que mejor describa cómo te has sentido durante la última semana.</p>
+<h1 class="text-primary" style="margin-top: 10%;">Test: {{test.nombre}}</h1>
+<p class="text-muted">{{test.descripcion}}</p>
 
 <div class="contenedor-flexible">
     <!-- Sección de preguntas (izquierda) -->
     <div class="seccion-preguntas">
         <form id="formulario-dass21" method="POST" action="/submit-test">
-             <!-- Pregunta 1 -->
+            <!-- Campo oculto para el ID del test -->
+            <input type="hidden" name="idTest" value="{{ test.id }}">
+
+            <!-- Pregunta 1 -->
             {% for pregunta in preguntas %}
                 <div class="card p-3 mb-3 shadow-sm" id="pregunta{{ loop.index }}">
                     <h5 class="card-title text-primary">{{ loop.index }}. {{ pregunta.pregunta }}</h5>
@@ -110,51 +139,60 @@
                     </div>
                 </div>
             {% endfor %}
-            <div class="text-center mt-4">
-                <button type="submit" class="btn btn-primary btn-lg shadow-sm">
-                    <i class="fas fa-paper-plane"></i> Terminar Test
-                </button>
-                <!-- Solo es para pobrar que te manda al resultado -->
-                <a class="btn btn-primary btn-terminar" href="/estudiante/resultado/ver">Terminar Tests</a>
-            </div>
+
         </form>
     </div>
 
     <!-- Sección de progreso (derecha) -->
     <div class="seccion-progreso">
-        <h5>Progreso del Test</h5>
+        <h5>Preguntas</h5>
         <div class="lista-preguntas">
-            <div class="item-pregunta" data-pregunta="1">1</div>
-            <div class="item-pregunta" data-pregunta="2">2</div>
-            <div class="item-pregunta" data-pregunta="3">3</div>
-            <!-- Agrega más ítems de preguntas aquí -->
+            {% for pregunta in preguntas %}
+                <div class="item-pregunta" data-pregunta="{{ loop.index }}">{{ loop.index }}</div>
+            {% endfor %}
         </div>
-        <button class="btn btn-primary btn-terminar" onclick="document.getElementById('formulario-dass21').submit()">
-            Terminar Test
-        </button>
+        <!-- /agregarTest/<roles>/<idCurso>/<usuario>/</tiene> -->
+        <form id="formulario" action="/agregarTest/{{roles}}/{{curso}}/{{usuario}}/{{tiene}}" method="POST">
+            <input type="hidden" name="cursos" value="{{cursos}}">
+            <input type="hidden" name="usuario" value="{{usuario}}">
+            <input type="hidden" name="usuarios_seleccionados" value="{{seleccionados}}">
+            <button type="submit" class="btn btn-primary">Regresar</button>
+        </form>
     </div>
 </div>
 
 <script>
+
     document.addEventListener('DOMContentLoaded', function() {
         const itemsPregunta = document.querySelectorAll('.item-pregunta');
-        const formulario = document.getElementById('formulario-dass21');
-
-        // Marcar preguntas contestadas
-        formulario.addEventListener('change', function(event) {
-            if (event.target.type === 'radio') {
-                const numeroPregunta = event.target.name.replace('pregunta', '');
-                const itemPregunta = document.querySelector(`.item-pregunta[data-pregunta="${numeroPregunta}"]`);
-                itemPregunta.classList.add('contestada');
-            }
-        });
+        const formChecks = document.querySelectorAll('.form-check-input');
 
         // Navegación entre preguntas
-        itemsPregunta.forEach(item => {
+        itemsPregunta.forEach((item, index) => {
+            item.setAttribute('data-pregunta', index + 1); // Asegura que el atributo de data es correcto
+
             item.addEventListener('click', function() {
                 const numeroPregunta = this.getAttribute('data-pregunta');
                 const pregunta = document.getElementById(`pregunta${numeroPregunta}`);
-                pregunta.scrollIntoView({ behavior: 'smooth' });
+
+                if (pregunta) {
+                    pregunta.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+
+                // Marcar la pregunta seleccionada
+                itemsPregunta.forEach((i) => i.classList.remove('seleccionada'));
+                this.classList.add('seleccionada');
+            });
+        });
+
+        // Colorear número de pregunta en progreso cuando se responde
+        formChecks.forEach((check) => {
+            check.addEventListener('change', function() {
+                const preguntaId = this.name.replace('pregunta', '');
+                const itemPregunta = document.querySelector(`.item-pregunta[data-pregunta="${preguntaId}"]`);
+                if (itemPregunta) {
+                    itemPregunta.classList.add('contestada');
+                }
             });
         });
     });

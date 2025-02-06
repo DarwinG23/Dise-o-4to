@@ -64,13 +64,13 @@
         <!-- Sección de Tests -->
         <div>
             <h5 class="fw-bold text-primary">📝 TESTS</h5>
-            {% for test in test %}
+            {% for test in tests %}
                 <form action="/docente/lista/test/presentadas" method="POST" id="formTest_{{test.id}}">
                     <!-- Campos ocultos para enviar los valores -->
                     <input type="hidden" name="roles" value="{{ roles }}">
                     <input type="hidden" name="usuario" value="{{ usuario }}">
                     <input type="hidden" name="idCurso" value="{{ idCurso }}">
-                    <input type="hidden" name="idTarea" value="{{ tarea.id }}">
+                    <input type="hidden" name="idTarea" value="{{ test.id }}">
                     <input type="hidden" name="cursos" value="{{ cursos }}">
                     <input type="hidden" name="tiene" value="{{ tiene }}">
 
@@ -83,7 +83,9 @@
                     </div>
                 </form>
             {% endfor %}
-            <a href="/agregarTest/{{roles}}/{{curso}}/{{usuario}}/{{cursos}}/{{tiene}}" class="btn btn-primary" style="margin-top: 1%;">Agregar Test</a>
+            <!-- /docente/seleccionar/estudiante/<roles>/<usuario>/<cursos>/<tiene>/<idCurso> -->
+                <!-- /agregarTest/{{roles}}/{{curso.id}}/{{usuario}}/{{cursos}}/{{tiene}} -->
+            <a href="/docente/seleccionar/estudiante/{{roles}}/{{usuario}}/{{cursos}}/{{tiene}}/{{curso.id}}" class="btn btn-primary" style="margin-top: 1%;">Agregar Test</a>
         </div>
     </div>
 </div>

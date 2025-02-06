@@ -93,9 +93,13 @@ class Test:
         pc = PreguntaControl()
         preguntas = pc._list()
         if not preguntas.isEmpty:
-            preguntas = preguntas.lineal_binary_search_models(str(test._id),"_idTest")
+            preguntas = preguntas.lineal_binary_search_models_id(test._id,"_idTest")
         test._preguntas = preguntas
         return test
+    
+    
+    def __str__(self):
+        return f"{self.__id} {self.__nombre} {self.__descripcion} {self.__idAsignacion}"
 
         
 

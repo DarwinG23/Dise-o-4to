@@ -79,6 +79,9 @@ class Pregunta:
         oc = OpcionControl()
         opciones = oc._list()
         if not opciones.isEmpty:
-            opciones = opciones.lineal_binary_search_models(str(pregunta._id),"_idPregunta")
+            opciones = opciones.lineal_binary_search_models_id(pregunta._id,"_idPregunta")
         pregunta._opciones = opciones
         return pregunta
+    
+    def __str__(self):
+        return f"{self.__pregunta}"

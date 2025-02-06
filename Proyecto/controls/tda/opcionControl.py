@@ -27,8 +27,6 @@ class OpcionControl(DaoAdapter):
         self._merge(self._opcion, pos)
         
     def crearOpcion(self, opcion, estado, valor, idPregunta):
-        print("Creando opcion")
-        print(opcion)
         self._opcion._opcion = opcion
         self._opcion._estado = estado
         self._opcion._valor = valor

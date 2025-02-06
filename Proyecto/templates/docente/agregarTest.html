@@ -1,5 +1,4 @@
 {% extends 'estudiante/estudianteInicio.html' %}
-
 {%block cursos%}
     {% if tiene == "Verdadero" %}
     {% for curso in cursos %}
@@ -201,8 +200,9 @@
         <h1>Tus tests</h1>
         <div class="course-container">
             <a href="/docente/crearTestGet/{{roles}}/{{usuario}}/{{cursos}}/{{tiene}}" class="btn btn-primary" style="margin-top: 1%;">Crear Test</a>
-        </div>
 
+        </div>
+ 
         <!-- Modal de Confirmación -->
         <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -246,8 +246,65 @@
 
                 // Agregar el comportamiento de confirmación con la ruta correspondiente
                 $('#confirmRedirectBtn').off('click').on('click', function() {
-                    // Redirigir a la ruta de asignación del test
-                    window.location.href = '/asignarTest/' + testId;
+                    // Crear un formulario dinámico para enviar los datos por POST
+                    var form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = '/asignarTest';  // Ruta a la que se enviará el formulario
+                    
+                    // Crear input para testId
+                    var inputTestId = document.createElement('input');
+                    inputTestId.type = 'hidden';
+                    inputTestId.name = 'testId';
+                    inputTestId.value = testId;
+
+                    // Crear input para roles
+                    var inputRoles = document.createElement('input');
+                    inputRoles.type = 'hidden';
+                    inputRoles.name = 'roles';
+                    inputRoles.value = '{{roles}}';
+
+                    // Crear input para usuario
+                    var inputUsuario = document.createElement('input');
+                    inputUsuario.type = 'hidden';
+                    inputUsuario.name = 'usuario';
+                    inputUsuario.value = '{{usuario}}';
+
+                    // Crear input para cursos
+                    var inputCursos = document.createElement('input');
+                    inputCursos.type = 'hidden';
+                    inputCursos.name = 'cursos';
+                    inputCursos.value = '{{cursos}}';
+
+                    // Crear input para tiene
+                    var inputTiene = document.createElement('input');
+                    inputTiene.type = 'hidden';
+                    inputTiene.name = 'tiene';
+                    inputTiene.value = '{{tiene}}';
+
+                    // Crear input para seleccionados
+                    var inputSeleccionados = document.createElement('input');
+                    inputSeleccionados.type = 'hidden';
+                    inputSeleccionados.name = 'seleccionados';
+                    inputSeleccionados.value = '{{seleccionados}}';
+                
+                    //Crear input para idCurso
+                    var inputIdCurso = document.createElement('input');
+                    inputIdCurso.type = 'hidden';
+                    inputIdCurso.name = 'idCurso';
+                    inputIdCurso.value = '{{idCurso}}';
+
+                    // Agregar los inputs al formulario
+                    form.appendChild(inputTestId);
+                    form.appendChild(inputRoles);
+                    form.appendChild(inputUsuario);
+                    form.appendChild(inputCursos);
+                    form.appendChild(inputTiene);
+                    form.appendChild(inputSeleccionados);
+                    form.appendChild(inputIdCurso);
+
+                    // Agregar el formulario al documento y enviarlo
+                    document.body.appendChild(form);
+                    form.submit();
                 });
             });
         });
@@ -258,17 +315,24 @@
 
             // Solo enviar el formulario de Visualizar, no mostrar el modal
             var form = document.createElement('form');
-            form.action = '/docente/test/ver/{{roles}}/{{curso}}/{{usuario}}/{{cursos}}/{{tiene}}'; 
+            form.action = '/docente/test/ver/{{roles}}/{{idCurso}}/{{tiene}}/{{seleccionados}}/{{usuario}}'; 
             form.method = 'POST';
             
             // Crear un campo oculto para el ID del test
-            var input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'idTest';
-            input.value = testId;
+            var inputTestId = document.createElement('input');
+            inputTestId.type = 'hidden';
+            inputTestId.name = 'idTest';
+            inputTestId.value = testId;
             
-            // Añadir el input al formulario y enviarlo
-            form.appendChild(input);
+            // Crear un campo oculto para cursos
+            var inputCursos = document.createElement('input');
+            inputCursos.type = 'hidden';
+            inputCursos.name = 'cursos';
+            inputCursos.value = '{{cursos}}';
+            
+            // Añadir los inputs al formulario y enviarlo
+            form.appendChild(inputTestId);
+            form.appendChild(inputCursos);
             document.body.appendChild(form);
             form.submit();
         }

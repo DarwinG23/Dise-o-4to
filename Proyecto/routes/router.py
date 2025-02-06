@@ -88,6 +88,33 @@ def login():
             flash('Esta cuenta no tiene un rol asignado', 'error')
             return render_template('inicio.html')
 
+#____________________Recuperar Contraseña_______________________#
+@router.route('/recuperarCuenta', methods=['GET'])
+def recuperarCuentaVer():
+    return render_template('presentacion/recuperarCuenta.html')
+
+@router.route('/recuperarContrasena', methods=['GET', 'POST'])
+def recuperarCuenta():
+    contrasena = None
+
+    if request.method == 'POST':
+        correo = request.form.get("correo")
+
+        if not correo:
+            return render_template('recuperarCuenta.html', error="Por favor, ingresa un correo válido.")
+
+        cc = CuentaControl()
+        cuenta = cc._list().binary_search_models(correo, "_correo")
+
+        if cuenta == -1:
+            return render_template('recuperarCuenta.html', error="El correo ingresado no está registrado.")
+
+        contrasena = cuenta._contrasena  # Obtener la contraseña
+
+    return render_template('presentacion/recuperarCuenta.html', contrasena=contrasena)
+
+
+
 @router.route('/confirmar-regreso', methods=["GET", "POST"])
 def confirmar_regreso():
     if current_user.is_authenticated:  
@@ -236,6 +263,42 @@ def testInicio(roles, usuario, nombreU, apellidoU, tiene, cursos):
 def testInicioPost():
     return render_template('/estudiante/testsE/inicioTest.html')
 
+#/estudiante/responderTest
+@router.route('/estudiante/responderTest', methods=['POST'])
+def responderTest():
+    data = request.form
+    cursos = eval(data["cursos"])
+    usuario= data["usuario"]
+    usuario = re.sub(r"datetime\.datetime\((\d+), (\d+), (\d+), (\d+), (\d+)\)", r'"\1-\2-\3 \4:\5"', usuario)
+    usuario = usuario.replace("'", '"')
+    usuario = json.loads(usuario)
+    tc = TestControl()
+    ee = EntregaControl()
+    ac = AsignacionControl()
+    
+
+    tests = tc._list()
+    test = -1
+    if not tests.isEmpty:
+        test = tests.binary_search_models_id(data["idTest"], "_id")
+    
+    
+    
+    preguntas = test._preguntas
+    preguntas.sort_models("_id", 1, 4)
+    
+    opcionesT = Linked_List()
+    for pregunta in preguntas.toArray:
+        opcionesP = pregunta._opciones
+        for opcion in opcionesP.toArray:
+            opcionesT.addNode(opcion)
+    
+    
+    opcionesT.sort_models("_id", 1, 4)
+    
+    return render_template('/estudiante/testsE/test.html',  roles = data["roles"], usuario = usuario, cursos = cursos, tiene = data["tiene"], test = test.serializable, preguntas = tc.to_dic_lista(preguntas), opciones = tc.to_dic_lista(opcionesT), nombreU = usuario["nombre"], apellidoU = usuario["apellido"])
+    
+
 
 @router.route('/estudiante/subirTarea', methods=['POST'])
 def subir_tarea():
@@ -340,14 +403,28 @@ def verCursoEstudiantePost(roles, usuario,nombreU, apellidoU, cursos, tiene):
     cc = CursoControl()
     ac= AsignacionControl()
     tc = TareaControl()
-    curso = cc._list().binary_search_models(id, "_id")
-    asignaciones = ac._list().lineal_binary_search_models(id, "_idCurso")
+    testC = TestControl()
+    print("ID CURSO: ", id)
+    curso = cc._list().binary_search_models_id(id, "_id")
+    if curso != -1:
+        curso = curso.serializable
+    asignaciones = ac._list().lineal_binary_search_models_id(id, "_idCurso")
     tareas = Linked_List()
+    tests = Linked_List()
     for asignacion in asignaciones.toArray:
-        tarea = tc._list().binary_search_models(str(asignacion._id), "_idAsignacion")
-        tareas.addNode(tarea)
+        tarea = tc._list().binary_search_models_id(asignacion._id, "_idAsignacion")
+        if tarea != -1:
+            tareas.addNode(tarea)
+        #carga los tests
+        test = testC._list().binary_search_models_id(asignacion._id, "_idAsignacion")
+        if test != -1 and test._idAsignacion != None:
+            tests.addNode(test)
+            
+    #imprime los tests
+    print("AHORA SI Tests: ")
+    tests.print
     
-    return render_template('/estudiante/curso/curso.html', roles = roles, nombreU = nombreU, apellidoU = apellidoU, cursos = cursos, tiene = tiene, curso = curso.serializable, usuario = usuario, tareas = tc.to_dic_lista(tareas))
+    return render_template('/estudiante/curso/curso.html', roles = roles, nombreU = nombreU, apellidoU = apellidoU, cursos = cursos, tiene = tiene, curso = curso, usuario = usuario, tareas = tc.to_dic_lista(tareas), tests = tc.to_dic_lista(tests))
     
 
 
@@ -394,10 +471,67 @@ def docente():
 def docenteInicio():
     return render_template('/docente/docenteCursos.html')
 
+# {{roles}}/{{curso}}/{{tiene}}/{{usuario}}
+@router.route('/docente/test/ver/<roles>/<curso>/<tiene>/<seleccionados>/<usuario>', methods=['Post'])
+def verTestsDocente(roles, curso,tiene,seleccionados,usuario):
+    data = request.form
+    tc = TestControl()
+    cc = CursoControl()
+    dc = DocenteControl()
+    uc = UsuarioControl()
+    cursos = cc._list()
+    cursosDocente = Linked_List()
+    ususarios = uc._list()
+    docentes = dc._list()
+    
+    docente = -1
+    usuario = -1
+    idCurso = -1
+    try:
+        idCurso = curso._id
+    except:
+        idCurso = curso
 
-@router.route('/docente/test/ver/<roles>/<curso>/<usuario>/<cursos>/<tiene>')
-def verTestsDocente():
-    return render_template('/estudiante/testsE/test.html')
+
+    if not cursos.isEmpty and not docentes.isEmpty and not ususarios.isEmpty and idCurso != -1:
+        
+        cursoBd = cursos.binary_search_models_id(idCurso, "_id")
+        if cursoBd != -1:
+            docente = docentes.binary_search_models_id(cursoBd._idDocente, "_id")
+            if docente != -1:
+                usuario = ususarios.binary_search_models_id(docente._idUsuario, "_id")
+                
+   
+    if usuario != -1:
+        nombreU = usuario._nombre
+        apellidoU = usuario._apellido
+        usuario = usuario.serializable
+        if not cursos.isEmpty and docente != -1:
+            cursosDocente = cursos.lineal_binary_search_models_id(docente._id, "_idDocente")
+
+
+    
+    tests = tc._list()
+    test = -1
+    if not tests.isEmpty:
+        test = tests.binary_search_models_id(data["idTest"], "_id")
+    
+    
+    
+    preguntas = test._preguntas
+    preguntas.sort_models("_id", 1, 4)
+    
+    opcionesT = Linked_List()
+    for pregunta in preguntas.toArray:
+        opcionesP = pregunta._opciones
+        for opcion in opcionesP.toArray:
+            opcionesT.addNode(opcion)
+    
+    
+    opcionesT.sort_models("_id", 1, 4)
+    
+    
+    return render_template('/docente/test/test.html', cursos = cc.to_dic_lista(cursosDocente), roles = roles, curso = curso, tiene = tiene, usuario = usuario, nombreU = nombreU, apellidoU = apellidoU, test = test.serializable, preguntas = uc.to_dic_lista(preguntas), opciones = uc.to_dic_lista(opcionesT), seleccionados = seleccionados)
 
 
 
@@ -414,6 +548,102 @@ def verListaE():
 @router.route('/tarea', methods=['GET'])
 def asignarTarea():
     return render_template('/docente/asignarTarea.html')
+
+#/asignarTest/' + testId + '/{{roles}}/{{usuario}}/{{cursos}}/{{tiene}}/{{seleccionados}}
+import json
+import datetime
+import html
+@router.route('/asignarTest', methods=['POST'])
+def asignarTest():
+    data = request.form
+    cursos = data["cursos"]
+    #Pasamos el string (usuario) a un diccionario 
+    usuario = data["usuario"]
+    testId = data["testId"]
+    seleccionados = data["seleccionados"]
+    tiene = data["tiene"]
+    roles = data["roles"]
+    idCurso = data["idCurso"]
+    
+    usuario = html.unescape(usuario)  
+    usuario = usuario.replace("'", '"')
+    usuario = usuario.replace('datetime.datetime(', '"').replace(', 0, 0)', '"')
+    usuario = json.loads(usuario)
+    
+    #Pasamos el string (cursos) a un diccionario
+    cursos = html.unescape(cursos)
+    cursos = cursos.replace("'", '"')
+    cursos = json.loads(cursos)
+    
+    
+    ids = []
+    for i in seleccionados:
+        if i.isdigit():
+            ids.append(i)
+            
+    fecha = datetime.datetime.now()
+    fecha = fecha.strftime("%d/%m/%Y")
+    
+    fechaDos = datetime.datetime.now()
+    fechaDos = fechaDos.strftime("%d/%m/%Y")        
+    
+    #Creamos la asignacion
+    ac = AsignacionControl()
+    tc = TestControl()
+    ec = EstudianteControl()
+    dc = DocenteControl()
+    pc = PreguntaControl()
+    oc = OpcionControl()
+    docente = dc._list().binary_search_models_id(usuario["id"], "_idUsuario")
+    test = tc._list().binary_search_models_id(int(testId), "_id")
+    if test != -1 and docente != -1:
+        #recorre las ids
+        for id in ids:
+            estudiante = ec._list().binary_search_models_id(int(id), "_idUsuario")
+            if estudiante != -1:
+                ac.crearAsignacion(fecha, fechaDos, 1,1,estudiante._id,int(idCurso),docente._id,1)
+                
+    #obtengo el test 
+    test = tc._list().binary_search_models_id(int(testId), "_id")
+    if test != -1:
+        #ordeno las asignaciones
+        asignaciones = ac._list().lineal_binary_search_models_id(int(idCurso), "_idCurso")
+        asignaciones.sort_models("_id", 1, 4)
+        asignacion = asignaciones.getData(asignaciones._length-1)
+        #creo un nuevo test
+        tc.crearTest(test._nombre, test._descripcion, test._resultado, asignacion._id, None)
+        #obtengo el test id del test creado
+        tests = tc._list()
+        tests.sort_models("_id", 1, 4)
+        testNuevo = tests.getData(tests._length-1)
+        
+        preguntas = test._preguntas
+        
+        for pregunta in preguntas.toArray:
+            #creo una nueva pregunta
+            pc.crearPregunta(pregunta._pregunta, pregunta._estado,pregunta._respuesta, testNuevo._id)
+            
+            #obtengo la pregunta creada
+            preguntas = pc._list()
+            preguntas.sort_models("_id", 1, 4)
+            preguntaNueva = preguntas.getData(preguntas._length-1)
+            
+            #obtengo las opciones de la pregunta
+            opciones = pregunta._opciones
+            for opcion in opciones.toArray:
+                #creo una nueva opcion
+                oc.crearOpcion(opcion._opcion, opcion._estado,opcion._valor, preguntaNueva._id)
+        
+        
+        
+        
+    
+
+    if isinstance(usuario, str):
+        usuario = json.loads(usuario) 
+        
+    flash('Test asignado con exito', 'success') 
+    return render_template('/docente/docenteInicio.html', roles = roles, usuario = usuario, cursos = cursos, tiene = tiene, seleccionados = seleccionados, testId = testId, nombreU = usuario["nombre"], apellidoU = usuario["apellido"])
 
 
 #_____________________________________________DOCENTES VISTAS - DARWIN - DRAW_____________________________________________________#
@@ -589,6 +819,23 @@ def crearTareaPost(roles, idCurso, usuario, nombreU, apellidoU, cursos, tiene):
     
     return render_template('/docente/docenteInicio.html', roles = roles, nombreU = nombreU, apellidoU = apellidoU, cursos = cursos, tiene = tiene, usuario = usuario)
 
+@router.route('/docente/seleccionar/estudiante/<roles>/<usuario>/<cursos>/<tiene>/<idCurso>', methods=['GET'])
+def seleccionarEstudiante(roles, usuario, cursos, tiene, idCurso):
+    cursos = eval(cursos)
+    ec = EstudianteControl()
+    uc = UsuarioControl()
+    estudiantes = ec._list().lineal_binary_search_models_id(idCurso, "_idCurso")
+    if estudiantes == -1:
+        estudiantes = Linked_List()
+    
+    usuarios = Linked_List()
+    for estudiante in estudiantes.toArray:
+        usuario = uc._list().binary_search_models_id(estudiante._idUsuario, "_id")
+        if usuario != -1:
+            usuarios.addNode(usuario)
+    
+    return render_template('/docente/seleccionarEstudiante.html', roles = roles, usuario = usuario, cursos = cursos, tiene = tiene, estudiantes = ec.to_dic_lista(estudiantes), idCurso = idCurso, usuarios = uc.to_dic_lista(usuarios))
+
 @router.route('/docente/crearTestGet/<roles>/<usuario>/<cursos>/<tiene>', methods=['GET'])
 def crearTestGet(roles, usuario, cursos, tiene):
     cursos = eval(cursos)
@@ -599,59 +846,96 @@ def crearTestGet(roles, usuario, cursos, tiene):
 
 @router.route('/crearTestPost/<roles>/<usuario>/<cursos>/<tiene>', methods=['POST'])
 def creartestPost(roles,usuario,cursos,tiene):
+    data = request.form
+    print("Datos recibidos en request.form:")
+    for key in request.form:
+        print(f"{key}: {request.form[key]}")
     pc = PreguntaControl()
     tc = TestControl()
     oc = OpcionControl()
+    ac = AsignacionControl()
+    dc = DocenteControl()
+    nc = NotificacionControl()
+
+    cursos = eval(cursos)
     
     usuario = re.sub(r"datetime\.datetime\((\d+), (\d+), (\d+), (\d+), (\d+)\)", r'"\1-\2-\3 \4:\5"', usuario)
     usuario = usuario.replace("'", '"')
     usuario = json.loads(usuario)
     
-    fecha_inicio = request.form.get("fechaInicio")
-    fecha_fin = request.form.get("fechaFin")
+    
+    
+    fecha_inicio = data["fechaInicio"]
+    fecha_fin = data["fechaFin"]
+    
+    #formatea las fechas a dd/mm/yyyy
+    fecha_inicio = datetime.strptime(fecha_inicio, "%Y-%m-%d")
+    fecha_inicio = fecha_inicio.strftime("%d/%m/%Y")
+    fecha_fin = datetime.strptime(fecha_fin, "%Y-%m-%d")
+    fecha_fin = fecha_fin.strftime("%d/%m/%Y")
+    
+    docente = dc._list().binary_search_models_id(usuario["id"], "_idUsuario")
+    
+    ac.crearAsignacion(fecha_inicio,fecha_fin,1,1,None,None,docente._id,None)
+   
     titulo = request.form.get("titulo")
     descripcion = request.form.get("descripcion")
 
+
+    tc.crearTest(titulo, descripcion,None,None,None)
+
     preguntas = []
     contador = 1  
-
-    while True:
-        pregunta_key = f"pregunta-{contador}"
-        pregunta_texto = request.form.get(pregunta_key)
-
-        if not pregunta_texto:
-            break 
-
-        respuestas = []
-        respuesta_contador = 1  
-
-        while True:
-            respuesta_key = f"respuesta-{contador}-{respuesta_contador}"
-            valor_key = f"valor-{contador}-{respuesta_contador}"
-
-            respuesta_texto = request.form.get(respuesta_key)
-            respuesta_valor = request.form.get(valor_key)
-
-            if not respuesta_texto:
-                break  
-
-            respuestas.append({"texto": respuesta_texto, "valor": respuesta_valor})
-            respuesta_contador += 1
-
-        preguntas.append({"pregunta": pregunta_texto, "respuestas": respuestas})
-        contador += 1
     
-    print("######################################")
-    print({
-        "fecha_inicio": fecha_inicio,
-        "fecha_fin": fecha_fin,
-        "titulo": titulo,
-        "descripcion": descripcion,
-        "preguntas": preguntas
-    })
-    print("######################################")
+    tests = tc._list()
+    test = -1
+    if not tests.isEmpty:
+        tests.sort_models("_id",1,4)
+        test = tests.getData(tests._length-1)
+    
+    if test != -1:
+        while True:
+            pregunta_key = f"pregunta-{contador}"
+            pregunta_texto = request.form.get(pregunta_key)
 
-    return "Formulario recibido con éxito", 200
+            if not pregunta_texto:
+                break 
+            
+            pc.crearPregunta(pregunta_texto, 1,"Sin respuesta", test._id)
+            preguntasBd = pc._list()
+            if not preguntasBd.isEmpty:
+                
+                preguntasBd.sort_models("_id",1,4)
+                pregunta = preguntasBd.getData(preguntasBd._length-1)
+                if pregunta != -1:
+                    respuestas = []
+                    respuesta_contador = 1  
+
+                    while True:
+                        respuesta_key = f"respuesta-{contador}-{respuesta_contador}"
+                        valor_key = f"valor-{contador}-{respuesta_contador}"
+
+                        # Buscar respuestas en el request.form
+                        if respuesta_key in request.form:
+                            respuesta_texto = request.form[respuesta_key].strip()
+                            respuesta_valor = request.form.get(valor_key, "0").strip()  # Valor por defecto 0
+
+                            print(f"Guardando opción: {respuesta_texto} con valor {respuesta_valor}")
+                            oc.crearOpcion(respuesta_texto, 1, int(respuesta_valor), pregunta._id)
+
+                            respuestas.append({"texto": respuesta_texto, "valor": respuesta_valor})
+                        else:
+                            print(f"No se encontró {respuesta_key}, omitiendo.")
+
+                        # Seguir buscando hasta que no haya más respuestas
+                        respuesta_contador += 1
+                        if respuesta_contador > 10:  # Un límite de seguridad para evitar bucles infinitos
+                            break
+
+                    preguntas.append({"pregunta": pregunta_texto, "respuestas": respuestas})
+                    contador += 1
+            
+    return render_template('administrador/administrador.html', cursos = cursos, tiene = tiene, roles = roles, nombreU = usuario["nombre"], apellidoU = usuario["apellido"], usuario = usuario)
 
 @router.route('/crearTestAdminGet/<roles>/<usuario>/<cursos>/<tiene>', methods=['GET'])
 def crearTestGetAdmin(roles, usuario, cursos, tiene):
@@ -686,7 +970,6 @@ def crearTestPostAdmin(roles,usuario,cursos,tiene):
     if not admins.isEmpty:
         admin = ac._list().binary_search_models_id(usuario["id"], "_idUsuario")
     if admin != -1:
-      print("#####################TEST#################")
       tc.crearTest(titulo, descripcion,None,None,admin._id)
 
     preguntas = []
@@ -699,7 +982,6 @@ def crearTestPostAdmin(roles,usuario,cursos,tiene):
         test = tests.getData(tests._length-1)
     
     if test != -1:
-        print("#####################PREGUNTA#################")
         while True:
             pregunta_key = f"pregunta-{contador}"
             pregunta_texto = request.form.get(pregunta_key)
@@ -761,29 +1043,61 @@ def verCursoDocentePost(roles, usuario,nombreU, apellidoU, cursos, tiene):
     tareasBd = tc._list()
     testsBd = testc._list()
     tareas = Linked_List()
-    tests = Linked_List()
+    examenes = Linked_List()
+    #imprimiendo las asignaciones
+    print("######")
+    asignaciones.print
     for asignacion in asignaciones.toArray:
         tarea = "Sin tarea"
-        test = "Sin test"
+        examen = "Sin test"
         if not tareasBd.isEmpty:
             tarea = tareasBd.binary_search_models_id(asignacion._id, "_idAsignacion")
             if tarea != -1:
                 tareas.addNode(tarea)
         if not testsBd.isEmpty:
-            test = testsBd.binary_search_models_id(asignacion._id, "_idAsignacion")
-            if test != -1:
-               tests.addNode(test)
-            
+            examen = testsBd.binary_search_models_id(asignacion._id, "_idAsignacion")
+            if examen != -1 and examen._idAdministrador != None:
+               examenes.addNode(examen)
+               
+    print("######TESTS")
+    print("######TESTS")
+    print("######TESTS")
+    print("######TESTS")
+    examenes.print
+    print("######TESTS")
+    print("######TESTS")
+    print("######TESTS")
+    print("######TESTS")
+    print("######TESTS")
     
-    return render_template('/docente/crud/listaTareasDocentes.html', roles = roles, nombreU = nombreU, apellidoU = apellidoU, cursos = cursos, tiene = tiene, curso = curso, usuario = usuario, tareas = tc.to_dic_lista(tareas), tests = tc.to_dic_lista(tests))
-
-#/agregarTest/{{roles}}/{{usuario}}/{{cursos}}/{{tiene}}
-@router.route('/agregarTest/<roles>/<curso>/<usuario>/<cursos>/<tiene>', methods=['GET'])
-def agregarTest(roles, curso, usuario, cursos, tiene):
-    cursos = eval(cursos)
+    #imprime la longitud de examenes
+    print("Longitud de examenes: ", examenes._length)
+    print("############")
+    
     usuario = re.sub(r"datetime\.datetime\((\d+), (\d+), (\d+), (\d+), (\d+)\)", r'"\1-\2-\3 \4:\5"', usuario)
     usuario = usuario.replace("'", '"')
     usuario = json.loads(usuario)
+    
+    return render_template('/docente/crud/listaTareasDocentes.html', roles = roles, nombreU = nombreU, apellidoU = apellidoU, cursos = cursos, tiene = tiene, curso = curso, usuario = usuario, tareas = tc.to_dic_lista(tareas), tests = testc.to_dic_lista(examenes))
+
+@router.route('/agregarTest/<roles>/<idCurso>/<usuario>/<tiene>', methods=['POST'])
+def agregarTest(roles, idCurso,usuario, tiene):
+    cc = CursoControl()
+    dc = DocenteControl()
+    uc = UsuarioControl()
+    cursos = cc._list()
+    docente = -1
+    if not cursos.isEmpty:
+        curso = cursos.binary_search_models_id(idCurso, "_id")
+        docente = dc._list().binary_search_models_id(curso._idDocente, "_id")
+        
+    if docente != -1:
+        usuario = uc._list().binary_search_models_id(docente._idUsuario, "_id")
+        usuario = usuario.serializable
+        
+        
+    data = request.form
+    cursos = eval(data["cursos"])
 
     
     tc = TestControl()
@@ -797,8 +1111,12 @@ def agregarTest(roles, curso, usuario, cursos, tiene):
     bandera ="Verdadero"
     if testsAdmin.isEmpty:
         bandera = "Falso"
+
         
-    return render_template('docente/agregarTest.html', tests = tc.to_dic_lista(testsAdmin), bandera = bandera, usuario = usuario, nombreU=usuario["nombre"], apellidoU = usuario["apellido"], roles = roles, cursos = cursos, tiene = tiene, curso = curso)
+    return render_template('docente/agregarTest.html', tests = tc.to_dic_lista(testsAdmin), bandera = bandera, usuario = usuario, nombreU=usuario["nombre"], apellidoU = usuario["apellido"], roles = roles, cursos = cursos, tiene = tiene, idCurso = idCurso, seleccionados = data["usuarios_seleccionados"])
+
+
+
 
 #---------------------------------------------Administrador-----------------------------------------------------#
 @router.route('/administrador', methods=['GET'])
@@ -831,6 +1149,45 @@ def ordenar_usuarios(tipo, attr, metodo):
 def buscar_usuarios(tipo, data, attr):
     uc = UsuarioControl()
     list = uc._list()
+    if tipo == "1":
+        list = list.lineal_binary_search_models(data, attr)
+    elif tipo == "2":
+        dato = list.binary_search_models(data, attr)
+        list.clear
+        if dato != -1:     
+            list.addNode(dato)
+        
+    return make_response(
+        jsonify({"msg": "OK", "code": 200, "data": uc.to_dic_lista(list)}),
+        200
+    )
+    
+#ORDENA LOS USUARIOS
+@router.route('/usuarios/ordenar/<tipo>/<attr>/<metodo>/<usuarios>') 
+def ordenar_usuarios_docente(tipo, attr, metodo,usuarios):
+    usuarios = eval(usuarios)
+    uc = UsuarioControl()
+    list = Linked_List()
+    for usuario in usuarios:
+        list.addNode(usuario)
+    list.sort_models(attr,int(tipo),int(metodo))
+    return make_response(
+        jsonify({"msg": "OK", "code": 200, "data": uc.to_dic_lista(list)}),
+        200
+    )
+
+
+    
+#BUSCA LOS USUARIOS
+@router.route('/usuarios/busqueda/<tipo>/<data>/<attr>/<usuarios>')
+def buscar_usuarios_docente(tipo, data, attr, usuarios):
+    uc = UsuarioControl()
+    usuarios = eval(usuarios)
+    list = Linked_List()
+    for usuario in usuarios:
+        if usuario[attr] == data:
+            list.addNode(usuario)
+            
     if tipo == "1":
         list = list.lineal_binary_search_models(data, attr)
     elif tipo == "2":
