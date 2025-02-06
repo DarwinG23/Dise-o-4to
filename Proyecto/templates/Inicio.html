@@ -19,6 +19,30 @@ https://templatemo.com/tm-560-astro-motion
 -->
 </head>
 <body>
+  <style>
+    /* Agrega o modifica estas clases en tu archivo CSS */
+    .tm-bg-dark {
+      background-color: rgba(0, 0, 0, 0.8);
+      /* Aumenta la opacidad para un fondo más oscuro */
+      padding: 20px;
+      border-radius: 10px;
+    }
+
+    .intro-left {
+      background-color: rgba(0, 0, 0, 0.8);
+      /* Asegúrate de que el fondo sea oscuro */
+      padding: 20px;
+      border-radius: 10px;
+    }
+
+    .alert-danger {
+      background-color: rgba(255, 0, 0, 0.8);
+      /* Fondo rojo oscuro para mensajes de error */
+      color: white;
+      border-radius: 5px;
+      padding: 10px;
+    }
+  </style>
     <video autoplay muted loop id="bg-video">
       <source src="{{ url_for('static', filename='video/UNL.mp4') }}" type="video/mp4">
     </video>
