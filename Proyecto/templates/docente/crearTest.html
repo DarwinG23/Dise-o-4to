@@ -1,23 +1,23 @@
 {% extends 'estudiante/estudianteInicio.html' %}
 
-{%block cursos%}
+{% block cursos %}
     {% if tiene == "Verdadero" %}
     {% for curso in cursos %}
         {% if curso.nombre != "Sin cursos" %}
-                <form action="/docente/curso/ver/{{roles}}/{{usuario}}/{{nombreU}}/{{apellidoU}}/{{cursos}}/{{tiene}}" method="POST" id="cursoForm{{ curso.id }}">
-                    <li>
-                        <a href="#" onclick="document.getElementById('cursoForm{{ curso.id }}').submit();">
-                            <i class="fas fa-book"></i> {{ curso.nombre }}
-                        </a>
-                        <input type="hidden" name="idCurso" value="{{ curso.id }}">
-                    </li>
-                </form>
+            <form action="/docente/curso/ver/{{roles}}/{{usuario}}/{{nombreU}}/{{apellidoU}}/{{cursos}}/{{tiene}}" method="POST" id="cursoForm{{ curso.id }}">
+                <li>
+                    <a href="#" onclick="document.getElementById('cursoForm{{ curso.id }}').submit();">
+                        <i class="fas fa-book"></i> {{ curso.nombre }}
+                    </a>
+                    <input type="hidden" name="idCurso" value="{{ curso.id }}">
+                </li>
+            </form>
         {% endif %}
     {% endfor %}
     {% else %}
     <li><a href="#"><i class="fas fa-book"></i> Sin cursos</a></li>
     {% endif %}
-{%endblock%}
+{% endblock %}
 
 {% block content %}
 <head>
@@ -26,123 +26,152 @@
     <title>Formulario de Registro</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body {
-            background-color: #e3f2fd; /* Azul claro */
-        }
-        .btn-primary {
-            background-color: #0d6efd; /* Azul de Bootstrap */
-            border: none;
-        }
-        .btn-primary:hover {
-            background-color: #0b5ed7;
-        }
-        .question-card {
-            border: 1px solid #ddd;
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 5px;
-            background-color: #f8f9fa;
-        }
+        body { background-color: #e3f2fd; }
+        .btn-primary { background-color: #0d6efd; border: none; }
+        .btn-primary:hover { background-color: #0b5ed7; }
+        .question-card { border: 1px solid #ddd; padding: 10px; margin-bottom: 10px; border-radius: 5px; background-color: #f8f9fa; }
     </style>
 </head>
 <body>
     <div>
         <h2 class="text-center text-primary">Registro de test</h2>
-        <form>
+        <form method="POST" action="/crearTestPost/{{roles}}/{{usuario}}/{{cursos}}/{{tiene}}" onsubmit="return validarFormulario()">
             <div class="mb-3">
                 <label for="fechaInicio" class="form-label">Fecha de Inicio</label>
-                <input type="date" class="form-control" id="fechaInicio" required>
+                <input type="date" name="fechaInicio" class="form-control" id="fechaInicio" required>
             </div>
             <div class="mb-3">
                 <label for="fechaFin" class="form-label">Fecha de Fin</label>
-                <input type="date" class="form-control" id="fechaFin" required>
+                <input type="date" name="fechaFin" class="form-control" id="fechaFin" required>
             </div>
             <div class="mb-3">
                 <label for="titulo" class="form-label">Nombre</label>
-                <input type="text" class="form-control" id="titulo" placeholder="Ingrese el título" required>
+                <input type="text" class="form-control" name="titulo" id="titulo" placeholder="Ingrese el título" required>
             </div>
             <div class="mb-3">
                 <label for="descripcion" class="form-label">Descripción</label>
-                <textarea class="form-control" id="descripcion" rows="3" placeholder="Ingrese la descripción" required></textarea>
+                <textarea class="form-control" name="descripcion" id="descripcion" rows="3" placeholder="Ingrese la descripción" required></textarea>
+            </div>
+
+            <h3 class="text-primary mt-4">Preguntas</h3>
+            <div id="preguntas-container"></div>
+            
+            <button type="button" class="btn btn-success w-100" onclick="agregarPregunta()">Agregar Pregunta</button>
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-primary w-100">Enviar</button>
             </div>
         </form>
-
-        <h3 class="text-primary mt-4">Preguntas</h3>
-        <div id="preguntas-container">
-            <!-- Aquí se agregarán dinámicamente las preguntas -->
-        </div>
-        
-        <button class="btn btn-success w-100" onclick="agregarPregunta()">Agregar Pregunta</button>
-
-        <div class="text-center mt-4">
-            <button type="submit" class="btn btn-primary w-100">Enviar</button>
-        </div>
     </div>
 
     <script>
         let contadorPreguntas = 0;
-    
-        function agregarPregunta() {
-            contadorPreguntas++;
-            let preguntasContainer = document.getElementById('preguntas-container');
-    
-            let preguntaDiv = document.createElement('div');
-            preguntaDiv.classList.add('question-card');
-            preguntaDiv.setAttribute('id', 'pregunta-' + contadorPreguntas);
-    
-            preguntaDiv.innerHTML = `
-                <label>Pregunta ${contadorPreguntas}:</label>
-                <input type="text" class="form-control mb-2" name="pregunta-${contadorPreguntas}" placeholder="Ingrese la pregunta" required>
-    
-                <div id="respuestas-${contadorPreguntas}">
-                    <label>Respuestas:</label>
-                    <input type="text" class="form-control mb-2" name="respuesta-${contadorPreguntas}-1" placeholder="Ingrese una respuesta" required>
-                </div>
-    
-                <button type="button" class="btn btn-secondary btn-sm" onclick="agregarRespuesta(${contadorPreguntas})">Agregar Respuesta</button>
-                <button type="button" class="btn btn-warning btn-sm" onclick="eliminarUltimaRespuesta(${contadorPreguntas})">Eliminar Respuesta</button>
-                <button type="button" class="btn btn-danger btn-sm" onclick="eliminarPregunta(${contadorPreguntas})">Eliminar Pregunta</button>
-            `;
-    
-            preguntasContainer.appendChild(preguntaDiv);
-        }
-    
-        function agregarRespuesta(idPregunta) {
-            let respuestasContainer = document.getElementById('respuestas-' + idPregunta);
-            let numRespuestas = respuestasContainer.querySelectorAll('input').length + 1;
-    
-            let nuevaRespuesta = document.createElement('input');
-            nuevaRespuesta.type = 'text';
-            nuevaRespuesta.classList.add('form-control', 'mb-2');
-            nuevaRespuesta.name = `respuesta-${idPregunta}-${numRespuestas}`;
-            nuevaRespuesta.placeholder = 'Ingrese otra respuesta';
-            nuevaRespuesta.required = true;
-    
-            respuestasContainer.appendChild(nuevaRespuesta);
-        }
-    
-        function eliminarUltimaRespuesta(idPregunta) {
-            let respuestasContainer = document.getElementById('respuestas-' + idPregunta);
-            let respuestas = respuestasContainer.querySelectorAll('input');
-    
-            if (respuestas.length > 1) {
-                respuestas[respuestas.length - 1].remove();
-            } else {
-                alert("Cada pregunta debe tener al menos una respuesta.");
-            }
-        }
-    
-        function eliminarPregunta(idPregunta) {
-            let preguntaDiv = document.getElementById('pregunta-' + idPregunta);
-            if (preguntaDiv) {
-                preguntaDiv.remove();
-            }
-        }
-    </script>
-    
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+function agregarPregunta() {
+    contadorPreguntas++;
+    let preguntasContainer = document.getElementById('preguntas-container');
+    let preguntaDiv = document.createElement('div');
+    preguntaDiv.classList.add('question-card');
+    preguntaDiv.setAttribute('id', 'pregunta-' + contadorPreguntas);
+
+    preguntaDiv.innerHTML = `
+        <label>Pregunta ${contadorPreguntas}:</label>
+        <input type="text" class="form-control mb-2" name="pregunta-${contadorPreguntas}" placeholder="Ingrese la pregunta" required>
+        <div id="respuestas-${contadorPreguntas}">
+            <div class="d-flex" style="gap: 285px;">
+                <label>Respuestas:</label>
+                <label>Valor:</label>
+            </div>
+            <div class="d-flex mb-2">
+                <input type="text" class="form-control me-2" name="respuesta-${contadorPreguntas}-1" placeholder="Ingrese una respuesta" required>
+                <select class="form-select" name="valor-${contadorPreguntas}-1"></select>
+            </div>
+        </div>
+        <button type="button" class="btn btn-secondary btn-sm" onclick="agregarRespuesta(${contadorPreguntas})">Agregar Respuesta</button>
+        <button type="button" class="btn btn-warning btn-sm" onclick="eliminarUltimaRespuesta(${contadorPreguntas})">Eliminar Respuesta</button>
+        <button type="button" class="btn btn-danger btn-sm" onclick="eliminarPregunta(${contadorPreguntas})">Eliminar Pregunta</button>
+    `;
+
+    preguntasContainer.appendChild(preguntaDiv);
+    actualizarOpciones();
+}
+
+function agregarRespuesta(idPregunta) {
+    let respuestasContainer = document.getElementById('respuestas-' + idPregunta);
+    let numRespuestas = respuestasContainer.querySelectorAll('.d-flex').length + 1;
+
+    let nuevaRespuestaDiv = document.createElement('div');
+    nuevaRespuestaDiv.classList.add('d-flex', 'mb-2');
+
+    nuevaRespuestaDiv.innerHTML = `
+        <input type="text" class="form-control me-2" name="respuesta-${idPregunta}-${numRespuestas}" placeholder="Ingrese otra respuesta" required>
+        <select class="form-select" name="valor-${idPregunta}-${numRespuestas}"></select>
+    `;
+
+    respuestasContainer.appendChild(nuevaRespuestaDiv);
+    actualizarOpciones();
+}
+
+function actualizarOpciones() {
+    document.querySelectorAll('select').forEach(select => {
+        let valorSeleccionado = select.value; // Guarda el valor actual
+
+        select.innerHTML = ""; // Limpia opciones anteriores
+
+        for (let i = 0; i <= 5; i++) { // Valores de 0 a 5
+            let option = document.createElement('option');
+            option.value = i;
+            option.textContent = i;
+
+            if (i == valorSeleccionado) {
+                option.selected = true; // Restaura la selección
+            }
+
+            select.appendChild(option);
+        }
+    });
+}
+
+
+function eliminarUltimaRespuesta(idPregunta) {
+    let respuestasContainer = document.getElementById('respuestas-' + idPregunta);
+    let respuestas = respuestasContainer.querySelectorAll('.d-flex');
+
+    if (respuestas.length > 1) {
+        respuestas[respuestas.length - 1].remove();
+        actualizarOpciones();
+    } else {
+        alert("Cada pregunta debe tener al menos una respuesta.");
+    }
+}
+
+function eliminarPregunta(idPregunta) {
+    let preguntaDiv = document.getElementById('pregunta-' + idPregunta);
+    if (preguntaDiv) {
+        preguntaDiv.remove();
+        contadorPreguntas--;
+        actualizarOpciones();
+    }
+}
+
+function validarFormulario() {
+    let preguntas = document.querySelectorAll('.question-card');
+    if (preguntas.length === 0) {
+        alert("Debe agregar al menos una pregunta.");
+        return false;
+    }
+
+    for (let pregunta of preguntas) {
+        let respuestas = pregunta.querySelectorAll('.d-flex');
+        if (respuestas.length < 2) {
+            alert("Cada pregunta debe tener al menos dos respuestas.");
+            return false;
+        }
+    }
+
+    return true;
+}
+
+    </script>
 </body>
 </html>
-
 {% endblock %}

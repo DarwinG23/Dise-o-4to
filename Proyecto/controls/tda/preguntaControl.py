@@ -25,4 +25,11 @@ class PreguntaControl(DaoAdapter):
     
     def merge(self, pos):
         self._merge(self._pregunta, pos)
+        
+    def crearPregunta(self, pregunta, estado, respuesta, idTest):
+        self._pregunta._pregunta = pregunta
+        self._pregunta._estado = estado
+        self._pregunta._respuesta = respuesta
+        self._pregunta._idTest = idTest
+        self.save
     

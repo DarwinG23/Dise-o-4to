@@ -1,133 +1,126 @@
 {% extends 'estudiante/estudianteInicio.html' %}
 {% block content %}
 <script>
-    $(document).ready(function(){
-        $("#link").click(function(){
+    $(document).ready(function () {
+        $("#link").click(function () {
             create();
         });
 
-        $("#valor").on("input", function(){
-            // Obtener el valor del campo de texto
+        $("#valor").on("input", function () {
             var valor = $(this).val();
-
-            // Si el campo está vacío
             if (valor === "") {
                 create();
             } else {
                 console.log("El campo tiene texto: ", valor);
-                buscar();  // Llamar a la función de búsqueda si el campo tiene texto
+                buscar();
             }
         });
-
     });
 
-    function tabla(url){
+    function tabla(url) {
         $.ajax({
             method: "GET",
             url: url,
             contentType: 'json',
-            success: function(data){
+            success: function (data) {
                 console.log(url);
-                if(data.code == '200'){
+                if (data.code == '200') {
                     var html = '';
-                        $.each(data.data, function(i, info){
-                            console.log(info);
-                            html+="<tr>";
-                            html+= "<td>"+info.id+"</td>";
-                            html+= "<td>"+info.nombre+"</td>";
-                            html+= "<td>"+info.apellido+"</td>";
-                            html+= "<td>"+'<a href="/servidores/editar/'+info.id+'" class="btn btn-info text-white">Editar</a>'+"</td>";
-                            html+= "<td>"+'<a href="/servidores/eliminar/'+info.id+'" class="btn btn-info btn-danger">Eliminar</a>'+"</td>";
-                            html+="</tr>";
-                            
-                        });
-                    
-                        $("#tabla tbody").html(html);
-                }else{
+                    $.each(data.data, function (i, info) {
+                        html += "<tr>";
+                        html += "<td>" + info.id + "</td>";
+                        html += "<td>" + info.nombre + "</td>";
+                        html += "<td>" + info.apellido + "</td>";
+                        html += "<td>" + '<a href="/servidores/editar/' + info.id + '" class="btn btn-info text-white"><i class="fas fa-edit"></i> Editar</a>' + "</td>";
+                        html += "<td>" + '<a href="/servidores/eliminar/' + info.id + '" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Eliminar</a>' + "</td>";
+                        html += "</tr>";
+                    });
+                    $("#tabla tbody").html(html);
+                } else {
                     html += "<tr><td colspan='7'>No se encontraron datos</td></tr>";
                     $("#tabla tbody").html(html);
                 }
-                
             }
-
-
         });
     }
 
-    function create(){
+    function create() {
         var aux = $("#tipo").prop("checked");
         var select = $("#criterio").find(":selected").val();
         var metodo = $("#metodo").find(":selected").val();
-        if(aux){
-            tabla("http://localhost:5000/administrador/ordenar/2/"+select+"/"+3);
-        }else{
-            tabla("http://localhost:5000/administrador/ordenar/1/"+select+"/"+3);
+        if (aux) {
+            tabla("http://localhost:5000/administrador/ordenar/2/" + select + "/" + 3);
+        } else {
+            tabla("http://localhost:5000/administrador/ordenar/1/" + select + "/" + 3);
         }
     }
 
-    function buscar(){
+    function buscar() {
         var atributo = $("#criterio").find(":selected").val();
         var valor = $("#valor").val();
-        tabla("http://localhost:5000/administrador/busqueda/1/"+valor+"/"+atributo);
+        tabla("http://localhost:5000/administrador/busqueda/1/" + valor + "/" + atributo);
     }
-
-    
 </script>
+
 <div class="text-center">
-    <h2 class="display-5">Gestión administradores</h2>
+    <h2 class="display-5 bg-dark text-white p-3 rounded">Gestionar Administradores</h2>
 </div>
-<div class="row ">
-    <table id="tabla" class="table text-black  table-striped table-hover table-bordered">
-        <div class="card p-4">
-            <!-- Sección de Ordenar -->
-            <div class="row mb-4 align-items-center">
-                <!-- Selección de Criterio -->
-                <div class="col-md-4 d-flex align-items-center">
-                    <label for="criterio" class="me-2">Criterio:</label>
-                    <select id="criterio" class="form-select w-auto">
-                        <option value="_nombre">Nombre</option>
-                        <option value="_apellido">Apellido</option>
-                    </select>
-                </div>
-                <!-- Check DESCENDENTE -->
-                <div class="col-md-4 d-flex align-items-center">
-                    <input type="checkbox" value="DESCENDENTE" id="tipo" class="form-check-input me-2">
-                    <label for="tipo" class="form-check-label">DESCENDENTE</label>
-                </div>
-                <!-- Botón Ordenar -->
-                <div class="col-md-4 text-end">
-                    <button class="btn btn-info w-100" id="link">ORDENAR</button>
-                </div>
+
+<div class="row">
+    <div class="card p-4 shadow-lg">
+        <!-- Sección de Ordenar -->
+        <div class="row mb-4 align-items-center">
+            <div class="col-md-4 d-flex align-items-center">
+                <label for="criterio" class="me-2">Criterio:</label>
+                <select id="criterio" class="form-select w-auto">
+                    <option value="_nombre">Nombre</option>
+                    <option value="_apellido">Apellido</option>
+                </select>
             </div>
-        
-            <!-- Sección de Buscar -->
-            <div class="row mb-4 align-items-center">
-                <!-- Campo de Búsqueda -->
-                <div class="col-md-8">
-                    <input type="text" id="valor" class="form-control" placeholder="Ingrese el valor a buscar">
-                </div>
-                <!-- Botón Buscar -->
-                <div class="col-md-4 text-end">
-                    <button class="btn btn-info w-100" id="buscar">BUSCAR</button>
-                </div>
+            <div class="col-md-4 d-flex align-items-center">
+                <input type="checkbox" value="DESCENDENTE" id="tipo" class="form-check-input me-2">
+                <label for="tipo" class="form-check-label">DESCENDENTE</label>
+            </div>
+            <div class="col-md-4 text-end">
+                <button class="btn btn-info w-100" id="link"><i class="fas fa-sort"></i> ORDENAR</button>
             </div>
         </div>
 
+        <!-- Sección de Buscar -->
+        <div class="row mb-4 align-items-center">
+            <div class="col-md-8">
+                <input type="text" id="valor" class="form-control" placeholder="Ingrese el valor a buscar">
+            </div>
+            <div class="col-md-4 text-end">
+                <button class="btn btn-info w-100" id="buscar"><i class="fas fa-search"></i> BUSCAR</button>
+            </div>
+        </div>
+    </div>
+</div>
 
-        <thead>
-            <th>Nro</th>
-            <th>Nombre</th>
-            <th>Apellido</th>
+<div class="row mt-4">
+    <table id="tabla" class="table text-black table-striped table-hover table-bordered">
+        <thead class="thead-dark">
+            <tr>
+                <th><i class="fas fa-hashtag"></i> Nro</th>
+                <th><i class="fas fa-user"></i> Nombre</th>
+                <th><i class="fas fa-user-tag"></i> Apellido</th>
+                <th><i class="fas fa-cogs"></i> Acciones</th>
+            </tr>
         </thead>
         <tbody>
             {% for item in lista %}
-                <tr>
-                    <td>{{item.id}}</td>
-                    <td>{{item.nombre}}</td>
-                    <td>{{item.apellido}}</td>
-                    <td><a href="/servidores/editar/{{item.id}}" class="btn btn-info text-white">Editar</a></td>
-                    <td><a href="/servidores/eliminar/{{item.id}}" class="btn btn-danger">Eliminar</a></td>
-                </tr>
+            <tr>
+                <td>{{item.id}}</td>
+                <td>{{item.nombre}}</td>
+                <td>{{item.apellido}}</td>
+                <td>
+                    <a href="/administrador/modificarAdministrador/ver/{{roles}}/{{nombreU}}/{{apellidoU}}/{{item.id}}" class="btn btn-info text-white"><i class="fas fa-edit"></i>
+                        Editar</a>
+                    <a href="/servidores/eliminar/{{item.id}}" class="btn btn-danger"><i class="fas fa-trash-alt"></i>
+                        Eliminar</a>
+                </td>
+            </tr>
             {% endfor %}
         </tbody>
     </table>
@@ -148,6 +141,10 @@
     .display-5 {
         font-size: 2.5rem;
         font-weight: 300;
+        background-color: #343a40;
+        padding: 15px;
+        border-radius: 8px;
+        color: white;
     }
 
     .table {
@@ -201,5 +198,15 @@
     .table-striped tbody tr:nth-of-type(odd) {
         background-color: rgba(0, 0, 0, 0.05);
     }
+
+    .fa-edit,
+    .fa-trash-alt,
+    .fa-sort,
+    .fa-search {
+        margin-right: 5px;
+    }
 </style>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
 {% endblock %}

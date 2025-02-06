@@ -44,8 +44,8 @@ class DaoAdapter(Generic[T]):
                 columns += key + ","
     
 
-                # Si el campo contiene 'fecha'
-                if "fecha" in key:
+                # Si el campo contiene 'fecha' y no es None
+                if "fecha" in key and value != None:
                     # Convertir el valor a la fecha en el formato correcto
                     value = datetime.strptime(value, "%d/%m/%Y").strftime("%d-%b-%Y").upper()  # Formato DD-MON-YYYY
                     data_values += f"TO_DATE('{value}', 'DD-MON-YYYY'),"

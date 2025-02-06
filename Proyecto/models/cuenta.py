@@ -91,7 +91,7 @@ class Cuenta:
         rc = RolControl()
         roles = rc._list()
         if not roles.isEmpty:
-            roles = roles.lineal_binary_search_models(str(cuenta._id),"_idCuenta")
+            roles = roles.lineal_binary_search_models_id(cuenta._id,"_idCuenta")
         cuenta._roles = roles
         nc = NotificacionControl()
         notificaciones = nc._list()
@@ -100,4 +100,6 @@ class Cuenta:
         cuenta._notificaciones = notificaciones
         return cuenta
 
+    def __str__(self):
+       return str(self.serializable)
         

@@ -3,6 +3,8 @@ from flask import Blueprint, app, jsonify, abort , request, render_template, red
 from flask_cors import CORS
 import time, math, datetime
 import random
+import re
+from abc import ABC, abstractmethod
 from controls.tda.asignacionControl import AsignacionControl
 from controls.tda.cursoControl import CursoControl
 from controls.tda.permisoControl import PermisoControl
@@ -22,12 +24,16 @@ from datetime import datetime
 from controls.tda.notificacionControl import NotificacionControl
 from controls.tda.cursoControl import CursoControl
 from controls.tda.tareaControl import TareaControl
+from controls.tda.entregaControl import EntregaControl
 from flask import send_from_directory, abort, current_app
 import os
 import json
 import urllib.parse
 import ast
 import re
+from flask_login import login_required
+from flask_login import login_user, logout_user, current_user
+from controls.tda.opcionControl import OpcionControl
 router = Blueprint('router', __name__)
 
 UPLOAD_FOLDER = os.path.join(os.getcwd(), 'uploads') 
@@ -49,11 +55,18 @@ cors = CORS(router, resource={
 def inicio():
     return render_template('inicio.html')
 
-@router.route('/login',  methods=["POST"])
+@router.route('/login', methods=["POST"])
 def login():
     data = request.form
+    correo = data["correo"]
+
+    # Validar que el correo tenga el dominio correcto
+    if not correo.endswith("@unl.edu.ec"):
+        flash('Solo se permite el acceso a correos institucionales (@unl.edu.ec)', 'error')
+        return redirect(url_for('router.inicio'))
+
     cc = CuentaControl()
-    login, rol, cursos, tiene, nombreRol, usuaario = cc.iniciarSesion(data["correo"], data["contrasenia"]) #Aqui llamo al metodo del controlador cc
+    login, rol, cursos, tiene, nombreRol, usuario = cc.iniciarSesion(data["correo"], data["contrasenia"]) #Aqui llamo al metodo del controlador cc
     if login == -1:
         flash('Usuario no encontrado', 'error')
         return redirect(url_for('router.inicio'))
@@ -61,18 +74,34 @@ def login():
         flash('Contraseña incorrecta', 'error')
         return redirect(url_for('router.inicio'))
     else:
+        flash(f'Bienvenido {usuario._nombre} {usuario._apellido}', 'success')
+        flash('Inicio exitoso', 'success')  # ✅ Nuevo flash
+
+        login_user(usuario) 
         if rol == "Administrador":
-            return render_template('administrador/administrador.html', cursos = cc.to_dic_lista(cursos), tiene = tiene, roles = nombreRol, nombreU = usuaario._nombre, apellidoU = usuaario._apellido)
+            return render_template('administrador/administrador.html', cursos = cc.to_dic_lista(cursos), tiene = tiene, roles = nombreRol, nombreU = usuario._nombre, apellidoU = usuario._apellido, usuario = usuario.serializable)
         elif rol == "Docente":
-            return render_template('docente/docenteInicio.html', cursos = cc.to_dic_lista(cursos), tiene = tiene, roles = nombreRol, nombreU = usuaario._nombre, apellidoU = usuaario._apellido, usuario = usuaario.serializable)
+            return render_template('docente/docenteInicio.html', cursos = cc.to_dic_lista(cursos), tiene = tiene, roles = nombreRol, nombreU = usuario._nombre, apellidoU = usuario._apellido, usuario = usuario.serializable)
         elif rol == "Estudiante":
-            return render_template('estudiante/inicioEstudiante.html', cursos = cc.to_dic_lista(cursos), tiene = tiene, roles = nombreRol, nombreU = usuaario._nombre, apellidoU = usuaario._apellido, usuario = usuaario.serializable)
+            return render_template('estudiante/inicioEstudiante.html', cursos = cc.to_dic_lista(cursos), tiene = tiene, roles = nombreRol, nombreU = usuario._nombre, apellidoU = usuario._apellido, usuario = usuario.serializable)
+        else:
+            flash('Esta cuenta no tiene un rol asignado', 'error')
+            return render_template('inicio.html')
+
+@router.route('/confirmar-regreso', methods=["GET", "POST"])
+def confirmar_regreso():
+    if current_user.is_authenticated:  
+        return render_template('confirmar_regreso.html', nombre_usuario=current_user.name)
+    else:
+        return redirect(url_for('router.inicio')) 
+
+@router.route('/proteccion')
+@login_required  
+def admin_dashboard():
+    return render_template('admin/dashboard.html')
 
 @router.route('/inicio/<roles>/<usuario>/<nombreU>/<apellidoU>/<cursos>/<tiene>', methods=["GET"])
 def regresarInicio(roles,usuario, nombreU, apellidoU, cursos, tiene):
-    # cursos_string = cursos
-    # cursos_decodificados = urllib.parse.unquote(cursos_string)
-    # cursos_json = cursos_decodificados.replace("'", "\"")
     cursos_dic = eval(cursos)
     try:
         # cursos_dic = json.loads(cursos_json)
@@ -87,7 +116,8 @@ def regresarInicio(roles,usuario, nombreU, apellidoU, cursos, tiene):
     except json.JSONDecodeError as e:
         print("Error al decodificar JSON:", e)
     return render_template('inicio.html')
-        
+#-------------------------------Registro---------------------------------------------------------------#
+     
 @router.route('/registrarEstudiante')
 def registrarEstudiante():
     return render_template('registro.html',usuario = "Estudiante")   
@@ -99,36 +129,71 @@ def registrarDocente():
 @router.route('/registrarAdministrador')
 def registrarAdministrador():
     return render_template('registro.html',usuario = "Administrador") 
-        
+
+@router.route('/registrar/<rol>', methods=["GET", "POST"])
+def registrar(rol):
+    # Verificar el rol para redirigir a la vista correcta
+    if rol == "Administrador":
+        return render_template('registro.html', usuario="Administrador")
+    elif rol == "Estudiante":
+        return render_template('registro.html', usuario="Estudiante")
+    elif rol == "Docente":
+        return render_template('registro.html', usuario="Docente")
+    else:
+        flash("Rol no válido", "error")
+        return redirect(url_for('router.inicio'))   
+       
 @router.route('/registro/<rol>', methods=["POST"])
 def registro(rol):
     data = request.form
     uc = UsuarioControl()
     cc = CuentaControl()
     rc = RolControl()
+
+    # Validación del correo electrónico
+    correo = data["correo"]
+    if not correo.endswith("@unl.edu.ec"):
+        flash('Solo se permite el acceso a correos institucionales (@unl.edu.ec)', 'error')
+        return redirect(url_for('router.registrar', rol=rol))  # Redirigir al formulario según el rol
+
+    # Validación de la cédula
+    cedula = data["ci"]
+    if not Cedula.validar_cedula(cedula):
+        flash('Cédula inválida. Verifique que tenga 10 dígitos y cumpla con los requisitos.', 'error')
+        return redirect(url_for('router.registrar', rol=rol))  # Redirigir al formulario si la cédula es inválida
+
     # Convertir la cadena a un objeto datetime
     fecha_objeto = datetime.strptime(data["fechaNacimiento"], "%Y-%m-%d")
     fecha_formateada = fecha_objeto.strftime("%d/%m/%Y")
     fecha_formateada = str(fecha_formateada)
 
-    uc.crearUsuario(data["nombre"],data["apellido"], data['ci'], fecha_formateada, data['telefono'], data['direccion'])
-    legth = uc._list()._length
-    cc.crearCuenta(data['correo'], data['contrasenia'], legth) 
-    cuenta = cc._list().getData(cc._list()._length-1)
+    # Crear el usuario
+    uc.crearUsuario(data["nombre"], data["apellido"], cedula, fecha_formateada, data['telefono'], data['direccion'])
+    usuarios = uc._list()
+    usuarios.sort_models("_id", 1, 4)
+    legth = usuarios.getData(usuarios._length-1)._id
+    cc.crearCuenta(data['correo'], data['contrasenia'], legth)
+    
+    # Crear la cuenta
+    cuentas = cc._list()
+    cuentas.sort_models("_id", 1, 4)
+    cuenta = cuentas.getData(cuentas._length-1)
     rc.crearRol(rol, cuenta._id)
     
+    # Registrar según el rol
     if rol == "Estudiante":
         ec = EstudianteControl()
         ec.agregarDatos(data["matricula"], data["contacto"], legth)
     elif rol == "Docente":
         dc = DocenteControl()
-        dc.agregarTitulo(data["titulo"],  legth)
+        dc.agregarTitulo(data["titulo"], legth)
     elif rol == "Administrador":
         ac = AdministradorControl()
         ac.agregarDatos(legth)
-        
-    flash('Cuenta creada con exito', 'success')
+
+    flash('Cuenta creada con éxito', 'success')
     return redirect(url_for('router.inicio'))
+
 #---------------------------------------------Presentación-----------------------------------------------#
 @router.route('/presentacion') 
 def presentacion():
@@ -160,8 +225,15 @@ def estudiante():
 def tareas():
     return render_template('/estudiante/curso/cursoInicio.html')
 
-@router.route('/estudiante/inicioTest')
-def testInicio():
+@router.route('/estudiante/inicioTest/<roles>/<usuario>/<nombreU>/<apellidoU>/<tiene>/<cursos>', methods=['POST'])
+def testInicio(roles, usuario, nombreU, apellidoU, tiene, cursos):
+    cursos = eval(cursos)
+    
+    return render_template('/estudiante/testsE/inicioTest.html', roles = roles, usuario = usuario, nombreU = nombreU, apellidoU = apellidoU, tiene = tiene, cursos = cursos)
+
+
+@router.route('/estudiante/inicioTestPost', methods=['POST'])
+def testInicioPost():
     return render_template('/estudiante/testsE/inicioTest.html')
 
 
@@ -175,11 +247,83 @@ def subir_tarea():
     usuario = usuario.replace("'", '"')
     usuario = json.loads(usuario)
     tc = TareaControl()
-    ec = EstudianteControl()
-    estudiantes = ec._list().lineal_binary_search_models(str(data["idCurso"]), "_idCurso")
-    tarea = tc._list().binary_search_models(data["idTarea"], "_id")
+    ee = EntregaControl()
+    ac = AsignacionControl()
+    tarea = "Sin tarea"
+    entrega = "Sin entrega"
+    entregas = ee._list()
+    idAsignacion = "Sin asignacion"
+    if not tc._list().isEmpty:
+        tarea = tc._list().binary_search_models_id(data["idTarea"], "_id")
+        if tarea == -1:
+            tarea = "Sin tarea"
+        asignaciones = ac._list()
+        if not asignaciones.isEmpty:
+            asignaciones = asignaciones.lineal_binary_search_models_id(data["idCurso"], "_idCurso")
+            if not asignaciones.isEmpty:
+                for asignacion in asignaciones.toArray:
+                    if tarea._idAsignacion == asignacion._id:
+                        idAsignacion = asignacion._id
+                        if not entregas.isEmpty:
+                            entrega = entregas.binary_search_models_id(asignacion._id, "_idAsignacion")
+                            if entrega != -1:
+                                break    
+                                           
     archivo_nombre = os.path.basename(tarea._ruta_pdf)
-    return render_template('/estudiante/curso/subirTarea.html',  roles = data["roles"], usuario = usuario, idCurso = data["idCurso"], idTarea = data["idTarea"], cursos = cursos, tiene = data["tiene"], tarea = tarea.serializable, estudiantes = ec.to_dic_lista(estudiantes), nombreU = usuario["nombre"], apellidoU = usuario["apellido"], archivo = archivo_nombre)
+    archivo_entrega = "Sin entrega"
+    if entrega != -1 and entrega != "Sin entrega":
+        archivo_entrega = os.path.basename(entrega._ruta_pdf)
+        entrega = entrega.serializable  
+    else:
+        entrega = "Sin entrega"
+    return render_template('/estudiante/curso/subirTarea.html',  roles = data["roles"], usuario = usuario, idCurso = data["idCurso"], idTarea = data["idTarea"], cursos = cursos, tiene = data["tiene"], tarea = tarea.serializable, nombreU = usuario["nombre"], apellidoU = usuario["apellido"], archivo = archivo_nombre, entrega = entrega, archivo_entrega = archivo_entrega, idAsignacion = idAsignacion)
+
+#/subirTareaPdf/{{roles}}/{{usuario}}/{{curso.id}}/{{idTarea}}/{{idAsignacion}}/{{cursos}}{{tiene}}
+@router.route('/subirTareaPdf/<roles>/<usuario>/<idCurso>/<idTarea>/<idAsignacion>/<cursos>/<tiene>', methods=['POST'])
+def subirTareaPdf(roles, usuario,idCurso,idTarea, idAsignacion, cursos, tiene):
+    cursos = eval(cursos)
+    #Pasamos el string (usuario) a un diccionario 
+    usuario = re.sub(r"datetime\.datetime\((\d+), (\d+), (\d+), (\d+), (\d+)\)", r'"\1-\2-\3 \4:\5"', usuario)
+    usuario = usuario.replace("'", '"')
+    usuario = json.loads(usuario)
+    
+    ec = EstudianteControl()
+    estudiantes = ec._list()
+    fecha = datetime.now()
+    fecha = fecha.strftime("%d/%m/%Y")
+    permiso = 1
+    comentario = "Sin comentario"
+    estado = 1
+    archivo = request.files['archivo']  
+    if not archivo.filename == '':
+        ruta = os.path.join(UPLOAD_FOLDER, archivo.filename)
+        archivo.save(os.path.join(UPLOAD_FOLDER, archivo.filename))
+    
+    bandera = False
+    entrega = "Sin entrega"
+    if not estudiantes.isEmpty:
+        estudiante = estudiantes.binary_search_models_id(usuario["id"], "_idUsuario")
+        if estudiante != -1:
+            if not archivo.filename == '':
+                ruta = os.path.join(UPLOAD_FOLDER, archivo.filename)
+                archivo.save(os.path.join(UPLOAD_FOLDER, archivo.filename))   
+                ecd = EntregaControl()
+                ecd.crearEntrega(ruta, estado, None, comentario, fecha, permiso, idAsignacion, estudiante._id)
+                bandera = True
+                entregas = ecd._list()
+                entregas.sort_models("_id", 1, 4)
+                entrega = entregas.getData(entregas._length-1)
+    if bandera:
+        flash('Entrega realizada con exito', 'success')
+        tc = TareaControl()
+        tarea = tc._list().binary_search_models_id(idTarea, "_id")
+        if tarea != -1:
+            archivo_nombre = os.path.basename(tarea._ruta_pdf)
+            tarea = tarea.serializable
+        archivo_entrega = os.path.basename(entrega._ruta_pdf)
+        entrega = entrega.serializable
+        return render_template('/estudiante/curso/subirTarea.html',  roles = roles, usuario = usuario, idCurso = idCurso, idTarea = idTarea, cursos = cursos, tiene = tiene, tarea = tarea, nombreU = usuario["nombre"], apellidoU = usuario["apellido"], archivo = archivo_nombre, entrega = entrega, archivo_entrega = archivo_entrega, idAsignacion = idAsignacion)
+
 
 
 # Estudiante Tests
@@ -226,7 +370,9 @@ def perfil():
     return render_template('/estudiante/perfil.html')
 
 @router.route('/logout')
+@login_required
 def logout():
+    logout_user()  
     return render_template("inicio.html")
 
 @router.route('/estudiante/asignarEstudiante', methods=['POST'])
@@ -247,6 +393,11 @@ def docente():
 @router.route('/docenteInicio', methods=['GET'])
 def docenteInicio():
     return render_template('/docente/docenteCursos.html')
+
+
+@router.route('/docente/test/ver/<roles>/<curso>/<usuario>/<cursos>/<tiene>')
+def verTestsDocente():
+    return render_template('/estudiante/testsE/test.html')
 
 
 
@@ -288,6 +439,19 @@ def tareasPresentadas():
 
     
     return render_template('docente/crud/listaTareasPresentadas.html', roles = data["roles"], usuario = usuario, idCurso = data["idCurso"], idTarea = data["idTarea"], cursos = cursos, tiene = data["tiene"], tarea = tarea.serializable, estudiantes = ec.to_dic_lista(estudiantes), nombreU = usuario["nombre"], apellidoU = usuario["apellido"], archivo = archivo_nombre)
+
+@router.route('/descargasEntrega/<idEntrega>')
+def descargarArchivoEntrega(idEntrega):
+    ec = EntregaControl()
+    entrega = ec._list().binary_search_models_id(idEntrega, "_id")
+    filename = os.path.basename(entrega._ruta_pdf)
+    upload_folder = os.path.join(current_app.root_path, 'uploads')
+    try:
+        return send_from_directory(upload_folder, filename, as_attachment=True)
+    except FileNotFoundError:
+        abort(404)
+
+
 
 @router.route('/descargas/<idTarea>')
 def descargarArchivo(idTarea):
@@ -425,10 +589,161 @@ def crearTareaPost(roles, idCurso, usuario, nombreU, apellidoU, cursos, tiene):
     
     return render_template('/docente/docenteInicio.html', roles = roles, nombreU = nombreU, apellidoU = apellidoU, cursos = cursos, tiene = tiene, usuario = usuario)
 
-@router.route('/docente/crearTestGet/<roles>/<nombreU>/<apellidoU>/<cursos>/<tiene>', methods=['GET'])
-def crearTestGet(roles, nombreU, apellidoU, cursos, tiene):
+@router.route('/docente/crearTestGet/<roles>/<usuario>/<cursos>/<tiene>', methods=['GET'])
+def crearTestGet(roles, usuario, cursos, tiene):
     cursos = eval(cursos)
-    return render_template('/docente/crearTest.html', roles = roles, nombreU = nombreU, apellidoU = apellidoU, cursos = cursos, tiene = tiene)
+    usuario = re.sub(r"datetime\.datetime\((\d+), (\d+), (\d+), (\d+), (\d+)\)", r'"\1-\2-\3 \4:\5"', usuario)
+    usuario = usuario.replace("'", '"')
+    usuario = json.loads(usuario)
+    return render_template('/docente/crearTest.html', roles = roles, nombreU = usuario["nombre"], apellidoU = usuario["apellido"], cursos = cursos, tiene = tiene, usuario=usuario)
+
+@router.route('/crearTestPost/<roles>/<usuario>/<cursos>/<tiene>', methods=['POST'])
+def creartestPost(roles,usuario,cursos,tiene):
+    pc = PreguntaControl()
+    tc = TestControl()
+    oc = OpcionControl()
+    
+    usuario = re.sub(r"datetime\.datetime\((\d+), (\d+), (\d+), (\d+), (\d+)\)", r'"\1-\2-\3 \4:\5"', usuario)
+    usuario = usuario.replace("'", '"')
+    usuario = json.loads(usuario)
+    
+    fecha_inicio = request.form.get("fechaInicio")
+    fecha_fin = request.form.get("fechaFin")
+    titulo = request.form.get("titulo")
+    descripcion = request.form.get("descripcion")
+
+    preguntas = []
+    contador = 1  
+
+    while True:
+        pregunta_key = f"pregunta-{contador}"
+        pregunta_texto = request.form.get(pregunta_key)
+
+        if not pregunta_texto:
+            break 
+
+        respuestas = []
+        respuesta_contador = 1  
+
+        while True:
+            respuesta_key = f"respuesta-{contador}-{respuesta_contador}"
+            valor_key = f"valor-{contador}-{respuesta_contador}"
+
+            respuesta_texto = request.form.get(respuesta_key)
+            respuesta_valor = request.form.get(valor_key)
+
+            if not respuesta_texto:
+                break  
+
+            respuestas.append({"texto": respuesta_texto, "valor": respuesta_valor})
+            respuesta_contador += 1
+
+        preguntas.append({"pregunta": pregunta_texto, "respuestas": respuestas})
+        contador += 1
+    
+    print("######################################")
+    print({
+        "fecha_inicio": fecha_inicio,
+        "fecha_fin": fecha_fin,
+        "titulo": titulo,
+        "descripcion": descripcion,
+        "preguntas": preguntas
+    })
+    print("######################################")
+
+    return "Formulario recibido con éxito", 200
+
+@router.route('/crearTestAdminGet/<roles>/<usuario>/<cursos>/<tiene>', methods=['GET'])
+def crearTestGetAdmin(roles, usuario, cursos, tiene):
+    usuario = re.sub(r"datetime\.datetime\((\d+), (\d+), (\d+), (\d+), (\d+)\)", r'"\1-\2-\3 \4:\5"', usuario)
+    usuario = usuario.replace("'", '"')
+    usuario = json.loads(usuario)
+    
+    return render_template('/administrador/crearTest.html', roles = roles, usuario = usuario, cursos = cursos, tiene = tiene, nombreU = usuario['nombre'], apellidoU=usuario['apellido'])
+
+
+@router.route('/crearTestAdminPost/<roles>/<usuario>/<cursos>/<tiene>', methods=['POST'])
+def crearTestPostAdmin(roles,usuario,cursos,tiene):
+    print("Datos recibidos en request.form:")
+    for key in request.form:
+        print(f"{key}: {request.form[key]}")
+    pc = PreguntaControl()
+    tc = TestControl()
+    oc = OpcionControl()
+    ac = AdministradorControl()
+    cursos = eval(cursos)
+    
+    usuario = re.sub(r"datetime\.datetime\((\d+), (\d+), (\d+), (\d+), (\d+)\)", r'"\1-\2-\3 \4:\5"', usuario)
+    usuario = usuario.replace("'", '"')
+    usuario = json.loads(usuario)
+    
+    fecha_inicio = None
+    fecha_fin = None
+    titulo = request.form.get("titulo")
+    descripcion = request.form.get("descripcion")
+    admins = ac._list()
+
+    if not admins.isEmpty:
+        admin = ac._list().binary_search_models_id(usuario["id"], "_idUsuario")
+    if admin != -1:
+      print("#####################TEST#################")
+      tc.crearTest(titulo, descripcion,None,None,admin._id)
+
+    preguntas = []
+    contador = 1  
+    
+    tests = tc._list()
+    test = -1
+    if not tests.isEmpty:
+        tests.sort_models("_id",1,4)
+        test = tests.getData(tests._length-1)
+    
+    if test != -1:
+        print("#####################PREGUNTA#################")
+        while True:
+            pregunta_key = f"pregunta-{contador}"
+            pregunta_texto = request.form.get(pregunta_key)
+
+            if not pregunta_texto:
+                break 
+            
+            pc.crearPregunta(pregunta_texto, 1,"Sin respuesta", test._id)
+            preguntasBd = pc._list()
+            if not preguntasBd.isEmpty:
+                
+                preguntasBd.sort_models("_id",1,4)
+                pregunta = preguntasBd.getData(preguntasBd._length-1)
+                if pregunta != -1:
+                    respuestas = []
+                    respuesta_contador = 1  
+
+                    while True:
+                        respuesta_key = f"respuesta-{contador}-{respuesta_contador}"
+                        valor_key = f"valor-{contador}-{respuesta_contador}"
+
+                        # Buscar respuestas en el request.form
+                        if respuesta_key in request.form:
+                            respuesta_texto = request.form[respuesta_key].strip()
+                            respuesta_valor = request.form.get(valor_key, "0").strip()  # Valor por defecto 0
+
+                            print(f"Guardando opción: {respuesta_texto} con valor {respuesta_valor}")
+                            oc.crearOpcion(respuesta_texto, 1, int(respuesta_valor), pregunta._id)
+
+                            respuestas.append({"texto": respuesta_texto, "valor": respuesta_valor})
+                        else:
+                            print(f"No se encontró {respuesta_key}, omitiendo.")
+
+                        # Seguir buscando hasta que no haya más respuestas
+                        respuesta_contador += 1
+                        if respuesta_contador > 10:  # Un límite de seguridad para evitar bucles infinitos
+                            break
+
+                    preguntas.append({"pregunta": pregunta_texto, "respuestas": respuestas})
+                    contador += 1
+            
+    return render_template('administrador/administrador.html', cursos = cursos, tiene = tiene, roles = roles, nombreU = usuario["nombre"], apellidoU = usuario["apellido"], usuario = usuario)
+
+
 
 @router.route('/docente/curso/ver/<roles>/<usuario>/<nombreU>/<apellidoU>/<cursos>/<tiene>', methods=['POST'])
 def verCursoDocentePost(roles, usuario,nombreU, apellidoU, cursos, tiene):
@@ -438,15 +753,52 @@ def verCursoDocentePost(roles, usuario,nombreU, apellidoU, cursos, tiene):
     cc = CursoControl()
     ac= AsignacionControl()
     tc = TareaControl()
-    curso = cc._list().binary_search_models(id, "_id")
-    asignaciones = ac._list().lineal_binary_search_models(id, "_idCurso")
+    testc = TestControl()
+    curso = cc._list().binary_search_models_id(id, "_id")
+    if curso != -1:
+        curso = curso.serializable
+    asignaciones = ac._list().lineal_binary_search_models_id(id, "_idCurso")
+    tareasBd = tc._list()
+    testsBd = testc._list()
     tareas = Linked_List()
+    tests = Linked_List()
     for asignacion in asignaciones.toArray:
-        tarea = tc._list().binary_search_models(str(asignacion._id), "_idAsignacion")
-        tareas.addNode(tarea)
+        tarea = "Sin tarea"
+        test = "Sin test"
+        if not tareasBd.isEmpty:
+            tarea = tareasBd.binary_search_models_id(asignacion._id, "_idAsignacion")
+            if tarea != -1:
+                tareas.addNode(tarea)
+        if not testsBd.isEmpty:
+            test = testsBd.binary_search_models_id(asignacion._id, "_idAsignacion")
+            if test != -1:
+               tests.addNode(test)
+            
     
-    return render_template('/docente/crud/listaTareasDocentes.html', roles = roles, nombreU = nombreU, apellidoU = apellidoU, cursos = cursos, tiene = tiene, curso = curso.serializable, usuario = usuario, tareas = tc.to_dic_lista(tareas))
+    return render_template('/docente/crud/listaTareasDocentes.html', roles = roles, nombreU = nombreU, apellidoU = apellidoU, cursos = cursos, tiene = tiene, curso = curso, usuario = usuario, tareas = tc.to_dic_lista(tareas), tests = tc.to_dic_lista(tests))
+
+#/agregarTest/{{roles}}/{{usuario}}/{{cursos}}/{{tiene}}
+@router.route('/agregarTest/<roles>/<curso>/<usuario>/<cursos>/<tiene>', methods=['GET'])
+def agregarTest(roles, curso, usuario, cursos, tiene):
+    cursos = eval(cursos)
+    usuario = re.sub(r"datetime\.datetime\((\d+), (\d+), (\d+), (\d+), (\d+)\)", r'"\1-\2-\3 \4:\5"', usuario)
+    usuario = usuario.replace("'", '"')
+    usuario = json.loads(usuario)
+
     
+    tc = TestControl()
+    tests = tc._list()
+    testsAdmin = Linked_List()
+    if not tests.isEmpty:
+        for test in tests.toArray:
+            if test._idAdministrador != None:
+                testsAdmin.addNode(test)
+    
+    bandera ="Verdadero"
+    if testsAdmin.isEmpty:
+        bandera = "Falso"
+        
+    return render_template('docente/agregarTest.html', tests = tc.to_dic_lista(testsAdmin), bandera = bandera, usuario = usuario, nombreU=usuario["nombre"], apellidoU = usuario["apellido"], roles = roles, cursos = cursos, tiene = tiene, curso = curso)
 
 #---------------------------------------------Administrador-----------------------------------------------------#
 @router.route('/administrador', methods=['GET'])
@@ -456,6 +808,7 @@ def administrador():
 #################################################################################################################
 #Presentar la lista de usuarios
 @router.route('/administrador/gestionar_usuarios/<roles>/<nombreU>/<apellidoU>', methods=['GET'])
+@login_required
 def gestionar_usuarios(roles, nombreU, apellidoU):
     uc = UsuarioControl() #Creo un objeto de la clase UsuarioControl
     listaUsuarios = uc._list() #Obtengo la lista de usuarios
@@ -490,6 +843,17 @@ def buscar_usuarios(tipo, data, attr):
         jsonify({"msg": "OK", "code": 200, "data": uc.to_dic_lista(list)}),
         200
     )
+
+
+# @router.route('/modificar_usuario/<roles>/<nombreU>/<apellidoU>', methods=['POST'])
+# def modificarUsuarioAdmin(roles, nombreU, apellidoU):
+#     data = request.form
+#     uc = UsuarioControl()
+#     fecha_objeto = datetime.strptime(data["fechaNacimiento"], "%Y-%m-%d")
+#     fecha_formateada = fecha_objeto.strftime("%d/%m/%Y")
+#     fecha_formateada = str(fecha_formateada)
+#     uc.modificarUsuario(data["id"], data["nombre"], data["apellido"], data["ci"], fecha_formateada, data["telefono"], data["direccion"])
+#     return redirect(url_for('router.gestionar_usuarios', roles = roles, nombreU = nombreU, apellidoU = apellidoU))
 
 #################################################################################################################
 
@@ -882,10 +1246,104 @@ def estadisticas():
 def estadisticas_individual():
     return render_template('estadisticas/estadisticasIndividual.html')
 
+@router.route('/perfil/ver/<tiene>/<roles>/<nombreU>/<apellidoU>/<usuario>/<cursos>', methods=['GET', 'POST'])
+def perfil_editar(tiene, roles, nombreU, apellidoU, usuario, cursos):
+    cursos = eval(cursos)
+    uc = UsuarioControl()
+    usuario = re.sub(r"datetime\.datetime\((\d+), (\d+), (\d+), (\d+), (\d+)\)", r'"\1-\2-\3 \4:\5"', usuario)
+    usuario = usuario.replace("'", '"')
+    usuario = json.loads(usuario)
+    usuario = uc.obtener_usuario(usuario["id"])
+    return render_template('administrador/perfil.html', cursos=cursos, data=usuario, tiene=tiene, roles=roles, nombreU=nombreU, apellidoU=apellidoU, usuario=usuario.serializable)
 
+
+#___________________Crear Usuario_______________________# Funciona Bien
+
+@router.route('/administrador/crearUsuario/ver/<roles>/<nombreU>/<apellidoU>', methods=['GET'])
+def crearUsuarioVer(roles, nombreU, apellidoU):
+    return render_template('administrador/crud/crear/crearUsuario.html', roles = roles, nombreU = nombreU, apellidoU = apellidoU)
+
+
+@router.route('/crear_usuario/<roles>/<nombreU>/<apellidoU>', methods=['POST'])
+def crearUsuarioAdmin(roles, nombreU, apellidoU):
+    data = request.form
+    uc = UsuarioControl()
+
+    fecha_objeto = datetime.strptime(data["fechaNacimiento"], "%Y-%m-%d")
+    fecha_formateada = fecha_objeto.strftime("%d/%m/%Y")
+    fecha_formateada = str(fecha_formateada)
+    uc.crearUsuario(data["nombre"], data["apellido"], data["ci"], fecha_formateada, data["telefono"], data["direccion"])
+    return redirect(url_for('router.gestionar_usuarios', roles = roles, nombreU = nombreU, apellidoU = apellidoU))
+
+#___________________Modificar Usuario_______________________#
+
+@router.route('/administrador/modificarUsuario/ver/<roles>/<nombreU>/<apellidoU>/<pos>', methods=['GET'])
+def modificarUsuarioVer(pos, roles, nombreU, apellidoU):
+    uc = UsuarioControl()
+    editarUsuario = uc._list().binary_search_models(int(pos), "_id")
+    return render_template('administrador/crud/editar/editarUsuario.html', data=editarUsuario, roles = roles, nombreU = nombreU, apellidoU = apellidoU)
+
+# @router.route('/modificar_usuario/<roles>/<nombreU>/<apellidoU>', methods=['POST'])
+# def modificarUsuarioAdmin(roles, nombreU, apellidoU):
+#     data = request.form
+#     uc = UsuarioControl()
+#     fecha_objeto = datetime.strptime(data["fechaNacimiento"], "%Y-%m-%d")
+#     fecha_formateada = fecha_objeto.strftime("%d/%m/%Y")
+#     fecha_formateada = str(fecha_formateada)
+#     uc.modificarUsuario(data["id"], data["nombre"], data["apellido"], data["ci"], fecha_formateada, data["telefono"], data["direccion"])
+#     return redirect(url_for('router.gestionar_usuarios', roles = roles, nombreU = nombreU, apellidoU = apellidoU))
+
+#___________________Modificar Cuenta_______________________#
+@router.route('/administrador/modificarCuenta/ver/<roles>/<nombreU>/<apellidoU>/<pos>', methods=['GET'])
+def modificarCuentaVer(pos, roles, nombreU, apellidoU):
+    cc = CuentaControl()
+    editarCuenta = cc._list().binary_search_models(int(pos), "_id")
+    return render_template('administrador/crud/editar/editarCuenta.html', data=editarCuenta, roles = roles, nombreU = nombreU, apellidoU = apellidoU)
+
+
+#___________________Modificar Estudiante_______________________#
+@router.route('/administrador/modificarEstudiante/ver/<roles>/<nombreU>/<apellidoU>/<pos>', methods=['GET'])
+def modificarEstudianteVer(pos, roles, nombreU, apellidoU):
+    ec = EstudianteControl()
+    editarEstudiante = ec._list().binary_search_models(int(pos), "_id")
+    return render_template('administrador/crud/editar/editarEstudiante.html', data=editarEstudiante, roles = roles, nombreU = nombreU, apellidoU = apellidoU)
+
+#___________________Modificar Administrador_______________________#
+@router.route('/administrador/modificarAdministrador/ver/<roles>/<nombreU>/<apellidoU>/<pos>', methods=['GET'])
+def modificarAdministradorVer(pos, roles, nombreU, apellidoU):
+    ac = AdministradorControl()
+    editarAdministrador = ac._list().binary_search_models(int(pos), "_id")
+    return render_template('administrador/crud/editar/editarAdministrador.html', data=editarAdministrador, roles = roles, nombreU = nombreU, apellidoU = apellidoU)
+
+#___________________Modificar Docente_______________________#
+@router.route('/administrador/modificarDocente/ver/<roles>/<nombreU>/<apellidoU>/<pos>', methods=['GET'])
+def modificarDocenteVer(pos, roles, nombreU, apellidoU):
+    dc = DocenteControl()
+    editarDocente = dc._list().binary_search_models(int(pos), "_id")
+    return render_template('administrador/crud/editar/editarDocente.html', data=editarDocente, roles = roles, nombreU = nombreU, apellidoU = apellidoU)
+
+#___________________Modificar Permiso_______________________#
+@router.route('/administrador/modificarPermiso/ver/<roles>/<nombreU>/<apellidoU>/<pos>', methods=['GET'])
+def modificarPermisoVer(pos, roles, nombreU, apellidoU):
+    pc = PermisoControl()
+    editarPermiso = pc._list().binary_search_models(int(pos), "_id")
+    return render_template('administrador/crud/editar/editarPermiso.html', data=editarPermiso, roles = roles, nombreU = nombreU, apellidoU = apellidoU)
+
+#___________________Modificar Rol_______________________#
+@router.route('/administrador/modificarRol/ver/<roles>/<nombreU>/<apellidoU>/<pos>', methods=['GET'])
+def modificarRolVer(pos, roles, nombreU, apellidoU):
+    rc = RolControl()
+    editarRol = rc._list().binary_search_models(int(pos), "_id")
+    return render_template('administrador/crud/editar/editarRol.html', data=editarRol, roles = roles, nombreU = nombreU, apellidoU = apellidoU)
 
 #--------------------------------------------Administrador/Vista/Darwin- Draw-----------------------------------------------------#
 
 @router.route('/prueba01', methods=['GET'])
 def prueba01():
     return render_template('administrador/crud/pruebas01.html')
+
+
+
+@router.route('/prueba')   
+def prueba(): 
+   return render_template('perfil.html')
