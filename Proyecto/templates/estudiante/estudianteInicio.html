@@ -420,15 +420,13 @@
             };
 
             // eslint-disable-next-line
-            var messages = {{ get_flashed_messages(with_categories=true) | tojson | safe }};
+            var messages = JSON.parse('{{ get_flashed_messages(with_categories=true) | tojson | safe }}');
 
             messages.forEach(function([category, message]) {
                 toastr[category](message);
             });
         });
-        
     </script>
-    
     
     
     </body>

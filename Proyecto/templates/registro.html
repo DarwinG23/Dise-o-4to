@@ -171,5 +171,22 @@
             <a href="/" class="btn btn-secondary">Regresar</a>
         </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            toastr.options = {
+                "closeButton": true,
+                "progressBar": true,
+                "timeOut": "3000",
+                "positionClass": "toast-bottom-right"
+            };
+
+            // eslint-disable-next-line
+            var messages = JSON.parse('{{ get_flashed_messages(with_categories=true) | tojson | safe }}');
+
+            messages.forEach(function([category, message]) {
+                toastr[category](message);
+            });
+        });
+    </script>
 </body>
 </html>
