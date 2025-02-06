@@ -74,7 +74,7 @@ def login():
         flash('Contraseña incorrecta', 'error')
         return redirect(url_for('router.inicio'))
     else:
-        flash(f'Bienvenido {usuaario._nombre} {usuaario._apellido}', 'success')
+        flash(f'Bienvenido {usuario._nombre} {usuario._apellido}', 'success')
         flash('Inicio exitoso', 'success')  # ✅ Nuevo flash
 
         login_user(usuario) 
