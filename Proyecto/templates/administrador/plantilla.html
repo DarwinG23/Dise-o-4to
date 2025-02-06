@@ -15,8 +15,8 @@
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-     <!-- Jquery -->
-     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Jquery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -33,7 +33,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             position: fixed;
             top: 0;
             left: 0;
@@ -54,34 +54,84 @@
             height: 50px;
         }
 
-        header .perfil {
-            display: flex;
-            align-items: center;
+        .navbar {
+            background: transparent;
+            padding: 0;
         }
 
-        header .perfil img {
+        .navbar .dropdown {
+            position: relative;
+        }
+
+        .navbar .dropdown-toggle {
+            color: #fff;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .navbar .dropdown-toggle:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        .navbar .dropdown-menu {
+            background-color: #fff;
+            border: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+            padding: 0.5rem 0;
+        }
+
+        .navbar .dropdown-item {
+            color: #333;
+            padding: 0.5rem 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .navbar .dropdown-item:hover {
+            background-color: #f4f4f9;
+        }
+
+        .perfil {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .perfil img {
             border-radius: 50%;
             width: 40px;
             height: 40px;
-            margin-right: 0.5rem;
         }
 
-        nav ul {
-            list-style: none;
-            padding: 0;
-            display: flex;
-            gap: 1rem;
-        }
-
-        nav ul li a {
+        .perfil .dropdown-toggle {
             color: #fff;
             text-decoration: none;
-            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
-        .container {
-            display: flex;
-            margin-top: 4rem;
+        .perfil .dropdown-menu {
+            background-color: #fff;
+            border: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+            padding: 0.5rem 0;
+        }
+
+        .perfil .dropdown-item {
+            color: #333;
+            padding: 0.5rem 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .perfil .dropdown-item:hover {
+            background-color: #f4f4f9;
         }
 
         .sidebar {
@@ -155,9 +205,8 @@
             text-decoration: underline;
         }
 
-
         .main-content {
-            margin-left: 10%;
+            margin-left: 20%;
             width: 80%;
             padding: 2rem;
             background-color: #f9f9f9;
@@ -194,7 +243,14 @@
             sidebar.classList.toggle('collapsed');
             mainContent.classList.toggle('collapsed');
         }
+        // Función para limpiar mensajes
+        // function limpiarMensajes() {
+        //     document.querySelector('#messages-menu-toggle + .dropdown-menu').innerHTML = '<li class="text-center text-muted">No hay mensajes</li>';
+        // }
 
+        function limpiarNotificaciones() {
+            document.querySelector('#notifications-menu-toggle + .dropdown-menu').innerHTML = '<li class="text-center text-muted">No hay notificaciones</li>';
+        }
     </script>
 </head>
 
@@ -204,55 +260,114 @@
             <img src="/static/img/unlLogo.png" alt="Logo de la Universidad Nacional de Loja">
             UNL- StressTraker
         </h1>
-        <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
+        <nav class="navbar navbar-expand-lg">
             <div class="container-fluid">
                 <div class="collapse navbar-collapse" id="navbarNav">
+                    <!-- <div class="dropdown">
+                        <a href="#" tabindex="0" class="dropdown-toggle" id="messages-menu-toggle"
+                            aria-label="Menú de mensajes" data-bs-toggle="dropdown" role="button"
+                            aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-envelope mr-1"></i> Mensajes
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end p-2" aria-labelledby="messages-menu-toggle"
+                            style="max-height: 400px; overflow-y: auto; min-width: 350px;">
+                            <li class="dropdown-header bg-light p-2 border-bottom">
+                                <strong>Mensajes</strong>
+                                <span class="float-end"><i class="fas fa-check"></i></span>
+                            </li>
+                            <li class="p-2 border-bottom d-flex align-items-start">
+                                <i class="fas fa-user text-primary me-2"></i>
+                                <div>
+                                    <strong>Juan Pérez</strong><br>
+                                    <small class="text-muted">Hola, ¿cómo estás?</small>
+                                    <br><a href="#" class="text-primary">Ver conversación</a>
+                                </div>
+                            </li>
+                            <li class="p-2 border-bottom d-flex align-items-start">
+                                <i class="fas fa-user text-primary me-2"></i>
+                                <div>
+                                    <strong>María López</strong><br>
+                                    <small class="text-muted">Recuerda la reunión de mañana</small>
+                                    <br><a href="#" class="text-primary">Ver conversación</a>
+                                </div>
+                            </li>
+                            <li class="p-2 border-bottom d-flex align-items-start">
+                                <i class="fas fa-user text-primary me-2"></i>
+                                <div>
+                                    <strong>Carlos García</strong><br>
+                                    <small class="text-muted">¿Puedes ayudarme con el proyecto?</small>
+                                    <br><a href="#" class="text-primary">Ver conversación</a>
+                                </div>
+                            </li>
+                            <li class="text-center mt-2">
+                                <button class="btn btn-danger btn-sm" onclick="limpiarMensajes()">Limpiar</button>
+                            </li>
+                        </ul>
+                    </div> -->
 
                     <div class="dropdown">
-                        <a href="#" tabindex="0" class="d-inline-block dropdown-toggle icon-no-margin"
-                            id="messages-menu-toggle" aria-label="Menú de mensajes" data-bs-toggle="dropdown"
-                            role="button" aria-haspopup="true" aria-expanded="false"
-                            style="color: white; text-decoration: none;">
-                            <span class="userbutton">
-                                <i class="fas fa-envelope mr-1 text-light"></i> Mensajes
-                            </span>
+                        <a href="#" tabindex="0" class="dropdown-toggle" id="notifications-menu-toggle"
+                            aria-label="Menú de notificaciones" data-bs-toggle="dropdown" role="button"
+                            aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-bell mr-1"></i> Notificaciones
                         </a>
-                        <b class="caret" style="float: right;"></b>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="messages-menu-toggle">
-                            <li><a class="dropdown-item" href="#">Hola</a></li>
-                        </ul>
-                    </div>
-                    <div class="dropdown">
-                        <a href="#" tabindex="0" class="d-inline-block dropdown-toggle icon-no-margin"
-                            id="notifications-menu-toggle" aria-label="Menú de notificaciones" data-bs-toggle="dropdown"
-                            role="button" aria-haspopup="true" aria-expanded="false"
-                            style="color: white; text-decoration: none;">
-                            <span class="userbutton">
-                                <i class="fas fa-bell mr-1 text-light"></i> Notificaciones
-                            </span>
-                        </a>
-                        <b class="caret" style="float: right;"></b>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notifications-menu-toggle">
-                            <li><a class="dropdown-item" href="#">Nueva Tarea Asignada</a></li>
+                        <ul class="dropdown-menu dropdown-menu-end p-2" aria-labelledby="notifications-menu-toggle"
+                            style="max-height: 400px; overflow-y: auto; min-width: 350px;">
+                            <li class="dropdown-header bg-light p-2 border-bottom">
+                                <strong>Notificaciones</strong>
+                                <span class="float-end"><i class="fas fa-check"></i></span>
+                            </li>
+                            <li class="p-2 border-bottom d-flex align-items-start">
+                                <i class="fas fa-file-alt text-success me-2"></i>
+                                <div>
+                                    <strong>Entrega de tarea: Taller - patrones de Diseño</strong><br>
+                                    <small class="text-muted">hace 4 horas 24 minutos</small>
+                                    <br><a href="#" class="text-primary">Ver notificación completa</a>
+                                </div>
+                            </li>
+                            <li class="p-2 border-bottom d-flex align-items-start">
+                                <i class="fas fa-file-alt text-success me-2"></i>
+                                <div>
+                                    <strong>Entrega de tarea: Trabajo autónomo</strong><br>
+                                    <small class="text-muted">hace 2 días 1 hora</small>
+                                    <br><a href="#" class="text-primary">Ver notificación completa</a>
+                                </div>
+                            </li>
+                            <li class="p-2 border-bottom d-flex align-items-start">
+                                <i class="fas fa-file-alt text-success me-2"></i>
+                                <div>
+                                    <strong>Entrega de tarea: Solución de ED con Transformadas de Laplace</strong><br>
+                                    <small class="text-muted">hace 3 días 1 hora</small>
+                                    <br><a href="#" class="text-primary">Ver notificación completa</a>
+                                </div>
+                            </li>
+                            <li class="p-2 border-bottom d-flex align-items-start">
+                                <i class="fas fa-file-alt text-success me-2"></i>
+                                <div>
+                                    <strong>Entrega de tarea: Anti_Transformadas de Laplace</strong><br>
+                                    <small class="text-muted">hace 6 días 2 horas</small>
+                                    <br><a href="#" class="text-primary">Ver notificación completa</a>
+                                </div>
+                            </li>
+                            <li class="text-center mt-2">
+                                <button class="btn btn-danger btn-sm" onclick="limpiarNotificaciones()">Limpiar</button>
+                            </li>
                         </ul>
                     </div>
                 </div>
             </div>
             <div class="perfil">
-                <h1 class="fs-6 text text-white" >Conectado: {{ roles }} </h1>
+                <h1 class="fs-6 text text-white">Conectado: {{ roles }} </h1>
                 <img src="/static/img/perfil.png" alt="Foto de perfil">
                 <div class="dropdown">
-                    <a href="#" tabindex="0" class="d-inline-block dropdown-toggle icon-no-margin" id="user-menu-toggle"
-                        aria-label="Menú de usuario" data-bs-toggle="dropdown" role="button" aria-haspopup="true"
-                        aria-expanded="false">
-                        <span class="userbutton">
-                            <span class="usertext mr-1 text-light">{{ nombreU }} {{ apellidoU }}</span>
-                        </span>
-                        <b class="caret"></b>
+                    <a href="#" tabindex="0" class="dropdown-toggle" id="user-menu-toggle" aria-label="Menú de usuario"
+                        data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        <span class="usertext mr-1">{{ nombreU }} {{ apellidoU }}</span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="user-menu-toggle">
-                        <li><a class="dropdown-item" href="#">Editar perfil</a></li>
-                        <li><a class="dropdown-item" href="#">Configuración</a></li>
+                        <li><a class="dropdown-item"
+                                href="/perfil/ver/{{tiene}}/{{ roles }}/{{ nombreU }}/{{ apellidoU }}/{{ usuario }}/{{cursos}}">Editar
+                                perfil</a></li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
@@ -269,32 +384,28 @@
             <div class="section">
                 <h2>Área Personal</h2>
                 <ul>
-                    <li><a href="/inicio/{{roles}}/{{usuario}}/{{nombreU}}/{{apellidoU}}/{{cursos}}/{{tiene}}"><i class="fas fa-home"></i> Inicio</a></li>
+                    <li><a href="/inicio/{{roles}}/{{usuario}}/{{nombreU}}/{{apellidoU}}/{{cursos}}/{{tiene}}"><i
+                                class="fas fa-home"></i> Inicio</a></li>
                 </ul>
             </div>
 
             <div class="section">
-                <h3>Opciones</h3>
+                <h3>Mis cursos</h3>
                 <ul>
                     {%block cursos%}
-                     
+
                     {%endblock%}
                 </ul>
             </div>
         </aside>
     </div>
+    <br>
+    <br>
     <section class="main-content">
-        <!-- Archivo: templates/estudiante/curso/tareas.html -->
-        <section class="main-content">
-            {% block content %}
-           
-            {% endblock %}
-        </section>
+        {% block content %}
 
+        {% endblock %}
     </section>
-    <!-- <footer>
-        <p>&copy; 2025 Universidad Nacional de Loja</p>
-    </footer> -->
 </body>
 
 </html>
