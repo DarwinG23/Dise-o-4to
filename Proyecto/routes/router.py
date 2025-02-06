@@ -1666,14 +1666,21 @@ def modificarRolVer(pos, roles, nombreU, apellidoU):
     editarRol = rc._list().binary_search_models(int(pos), "_id")
     return render_template('administrador/crud/editar/editarRol.html', data=editarRol, roles = roles, nombreU = nombreU, apellidoU = apellidoU)
 
+
+
 #--------------------------------------------Administrador/Vista/Darwin- Draw-----------------------------------------------------#
 
 @router.route('/prueba01', methods=['GET'])
 def prueba01():
     return render_template('administrador/crud/pruebas01.html')
 
+@router.route('/prueba02', methods=['GET'])
+def prueba02():
+    return render_template('administrador/crud/pruebas02.html')
 
 
 @router.route('/prueba')   
 def prueba(): 
    return render_template('perfil.html')
+
+#--------------------------------------------Administrador/Vista/Darwin- Draw-----------------------------------------------------#
